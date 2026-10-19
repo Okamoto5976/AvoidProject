@@ -10,26 +10,26 @@ public class PoolManager : MonoBehaviour
 
     [Header("確認用")]
     [SerializeField] private List<GameObject> m_Pool = new();
-    [SerializeField] private List<GameObject> test;
+    //[SerializeField] private List<GameObject> test;
 
     private void Awake()
     {
         Initialized();
     }
 
-    private void Update()
-    {
-        //テスト
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            test.Add(GenerateFromPool());
-        }
-        if (Mouse.current.rightButton.wasPressedThisFrame)
-        {
-            ReturnToPool(test[0]);
-            test.Remove(test[0]);
-        }
-    }
+    //private void Update()
+    //{
+    //    //テスト
+    //    if (Mouse.current.leftButton.wasPressedThisFrame)
+    //    {
+    //        test.Add(GenerateFromPool());
+    //    }
+    //    if (Mouse.current.rightButton.wasPressedThisFrame)
+    //    {
+    //        ReturnToPool(test[0]);
+    //        test.Remove(test[0]);
+    //    }
+    //}
 
     //初期化
     //m_countの数　m_poolObjを　Instanciateを使う　（生成されたオブジェクトが　このオブジェクトを親にするように)
@@ -60,7 +60,12 @@ public class PoolManager : MonoBehaviour
     //関数を　値を返すものにする
     //格納したListから一個だけ抜き取って　返す
 
-    private GameObject GenerateFromPool()
+
+    /// <summary>
+    /// プールからオブジェクトを取り出す関数
+    /// </summary>
+    /// <returns>取り出したオブジェクト</returns>
+    public GameObject GenerateFromPool()
     {
         GameObject generateObj = null;
         foreach (GameObject obj in m_Pool)
@@ -81,7 +86,12 @@ public class PoolManager : MonoBehaviour
 
     //Returnの処理
     //返されたオブジェクトをSetActivefalseにもどして　Listに戻す
-    private void ReturnToPool(GameObject obj)
+
+    /// <summary>
+    /// オブジェクトをプールに戻す関数
+    /// </summary>
+    /// <param name="obj">戻したいオブジェクト</param>
+    public void ReturnToPool(GameObject obj)
     {
         obj.SetActive(false);
         m_Pool.Add(obj);
