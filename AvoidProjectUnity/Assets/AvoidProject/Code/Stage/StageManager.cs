@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class StageManager
+public class StageManager : MonoBehaviour
 {
-    private Vector2 m_center;
+    [SerializeField] private Vector2 m_center;
     private float m_limitRadius;
 
     public void Initialized(float radius)
@@ -21,4 +21,6 @@ public class StageManager
 
         return pos;
     }
+
+    //poolからオブジェクトを拾う？poolは使わず　この中で処理を行う
 }

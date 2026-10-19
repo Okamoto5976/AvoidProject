@@ -4,8 +4,8 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState
     {
-        Playing,
-        Stopping,
+        InPlay,
+        Pouse,
         Event,
         GameOver,
     }
