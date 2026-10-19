@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class InitializedManager : MonoBehaviour
 {
+    [SerializeField] private StageManager m_stageManager;
+
+    [SerializeField] private Movement m_playerMovement;
+
     private void Awake()
     {
         Initialized();
@@ -12,6 +16,10 @@ public class InitializedManager : MonoBehaviour
         //RuntimeData‚ğ~‚ë‚·
 
         //StageType‚ğó‚¯‚é
+
+        m_stageManager.Initialized(5f);
+
+        m_playerMovement.Initialized(m_stageManager);
 
         //Player‚Ì¶¬
         //RunTimeData‚à“n‚·

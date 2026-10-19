@@ -3,7 +3,14 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     private Rigidbody2D m_rd;
-    
+
+    private StageManager m_stageManager;
+
+    public void Initialized(StageManager manager)
+    {
+        m_stageManager = manager;
+    }
+
     private void Awake()
     {
         m_rd = GetComponent<Rigidbody2D>();
@@ -12,6 +19,11 @@ public class Movement : MonoBehaviour
     public void Move(Vector2 value , float speed)
     {
         m_rd.linearVelocity = new Vector2(value.x * speed, value.y * speed);
+    }
+
+    private void Update()
+    {
+        transform.position = m_stageManager.LimitMovement(transform.position);
     }
 
 }
