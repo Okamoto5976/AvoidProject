@@ -1,17 +1,34 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class PoolManager : MonoBehaviour
 {
+    [Header("プールオブジェクト生成元と生成数")]
     [SerializeField] private GameObject m_poolObj;
     [SerializeField] private int m_count;
 
-    private List<GameObject> m_Pool = new();
-    //EnumTypeの変数
+    [Header("確認用")]
+    [SerializeField] private List<GameObject> m_Pool = new();
+    [SerializeField] private List<GameObject> test;
 
     private void Awake()
     {
         Initialized();
+    }
+
+    private void Update()
+    {
+        //テスト
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            test.Add(GenerateFromPool());
+        }
+        if (Mouse.current.rightButton.wasPressedThisFrame)
+        {
+            ReturnToPool(test[0]);
+            test.Remove(test[0]);
+        }
     }
 
     //初期化
@@ -36,7 +53,7 @@ public class PoolManager : MonoBehaviour
         GameObject obj = Instantiate(m_poolObj, transform);
         //objにReturnPoolをつける　ここは後につくる
         obj.SetActive(false);
-        return obj; 
+        return obj;
     }
 
     //生成の処理
@@ -52,11 +69,13 @@ public class PoolManager : MonoBehaviour
             {
                 generateObj = obj;
                 m_Pool.Remove(generateObj);
+                generateObj.SetActive(true);
                 return generateObj;
             }
         }
         //もし足りなかった場合
-        generateObj = GenerateFromPool();
+        generateObj = GeneratePoolObject();
+        generateObj.SetActive(true);
         return generateObj;
     }
 
