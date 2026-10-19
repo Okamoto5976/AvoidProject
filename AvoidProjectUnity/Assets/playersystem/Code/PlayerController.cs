@@ -4,13 +4,15 @@ public class PlayerController : MonoBehaviour
 {
     private InputProvider m_inputProvider;
     private Rigidbody2D m_rd;
-    private float m_jumpForce = 5f;
+  
     private float m_moveSpeed = 5f;
     private float m_sprintSpeed = 10f;
     private bool m_isSprinting = false;
 
     private Vector2 m_velocity;
-    
+    private Movement m_movement;
+    private HpController m_hpController;
+
     private void Awake()
     {
         m_inputProvider = new InputProvider();
@@ -21,6 +23,8 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.OnInputRecover += InputRecover;
         m_inputProvider.OnInputAvoid += InputAvoid;
         m_rd = GetComponent<Rigidbody2D>();
+        m_movement = GetComponent<Movement>();
+        m_hpController = GetComponent<HpController>();
     }
 
     private void OnDisable()
@@ -48,7 +52,8 @@ public class PlayerController : MonoBehaviour
     {
         float speed = m_isSprinting ? m_sprintSpeed : m_moveSpeed;
 
-        m_rd.linearVelocity = new Vector2(m_velocity.x *  speed, m_velocity.y * speed);
+        //m_rd.linearVelocity = new Vector2(m_velocity.x *  speed, m_velocity.y * speed);
+        m_movement.Move(m_velocity, speed);
 
     }
 
@@ -60,6 +65,7 @@ public class PlayerController : MonoBehaviour
     {
         m_velocity = value;
     }
+
     private void InputInteract()
     {
         Debug.Log("インタラクト！");
@@ -75,5 +81,10 @@ public class PlayerController : MonoBehaviour
     private void InputAvoid()
     {
         Debug.Log("回避！");
+    }
+
+    public void Damage(int damage)
+    {
+        m_hpController.Damage(damage);
     }
 }
