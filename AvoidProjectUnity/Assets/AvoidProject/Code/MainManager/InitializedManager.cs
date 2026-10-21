@@ -26,6 +26,13 @@ public class InitializedManager : MonoBehaviour
     {
         //RuntimeDataを降ろす
 
+        //アルファ版
+        //HasTimeLimit
+        //TimeLimit
+        //回復薬
+        
+        //PlayerData(SO)
+
         //GameTypeを受け取る　制限時間か　討伐か
         //GameManagerの初期化
         m_gameManager.Initialized(m_hasTimeLimit, m_timeLimit);
