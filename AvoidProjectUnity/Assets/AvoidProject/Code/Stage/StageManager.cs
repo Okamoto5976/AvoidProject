@@ -5,7 +5,11 @@ public class StageManager : MonoBehaviour
     [SerializeField] private Vector2 m_center;
     private float m_limitRadius;
 
-    public void Initialized(float radius)
+    /// <summary>
+    /// ‰Šú‰»‚ÉŒÄ‚Ô 
+    /// </summary>
+    /// <param name="radius"></param>
+    public void Initialized(float radius)//ŒãXˆø”‚ª‘‚¦‚é‚æ‚¤‚È‚ç@•Ê‚²‚Æ‚ÉŠÖ”‚ğì‚é‚©@Class‚Å“n‚µ‚Ä‚ ‚°‚é
     {
         m_limitRadius = radius;
     }
