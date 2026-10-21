@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public enum SoundType
 {
     BGM,
-    SE
+    SE,
+    Master
 }
 
 public class AudioManager : MonoBehaviour
@@ -15,35 +16,50 @@ public class AudioManager : MonoBehaviour
     //音量はAudioMixerで制御する
     [SerializeField] private AudioMixer m_mixer;
 
+    //BGM
     [SerializeField] private string m_bgmParam = "BGMVolume";
-    [SerializeField] private string m_seParam = "SEVolume";
-
-    //音量調整用のスライダー
     [SerializeField] private Slider m_bgmSlider;
-    [SerializeField] private Slider m_seSlider;
-
-    //BGMを鳴らすAudioSource
     [SerializeField] private AudioSource m_bgmSource;
+
+    //SE
+    [SerializeField] private string m_seParam = "SEVolume";
+    [SerializeField] private Slider m_seSlider;
+    [SerializeField] private AudioSource m_seSource;
+
+    //MasterVolume
+    [SerializeField] private string m_masterParam = "MasterVolume";
+    [SerializeField] private Slider m_masterSlider;
+
 
     private Coroutine m_bgmFadeCoroutine;
 
-    private const float MinDecibel = -80f;
+    //音量設定
+    private const float MinDecibel = -50f;
 
     private Dictionary<SoundType, string> parameters;
     private Dictionary<SoundType, Slider> sliders;
+    private Dictionary<SoundType, AudioSource> sources;
 
     private void Awake()
     {
+        sources = new Dictionary<SoundType, AudioSource>
+        {
+            { SoundType.BGM, m_bgmSource },
+            { SoundType.SE,  m_seSource  }
+        };
+
         parameters = new Dictionary<SoundType, string>
         {
             { SoundType.BGM, m_bgmParam },
-            { SoundType.SE,  m_seParam  }
+            { SoundType.SE,  m_seParam  },
+            { SoundType.Master, m_masterParam }
         };
 
         sliders = new Dictionary<SoundType, Slider>
         {
             { SoundType.BGM, m_bgmSlider },
-            { SoundType.SE,  m_seSlider  }
+            { SoundType.SE,  m_seSlider  },
+            { SoundType.Master, m_masterSlider }
         };
     }
 
@@ -79,6 +95,8 @@ public class AudioManager : MonoBehaviour
             slider.SetValueWithoutNotify(clamped);
         }
     }
+
+    //現在の音量を返す
     public float GetVolume(SoundType type)
     {
         if (m_mixer != null
@@ -87,8 +105,6 @@ public class AudioManager : MonoBehaviour
         {
             return ToVolume(decibel);
         }
-
-        Debug.LogWarning($"AudioManager: {type} の音量を取得できません。MixerとExposeしたパラメータ名を確認してください", this);
         return 0f;
     }
 
@@ -97,22 +113,59 @@ public class AudioManager : MonoBehaviour
         SetVolume(type, GetVolume(type) - amount);
     }
 
+    //BGMのフェードアウトから次のBGMのフェードイン
     public void ChangeBGM(AudioClip nextClip, float fadeTime = 1f)
     {
         if (m_bgmSource == null) return;
 
         if (nextClip != null && m_bgmSource.clip == nextClip && m_bgmSource.isPlaying) return;
 
-        if (m_bgmFadeCoroutine != null)
-        {
-            StopCoroutine(m_bgmFadeCoroutine);
-        }
+        CancelBGMFade();
         m_bgmFadeCoroutine = StartCoroutine(ChangeBGMRoutine(nextClip, fadeTime));
     }
 
+    //BGMのフェードアウト
     public void FadeOutBGM(float fadeTime = 1f)
     {
         ChangeBGM(null, fadeTime);
+    }
+
+    //音源を止める
+    public void Stop(SoundType type)
+    {
+        if (type == SoundType.Master)
+        {
+            StopAll();
+            return;
+        }
+
+        if (type == SoundType.BGM)
+        {
+            CancelBGMFade();
+        }
+
+        if (sources.TryGetValue(type, out var source) && source != null)
+        {
+            source.Stop();
+            source.volume = 1f;
+        }
+    }
+
+    //全部の音源を止める
+    public void StopAll()
+    {
+        foreach (var type in sources.Keys)
+        {
+            Stop(type);
+        }
+    }
+
+    private void CancelBGMFade()
+    {
+        if (m_bgmFadeCoroutine == null) return;
+
+        StopCoroutine(m_bgmFadeCoroutine);
+        m_bgmFadeCoroutine = null;
     }
 
     private IEnumerator ChangeBGMRoutine(AudioClip nextClip, float fadeTime)
@@ -133,6 +186,7 @@ public class AudioManager : MonoBehaviour
 
         m_bgmFadeCoroutine = null;
     }
+
     private IEnumerator FadeBGM(float from, float to, float duration)
     {
         if (duration <= 0f)
