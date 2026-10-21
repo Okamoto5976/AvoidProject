@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 
 public class PoolManager : MonoBehaviour
 {
@@ -10,26 +9,11 @@ public class PoolManager : MonoBehaviour
 
     [Header("確認用")]
     [SerializeField] private List<GameObject> m_Pool = new();
-    //[SerializeField] private List<GameObject> test;
 
     private void Awake()
     {
         Initialized();
     }
-
-    //private void Update()
-    //{
-    //    //テスト
-    //    if (Mouse.current.leftButton.wasPressedThisFrame)
-    //    {
-    //        test.Add(GenerateFromPool());
-    //    }
-    //    if (Mouse.current.rightButton.wasPressedThisFrame)
-    //    {
-    //        ReturnToPool(test[0]);
-    //        test.Remove(test[0]);
-    //    }
-    //}
 
     //初期化
     //m_countの数　m_poolObjを　Instanciateを使う　（生成されたオブジェクトが　このオブジェクトを親にするように)
