@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI;
 
 public enum SoundType
 {
@@ -18,18 +17,15 @@ public class AudioManager : MonoBehaviour
 
     //BGM
     [SerializeField] private string m_bgmParam = "BGMVolume";
-    [SerializeField] private Slider m_bgmSlider;
     [SerializeField] private AudioSource m_bgmSource;
 
     //SE
     [SerializeField] private string m_seParam = "SEVolume";
-    [SerializeField] private Slider m_seSlider;
     [SerializeField] private AudioSource m_seSource;
+    [SerializeField] private int m_maxSESources = 16;
 
     //MasterVolume
     [SerializeField] private string m_masterParam = "MasterVolume";
-    [SerializeField] private Slider m_masterSlider;
-
 
     private Coroutine m_bgmFadeCoroutine;
 
@@ -37,17 +33,12 @@ public class AudioManager : MonoBehaviour
     private const float MinDecibel = -50f;
 
     private Dictionary<SoundType, string> parameters;
-    private Dictionary<SoundType, Slider> sliders;
-    private Dictionary<SoundType, AudioSource> sources;
+
+    //同時に鳴らすSE用のAudioSource（m_seSourceを1つ目として使う）
+    private readonly List<AudioSource> m_sePool = new List<AudioSource>();
 
     private void Awake()
     {
-        sources = new Dictionary<SoundType, AudioSource>
-        {
-            { SoundType.BGM, m_bgmSource },
-            { SoundType.SE,  m_seSource  }
-        };
-
         parameters = new Dictionary<SoundType, string>
         {
             { SoundType.BGM, m_bgmParam },
@@ -55,30 +46,10 @@ public class AudioManager : MonoBehaviour
             { SoundType.Master, m_masterParam }
         };
 
-        sliders = new Dictionary<SoundType, Slider>
+        if (m_seSource != null)
         {
-            { SoundType.BGM, m_bgmSlider },
-            { SoundType.SE,  m_seSlider  },
-            { SoundType.Master, m_masterSlider }
-        };
-    }
-
-    private void Start()
-    {
-        foreach (var pair in sliders)
-        {
-            BindSlider(pair.Key, pair.Value);
+            m_sePool.Add(m_seSource);
         }
-    }
-
-    private void BindSlider(SoundType type, Slider slider)
-    {
-        if (slider == null) return;
-
-        slider.minValue = 0f;
-        slider.maxValue = 1f;
-        slider.SetValueWithoutNotify(GetVolume(type));
-        slider.onValueChanged.AddListener(value => SetVolume(type, value));
     }
 
     public void SetVolume(SoundType type, float volume)
@@ -88,11 +59,6 @@ public class AudioManager : MonoBehaviour
         if (m_mixer != null && parameters.TryGetValue(type, out var param))
         {
             m_mixer.SetFloat(param, ToDecibel(clamped));
-        }
-
-        if (sliders.TryGetValue(type, out var slider) && slider != null)
-        {
-            slider.SetValueWithoutNotify(clamped);
         }
     }
 
@@ -111,6 +77,38 @@ public class AudioManager : MonoBehaviour
     public void DecreaseVolume(SoundType type, float amount)
     {
         SetVolume(type, GetVolume(type) - amount);
+    }
+
+    //SEを再生する（volume/pitch/loopはAudioDataの設定を使う）
+    public void PlaySE(AudioData data)
+    {
+        if (data == null || data.clip == null) return;
+
+        AudioSource source = GetFreeSESource();
+        if (source == null) return;
+
+        source.clip = data.clip;
+        source.volume = Mathf.Clamp01(data.volume);
+        source.pitch = data.pitch;
+        source.loop = data.loop;
+        source.Play();
+    }
+
+    //空いているSE用AudioSourceを返す。無ければ上限まで追加する
+    private AudioSource GetFreeSESource()
+    {
+        foreach (var source in m_sePool)
+        {
+            if (source != null && !source.isPlaying) return source;
+        }
+
+        if (m_seSource == null || m_sePool.Count >= m_maxSESources) return null;
+
+        var added = gameObject.AddComponent<AudioSource>();
+        added.playOnAwake = false;
+        added.outputAudioMixerGroup = m_seSource.outputAudioMixerGroup;
+        m_sePool.Add(added);
+        return added;
     }
 
     //BGMのフェードアウトから次のBGMのフェードイン
@@ -133,31 +131,41 @@ public class AudioManager : MonoBehaviour
     //音源を止める
     public void Stop(SoundType type)
     {
-        if (type == SoundType.Master)
+        switch (type)
         {
-            StopAll();
-            return;
-        }
+            case SoundType.Master:
+                StopAll();
+                break;
 
-        if (type == SoundType.BGM)
-        {
-            CancelBGMFade();
-        }
+            case SoundType.BGM:
+                CancelBGMFade();
+                StopSource(m_bgmSource);
+                break;
 
-        if (sources.TryGetValue(type, out var source) && source != null)
-        {
-            source.Stop();
-            source.volume = 1f;
+            case SoundType.SE:
+                foreach (var source in m_sePool)
+                {
+                    StopSource(source);
+                }
+                break;
         }
     }
 
     //全部の音源を止める
     public void StopAll()
     {
-        foreach (var type in sources.Keys)
-        {
-            Stop(type);
-        }
+        Stop(SoundType.BGM);
+        Stop(SoundType.SE);
+    }
+
+    private static void StopSource(AudioSource source)
+    {
+        if (source == null) return;
+
+        source.Stop();
+        source.volume = 1f;
+        source.pitch = 1f;
+        source.loop = false;
     }
 
     private void CancelBGMFade()

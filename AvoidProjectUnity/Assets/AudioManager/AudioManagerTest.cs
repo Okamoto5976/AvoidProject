@@ -9,6 +9,10 @@ public class AudioManagerTest : MonoBehaviour
     [Header("BGM切り替えのテスト")]
     [SerializeField] private AudioClip m_nextBGM;
     [SerializeField] private float m_fadeTime = 1f;
+
+    [Header("SE再生のテスト")]
+    [SerializeField] private AudioData m_testSE;
+
     private void Update()
     {
         if (Keyboard.current == null) return;
@@ -19,6 +23,7 @@ public class AudioManagerTest : MonoBehaviour
         if (Keyboard.current.cKey.wasPressedThisFrame) m_audioManager.Stop(SoundType.SE);
         if (Keyboard.current.zKey.wasPressedThisFrame) m_audioManager.StopAll();
         if (Keyboard.current.mKey.wasPressedThisFrame) m_audioManager.ChangeBGM(m_nextBGM, m_fadeTime);
+        if (Keyboard.current.sKey.wasPressedThisFrame) m_audioManager.PlaySE(m_testSE);
     }
 
     private void DecreaseVolume(SoundType type)
