@@ -5,19 +5,30 @@ public class InitializedManager : MonoBehaviour
     //InitializedValue
     [Header("InitializedValue : Test")]
 
+    //GameManager
     [SerializeField] private bool m_hasTimeLimit;
     [SerializeField] private float m_timeLimit;
+
+    //StartManager
+    [SerializeField] private float m_stageRadius = 5f;
 
     //GameObjectReference
     [Header("GameObjectReference")]
     [SerializeField] private GameManager m_gameManager;
     [SerializeField] private StageManager m_stageManager;
 
+    [SerializeField] private GameObject m_player;
+    [SerializeField] private GameObject m_enemy;
+
+
+    [SerializeField] private CameraManager m_cameraManager;
+
     [SerializeField] private Movement m_playerMovement;
+
 
     [SerializeField] private DebugManager m_debugManager;
 
-    private void Awake()
+    private void Start()
     {
         Initialized();
     }
@@ -38,7 +49,7 @@ public class InitializedManager : MonoBehaviour
         m_gameManager.Initialized(m_hasTimeLimit, m_timeLimit);
 
         //StageManager‰Šú‰»
-        m_stageManager.Initialized(5f);
+        m_stageManager.Initialized(m_stageRadius);
 
 
 
@@ -53,6 +64,9 @@ public class InitializedManager : MonoBehaviour
         //Runtime‚©‚ç~‚ë‚µ‚½“G‚Ì¶¬
         //“G‚Ì‰Šú‰»iRunTime‚Ì‚à‚Ì‚ğ‰Šú‰»j
         //Enemy‚ÌDisable
+
+        //Camera‚Ì‰Šú‰»
+        m_cameraManager.Initialized(m_player, m_enemy);
 
         //‚»‚ê‚¼‚êPool‚ª‚ ‚é‚Ì‚Å@‚ ‚Á‚½Pool‚ğŠeManager‚É“n‚·
 
