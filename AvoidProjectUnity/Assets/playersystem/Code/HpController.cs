@@ -1,11 +1,10 @@
 using UnityEngine;
-
-public class HpController : MonoBehaviour
+public abstract class HpController : MonoBehaviour
 {
     private int m_maxHp = 100;
-  
-    
-     
+
+    public int MaxHp {  get { return m_maxHp; } }
+
     public void Damage(int damage)
     {
         m_maxHp -= damage;
@@ -15,10 +14,8 @@ public class HpController : MonoBehaviour
         }
     }
 
-    private void Dead()
+    protected virtual void Dead()
     {
-        Debug.Log("Player is dead");
+        Debug.Log("Entity is dead");
     }
-
-
 }
