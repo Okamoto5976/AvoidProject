@@ -7,7 +7,7 @@ public class AudioManagerTest : MonoBehaviour
     [SerializeField] private float m_step = 0.1f;
 
     [Header("BGM切り替えのテスト")]
-    [SerializeField] private AudioClip m_nextBGM;
+    [SerializeField] private AudioData m_nextBGM;
     [SerializeField] private float m_fadeTime = 1f;
 
     [Header("SE再生のテスト")]

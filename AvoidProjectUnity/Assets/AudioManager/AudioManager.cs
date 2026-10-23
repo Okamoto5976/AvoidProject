@@ -112,14 +112,16 @@ public class AudioManager : MonoBehaviour
     }
 
     //BGMのフェードアウトから次のBGMのフェードイン
-    public void ChangeBGM(AudioClip nextClip, float fadeTime = 1f)
+    //volume/pitch/loopはAudioDataの設定をAudioSourceに反映する（nullならフェードアウトのみ）
+    public void ChangeBGM(AudioData nextData, float fadeTime = 1f)
     {
         if (m_bgmSource == null) return;
 
-        if (nextClip != null && m_bgmSource.clip == nextClip && m_bgmSource.isPlaying) return;
+        if (nextData != null && nextData.clip != null
+            && m_bgmSource.clip == nextData.clip && m_bgmSource.isPlaying) return;
 
         CancelBGMFade();
-        m_bgmFadeCoroutine = StartCoroutine(ChangeBGMRoutine(nextClip, fadeTime));
+        m_bgmFadeCoroutine = StartCoroutine(ChangeBGMRoutine(nextData, fadeTime));
     }
 
     //BGMのフェードアウト
@@ -176,7 +178,7 @@ public class AudioManager : MonoBehaviour
         m_bgmFadeCoroutine = null;
     }
 
-    private IEnumerator ChangeBGMRoutine(AudioClip nextClip, float fadeTime)
+    private IEnumerator ChangeBGMRoutine(AudioData nextData, float fadeTime)
     {
         if (m_bgmSource.isPlaying)
         {
@@ -184,12 +186,14 @@ public class AudioManager : MonoBehaviour
         }
         m_bgmSource.Stop();
 
-        if (nextClip != null)
+        if (nextData != null && nextData.clip != null)
         {
-            m_bgmSource.clip = nextClip;
+            m_bgmSource.clip = nextData.clip;
+            m_bgmSource.pitch = nextData.pitch;
+            m_bgmSource.loop = nextData.loop;
             m_bgmSource.volume = 0f;
             m_bgmSource.Play();
-            yield return FadeBGM(0f, 1f, fadeTime);
+            yield return FadeBGM(0f, Mathf.Clamp01(nextData.volume), fadeTime);
         }
 
         m_bgmFadeCoroutine = null;
