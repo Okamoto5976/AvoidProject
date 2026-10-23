@@ -15,6 +15,7 @@ public class InitializedManager : MonoBehaviour
     //GameObjectReference
     [Header("GameObjectReference")]
     [SerializeField] private GameManager m_gameManager;
+    [SerializeField] private MenuManager m_menuManager;
     [SerializeField] private StageManager m_stageManager;
 
     [SerializeField] private GameObject m_player;
@@ -47,6 +48,10 @@ public class InitializedManager : MonoBehaviour
         //GameType‚ğó‚¯æ‚é@§ŒÀŠÔ‚©@“¢”°‚©
         //GameManager‚Ì‰Šú‰»
         m_gameManager.Initialized(m_hasTimeLimit, m_timeLimit);
+
+        //MenuManager‚Ì‰Šú‰»
+        m_menuManager.Initialized();
+        m_menuManager.SetGameManager(m_gameManager);
 
         //StageManager‰Šú‰»
         m_stageManager.Initialized(m_stageRadius);
