@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6902766686388754760}
   - component: {fileID: 8846246836111008300}
   - component: {fileID: 5076684267000500398}
+  - component: {fileID: 966426674903965639}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -128,3 +129,15 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &966426674903965639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825385019038204349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 680b92b88ca15cb4ab163bb808dccdfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReturnPool

@@ -7,8 +7,7 @@ public class PoolManager : MonoBehaviour
     [SerializeField] private GameObject m_poolObj;
     [SerializeField] private int m_count;
 
-    [Header("Šm”F—p")]
-    [SerializeField] private List<GameObject> m_Pool = new();
+    private List<GameObject> m_Pool = new();
 
     private void Awake()
     {

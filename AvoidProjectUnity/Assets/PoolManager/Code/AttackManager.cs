@@ -3,8 +3,7 @@ using UnityEngine;
 public enum ShapeType
 {
     Box,
-    Circle,
-    //Capsule
+    Circle
 }
 
 [System.Serializable]
