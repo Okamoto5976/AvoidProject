@@ -30,12 +30,21 @@ public class MenuManager : MonoBehaviour
     //GoreController
 
     //InputProvider
+    private InputProvider m_inputProvider;
+
+    private void OnDisable()
+    {
+        m_inputProvider.OnInputMenu -= InputMenu;
+        m_inputProvider.Disable();
+    }
 
     public void Initialized()
     {
         //OptionSave‚©‚çŒ»İİ’è‚³‚ê‚Ä‚¢‚éVolume‚ğMixer‚ÆSlider‚Éİ’è
 
         m_optionSaveClass = new();
+        m_inputProvider = new();
+        m_inputProvider.OnInputMenu += InputMenu;
 
         OptionSaveData data = m_optionSaveClass.LoadOptionData();
 
@@ -57,6 +66,7 @@ public class MenuManager : MonoBehaviour
         SetValueOfSlider(m_mixerSEName, m_seSlider);
 
     }
+
 
     private void SetValueOfSlider(string name, Slider slider)
     {
@@ -124,6 +134,11 @@ public class MenuManager : MonoBehaviour
         data.m_seVolume = seValue;
 
         m_optionSaveClass.SaveOptionData(data);
+    }
+
+    public void InputMenu()
+    {
+
     }
 
     public void OnOpenMenu()

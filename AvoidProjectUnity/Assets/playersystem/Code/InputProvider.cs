@@ -16,6 +16,7 @@ public class InputProvider
     public event Action OnInputAttack;
     public event Action OnInputRecover;
     public event Action OnInputAvoid;
+    public event Action OnInputMenu;
 
     public InputProvider()
     {
@@ -30,6 +31,7 @@ public class InputProvider
         m_action.Player.Attack.performed += OnAttack;
         m_action.Player.Recover.performed += OnRecover;
         m_action.Player.Avoid.performed += OnAvoid;
+        m_action.UI.Menu.performed += OnMenu;
     }
 
     public void Disable()
@@ -64,4 +66,9 @@ public class InputProvider
     {
         OnInputAvoid?.Invoke();
     }   
+
+    private void OnMenu(InputAction.CallbackContext context)
+    {
+        OnInputMenu?.Invoke();
+    }
 }
