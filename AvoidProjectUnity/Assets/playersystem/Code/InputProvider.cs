@@ -18,6 +18,7 @@ public class InputProvider
     public event Action OnInputAvoid;
     public event System.Action<bool> OnInputInteractHold;
     public event Action<bool> OnInputRecoverHold;
+    public event Action OnInputMenu;
 
     public InputProvider()
     {
@@ -36,6 +37,7 @@ public class InputProvider
         m_action.Player.Recover.started += OnRecoverHold;
         m_action.Player.Recover.canceled += OnRecoverHold;
         m_action.Player.Avoid.performed += OnAvoid;
+        m_action.UI.Menu.performed += OnMenu;
     }
 
     public void Disable()
@@ -77,5 +79,10 @@ public class InputProvider
     private void OnRecoverHold(InputAction.CallbackContext context)
     {
         OnInputRecoverHold?.Invoke(context.started);
+    }   
+
+    private void OnMenu(InputAction.CallbackContext context)
+    {
+        OnInputMenu?.Invoke();
     }
 }
