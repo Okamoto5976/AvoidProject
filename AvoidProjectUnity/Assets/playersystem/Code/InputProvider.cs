@@ -16,6 +16,8 @@ public class InputProvider
     public event Action OnInputAttack;
     public event Action OnInputRecover;
     public event Action OnInputAvoid;
+    public event System.Action<bool> OnInputInteractHold;
+    public event Action<bool> OnInputRecoverHold;
 
     public InputProvider()
     {
@@ -25,10 +27,14 @@ public class InputProvider
         m_action.Player.Move.performed += OnMove;
         m_action.Player.Move.canceled += OnMove;
         m_action.Player.Interact.performed += OnInteract;
+        m_action.Player.Interact.started += OnInteractHold;
+        m_action.Player.Interact.canceled += OnInteractHold;
         m_action.Player.Sprint.performed += OnSprint;
         m_action.Player.Sprint.canceled += OnSprint;
         m_action.Player.Attack.performed += OnAttack;
         m_action.Player.Recover.performed += OnRecover;
+        m_action.Player.Recover.started += OnRecoverHold;
+        m_action.Player.Recover.canceled += OnRecoverHold;
         m_action.Player.Avoid.performed += OnAvoid;
     }
 
@@ -63,5 +69,13 @@ public class InputProvider
     private void OnAvoid(InputAction.CallbackContext context)
     {
         OnInputAvoid?.Invoke();
-    }   
+    }
+    private void OnInteractHold(InputAction.CallbackContext context)
+    {
+        OnInputInteractHold?.Invoke(context.started);
+    }
+    private void OnRecoverHold(InputAction.CallbackContext context)
+    {
+        OnInputRecoverHold?.Invoke(context.started);
+    }
 }

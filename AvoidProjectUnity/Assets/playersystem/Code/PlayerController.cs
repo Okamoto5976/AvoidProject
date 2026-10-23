@@ -6,35 +6,42 @@ public class PlayerController : MonoBehaviour
     private InputProvider m_inputProvider;
     private Rigidbody2D m_rd;
   
-    private float m_moveSpeed = 5f;
-    private float m_sprintSpeed = 10f;
     private bool m_isSprinting = false;
     private bool m_isInvincible = false;
     private bool m_isAvoiding = false;
+    private bool m_isInteracting = false;
+    private bool m_isWaitingAvoid = false;
+    private bool m_isRecovering = false;
 
+    private float m_moveSpeed = 5f;
+    private float m_sprintSpeed = 10f;
     private float m_avoidDelay = 5f / 60f; // 回避開始までのフレーム数
     private float m_avoidDuration = 0.2f;
     private float m_avoidSpeed = 15f;
+    private float m_recoverMoveSpeed = 2f;
 
     private int m_avoidFrameCount = 0;
-    private bool m_isWaitingAvoid = false;
-
+    
     private Vector2 m_velocity;
     private Movement m_movement;
     private HpController m_hpController;
+    private PlayerInteract m_playerInteract;
 
     private void Awake()
     {
         m_inputProvider = new InputProvider();
+        m_playerInteract = new PlayerInteract();
+        m_rd = GetComponent<Rigidbody2D>();
+        m_movement = GetComponent<Movement>();
+        m_hpController = GetComponent<HpController>();
         m_inputProvider.OnInputMove += InputMove;
         m_inputProvider.OnInputInteract += InputInteract;
         m_inputProvider.OnInputSprint += InputSprint;
         m_inputProvider.OnInputAttack += InputAttack;
         m_inputProvider.OnInputRecover += InputRecover;
         m_inputProvider.OnInputAvoid += InputAvoid;
-        m_rd = GetComponent<Rigidbody2D>();
-        m_movement = GetComponent<Movement>();
-        m_hpController = GetComponent<HpController>();
+        m_inputProvider.OnInputInteractHold += InputInteractHold;
+        m_inputProvider.OnInputRecoverHold += InputRecoverHold;
     }
 
     private void OnDisable()
@@ -45,23 +52,29 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.OnInputAttack -= InputAttack;
         m_inputProvider.OnInputRecover -= InputRecover;
         m_inputProvider.OnInputAvoid -= InputAvoid;
+        m_inputProvider.OnInputInteractHold -= InputInteractHold;
+        m_inputProvider.OnInputRecoverHold -= InputRecoverHold;
         m_inputProvider.Disable();
     }
 
     private void Update()
     {
-        if (!m_isWaitingAvoid)
+        if (m_isWaitingAvoid)
         {
-            return;
+            m_avoidFrameCount++;
+
+            if (m_avoidFrameCount >= 5)
+            {
+                m_isWaitingAvoid = false;
+                StartCoroutine(AvoidCoroutine());
+            }
         }
+       
+        
 
-        m_avoidFrameCount++;
-
-        if (m_avoidFrameCount >= 5)
+        if (m_isInteracting)
         {
-            m_isWaitingAvoid = false;
-
-            StartCoroutine(AvoidCoroutine());
+            //m_playerInteract.Interact();
         }
     }
 
@@ -77,7 +90,17 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        float speed = m_isSprinting ? m_sprintSpeed : m_moveSpeed;
+        float speed = m_moveSpeed;
+
+        if (m_isSprinting)
+        {
+            speed = m_sprintSpeed;
+        }
+
+        if (m_isRecovering)
+        {
+            speed = m_recoverMoveSpeed;
+        }
         m_movement.Move(m_velocity, speed);
 
     }
@@ -97,6 +120,7 @@ public class PlayerController : MonoBehaviour
     }
     private void InputAttack()
     {
+        m_isRecovering = false;
         Debug.Log("攻撃！",this);
     }
     private void InputRecover()
@@ -109,6 +133,8 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+
+        m_isRecovering = false;
 
         m_isWaitingAvoid = true;
         m_avoidFrameCount = 0;
@@ -124,7 +150,29 @@ public class PlayerController : MonoBehaviour
         m_hpController.Damage(damage);
     }
 
-   
+    private void InputInteractHold(bool isHolding)
+    {
+        m_isInteracting = isHolding;
+        if (isHolding)
+        {
+            m_isRecovering = false;
+        }
+    }
+    private void InputRecoverHold(bool isHolding)
+    {
+        m_isRecovering = isHolding;
+
+        if (m_isRecovering)
+        {
+            Debug.Log("回復開始！", this);
+        }
+        else
+        {
+            Debug.Log("回復終了！", this);
+        }
+    }
+
+
     private IEnumerator AvoidCoroutine()
     {
         m_isAvoiding = true;
