@@ -8,8 +8,7 @@ public class AttackViewManager : MonoBehaviour
     [SerializeField] private Sprite m_Box;
     [SerializeField] private Sprite m_Circle;
 
-    //Šm”F—p
-    [SerializeField] private List<TimedAction> m_TimedActions;
+    private List<TimedAction> m_TimedActions = new();
 
     private void Update()
     {
@@ -19,7 +18,8 @@ public class AttackViewManager : MonoBehaviour
             if (m_TimedActions[i].Timer < 0)
             {
                 //Debug.Log("UŒ‚—\”ñ•\Ž¦");
-                m_AttackViewPool.ReturnToPool(m_TimedActions[i].Object);
+                ReturnPool returnPool = m_TimedActions[i].Object.GetComponent<ReturnPool>();
+                returnPool.Return();
                 m_AttackManager.EndAttackView(m_TimedActions[i].Attack);
                 m_TimedActions[i] = m_TimedActions[m_TimedActions.Count - 1];
                 m_TimedActions.RemoveAt(m_TimedActions.Count - 1);
@@ -45,6 +45,15 @@ public class AttackViewManager : MonoBehaviour
                 spriteRenderer.sprite = m_Circle;
                 break;
         }
+
+        ReturnPool returnPool;
+        if (!obj.TryGetComponent<ReturnPool>(out returnPool))
+        {
+            Debug.Log("ReturnPool‚ª‚È‚©‚Á‚½‚½‚ß’Ç‰Á‚µ‚Ü‚µ‚½");
+            returnPool = obj.AddComponent<ReturnPool>();
+        }
+        returnPool.SetReturnPool(m_AttackViewPool);
+
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;
         TimedAction action = new();

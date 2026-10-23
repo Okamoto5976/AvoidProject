@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class ColliderManager : MonoBehaviour
 {
-    [SerializeField] private PoolManager m_BoxColliderPool;
-    [SerializeField] private PoolManager m_CiecleColliderPool;
+    [SerializeField] private ColliderMediationPool m_MediationPool;
     [SerializeField] private Rigidbody2D m_Player;
 
-    //確認用
-    [SerializeField] private List<TimedAction> m_TimedActions;
+    private List<TimedAction> m_TimedActions = new();
 
     private void Update()
     {
@@ -18,23 +16,11 @@ public class ColliderManager : MonoBehaviour
             if (m_TimedActions[i].Timer < 0)
             {
                 //Debug.Log("コライダー無効化");
-                ReturnCollider(m_TimedActions[i]);
+                ReturnPool returnPool = m_TimedActions[i].Object.GetComponent<ReturnPool>();
+                returnPool.Return();
                 m_TimedActions[i] = m_TimedActions[m_TimedActions.Count - 1];
                 m_TimedActions.RemoveAt(m_TimedActions.Count - 1);
             }
-        }
-    }
-
-    private void ReturnCollider(TimedAction action)
-    {
-        switch (action.Attack.ShapeType)
-        {
-            case ShapeType.Box:
-                m_BoxColliderPool.ReturnToPool(action.Object);
-                break;
-            case ShapeType.Circle:
-                m_CiecleColliderPool.ReturnToPool(action.Object);
-                break;
         }
     }
 
@@ -46,21 +32,18 @@ public class ColliderManager : MonoBehaviour
     {
         //Debug.Log("コライダー有効化");
         GameObject obj = null;
-        switch (attack.ShapeType)
-        {
-            case ShapeType.Box:
-                obj = m_BoxColliderPool.GenerateFromPool();
-                //BoxCollider2D boxCollider = obj.GetComponent<BoxCollider2D>();
-                //boxCollider.size = attack.Size;
-                break;
-            case ShapeType.Circle:
-                obj = m_CiecleColliderPool.GenerateFromPool();
-                //CircleCollider2D circleCollider2D = obj.GetComponent<CircleCollider2D>();
-                //circleCollider2D.radius = attack.Size.x / 2;
-                break;
-        }
+        PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
+        obj = pool.GenerateFromPool();
         if (obj == null) return;
 
+        ReturnPool returnPool;
+        if (!obj.TryGetComponent<ReturnPool>(out returnPool))
+        {
+            Debug.Log("ReturnPoolがなかったため追加しました");
+            returnPool = obj.AddComponent<ReturnPool>();
+        }
+        returnPool.SetReturnPool(pool);
+        
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;
         TimedAction action = new();
