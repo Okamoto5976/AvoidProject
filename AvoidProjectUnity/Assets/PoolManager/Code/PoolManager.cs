@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PoolManager : MonoBehaviour
 {
@@ -8,6 +8,8 @@ public class PoolManager : MonoBehaviour
     [SerializeField] private int m_count;
 
     private List<GameObject> m_Pool = new();
+
+    private PoolManager m_PoolManager;
 
     private void Awake()
     {
@@ -24,6 +26,7 @@ public class PoolManager : MonoBehaviour
 
     private void Initialized()
     {
+        m_PoolManager = GetComponent<PoolManager>();
         //for分でカウントの分だけ
         for (int i = 0; i < m_count; i++)
         {
@@ -35,6 +38,13 @@ public class PoolManager : MonoBehaviour
     {
         GameObject obj = Instantiate(m_poolObj, transform);
         //objにReturnPoolをつける　ここは後につくる
+        ReturnPool returnPool;
+        if (!obj.TryGetComponent<ReturnPool>(out returnPool))
+        {
+            Debug.Log("ReturnPoolがなかったため追加しました");
+            returnPool = obj.AddComponent<ReturnPool>();
+        }
+        returnPool.SetReturnPool(m_PoolManager);
         obj.SetActive(false);
         return obj;
     }

@@ -35,14 +35,6 @@ public class ColliderManager : MonoBehaviour
         PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
         obj = pool.GenerateFromPool();
         if (obj == null) return;
-
-        ReturnPool returnPool;
-        if (!obj.TryGetComponent<ReturnPool>(out returnPool))
-        {
-            Debug.Log("ReturnPool‚ª‚È‚©‚Á‚½‚½‚ß’Ç‰Á‚µ‚Ü‚µ‚½");
-            returnPool = obj.AddComponent<ReturnPool>();
-        }
-        returnPool.SetReturnPool(pool);
         
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;

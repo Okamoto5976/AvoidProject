@@ -13,14 +13,6 @@ public class ParticleManager : MonoBehaviour
         PoolManager pool = m_MediationPool.GetParticlePool(type);
         GameObject particle = pool.GenerateFromPool();
 
-        ReturnPool returnPool;
-        if (!particle.TryGetComponent<ReturnPool>(out returnPool))
-        {
-            Debug.Log("ReturnPool‚ª‚È‚©‚Á‚½‚½‚ß’Ç‰Á‚µ‚Ü‚µ‚½");
-            returnPool = particle.AddComponent<ReturnPool>();
-        }
-
-        returnPool.SetReturnPool(pool);
         ParticleObject particleObject = particle.GetComponent<ParticleObject>();
         particleObject.Initialize(duration);
     }
