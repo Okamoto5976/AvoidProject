@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class ReturnPool : MonoBehaviour
 {
     private PoolManager m_PoolManager;
