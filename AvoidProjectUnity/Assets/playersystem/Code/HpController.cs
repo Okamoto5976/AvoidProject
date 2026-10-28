@@ -1,6 +1,7 @@
 using UnityEngine;
 public abstract class HpController : MonoBehaviour
 {
+    
     private int m_maxHp = 100;
 
     public int MaxHp {  get { return m_maxHp; } }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3403618064274717878}
   - component: {fileID: 7722220384123537765}
   - component: {fileID: 3972608315360122793}
+  - component: {fileID: 8326170368062990274}
   - component: {fileID: 4960408359565414131}
   m_Layer: 0
   m_Name: Player
@@ -59,6 +60,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94478c3e5e7ece342abacecaa9acad1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
+--- !u!114 &8326170368062990274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2953645378532087243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 926fb9da1e4a0df4e98425f5b7045984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHp
 --- !u!50 &4960408359565414131
 Rigidbody2D:
   serializedVersion: 5

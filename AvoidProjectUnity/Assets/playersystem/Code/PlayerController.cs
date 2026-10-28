@@ -3,16 +3,22 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
-    private InputProvider m_inputProvider;
+    //component or class
     private Rigidbody2D m_rd;
+    private Movement m_movement;
+    private HpController m_hpController;
+
+    private InputProvider m_inputProvider;
+    private PlayerInteract m_playerInteract;
   
+    //InputRelated
     private bool m_isSprinting = false;
-    private bool m_isInvincible = false;
     private bool m_isAvoiding = false;
     private bool m_isInteracting = false;
     private bool m_isWaitingAvoid = false;
     private bool m_isRecovering = false;
 
+    //PlayerStatus
     private float m_moveSpeed = 5f;
     private float m_sprintSpeed = 10f;
     private float m_avoidDelay = 5f / 60f; // 回避開始までのフレーム数
@@ -23,9 +29,9 @@ public class PlayerController : MonoBehaviour
     private int m_avoidFrameCount = 0;
     
     private Vector2 m_velocity;
-    private Movement m_movement;
-    private HpController m_hpController;
-    private PlayerInteract m_playerInteract;
+
+    private bool m_isInvincible = false;
+    private bool m_hasWeapon = false;
 
     private void Awake()
     {
@@ -221,5 +227,10 @@ public class PlayerController : MonoBehaviour
         m_isAvoiding = false;
 
         Debug.Log("回避終了・無敵解除！", this);  
+    }
+
+    public void SetHasWeapon(bool value)
+    {
+        m_hasWeapon = value;
     }
 }
