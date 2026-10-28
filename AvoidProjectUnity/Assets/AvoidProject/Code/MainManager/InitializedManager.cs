@@ -12,6 +12,8 @@ public class InitializedManager : MonoBehaviour
     //StartManager
     [SerializeField] private float m_stageRadius = 5f;
 
+    [SerializeField] private int m_stageWeaponCount = 4;
+
     //GameObjectReference
     [Header("GameObjectReference")]
     [SerializeField] private GameManager m_gameManager;
@@ -34,6 +36,9 @@ public class InitializedManager : MonoBehaviour
         Initialize();
     }
 
+    //別のスクリプトを渡すとき　そのスクリプトは初期化を終えてるかを見る
+    //GameManagerを初期化後に　StageManagerに渡すような
+
     private void Initialize()//Event設定があるなら　解除の設定もここで？
     {
         //RuntimeDataを降ろす
@@ -54,7 +59,9 @@ public class InitializedManager : MonoBehaviour
         m_menuManager.SetGameManager(m_gameManager);
 
         //StageManager初期化
-        m_stageManager.Initialize(m_stageRadius);
+        m_stageManager.Initialize(m_gameManager);
+        m_stageManager.StageRadiusInitialize(m_stageRadius);
+        m_stageManager.StageWeaponInitialize(m_stageWeaponCount);
 
 
 
@@ -84,8 +91,13 @@ public class InitializedManager : MonoBehaviour
 
         //GameStartDirectorを呼ぶ
 
+
+        //------------以下　GameStartDirector ---------------------
         //仮でGameStart
+        m_stageManager.GenerateStageWeapon();
+
         m_gameManager.StartGame();
+        
     }
 
     //討伐時にクリア判定をする必要がある　EnemyManagerが敵の死亡を確認するべき

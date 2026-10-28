@@ -403,6 +403,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
   m_center: {x: 0, y: 0}
+  m_weaponSwordPrefab: {fileID: 8726903115851776322, guid: dd023c19bd3748d41b51cfcb93754e8a, type: 3}
+  m_regenerateWeaponTimeValue: 10
 --- !u!4 &432417507
 Transform:
   m_ObjectHideFlags: 0
@@ -4125,6 +4127,7 @@ MonoBehaviour:
   m_hasTimeLimit: 1
   m_timeLimit: 60
   m_stageRadius: 20
+  m_stageWeaponCount: 4
   m_gameManager: {fileID: 503960966}
   m_menuManager: {fileID: 490510300}
   m_stageManager: {fileID: 432417506}
