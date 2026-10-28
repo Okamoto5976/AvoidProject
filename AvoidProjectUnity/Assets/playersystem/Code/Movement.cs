@@ -6,7 +6,7 @@ public class Movement : MonoBehaviour
 
     private StageManager m_stageManager;
 
-    public void Initialized(StageManager manager)
+    public void Initialize(StageManager manager)
     {
         m_stageManager = manager;
     }

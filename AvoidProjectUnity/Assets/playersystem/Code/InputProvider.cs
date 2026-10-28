@@ -6,24 +6,23 @@ public class InputProvider
 {
     private InputSystem_Actions m_action;
 
+    //Input Player
     private Vector2 m_inputMove;
-
-    
-
     public event Action<Vector2> OnInputMove;
     public event Action OnInputInteract;
     public event Action<bool> OnInputSprint;
     public event Action OnInputAttack;
     public event Action OnInputRecover;
     public event Action OnInputAvoid;
-    public event System.Action<bool> OnInputInteractHold;
+    public event Action<bool> OnInputInteractHold;
     public event Action<bool> OnInputRecoverHold;
+
+    //Input UI
     public event Action OnInputMenu;
 
     public InputProvider()
     {
         m_action = new InputSystem_Actions();
-        m_action.Enable();
 
         m_action.Player.Move.performed += OnMove;
         m_action.Player.Move.canceled += OnMove;
@@ -37,12 +36,29 @@ public class InputProvider
         m_action.Player.Recover.started += OnRecoverHold;
         m_action.Player.Recover.canceled += OnRecoverHold;
         m_action.Player.Avoid.performed += OnAvoid;
+
+
         m_action.UI.Menu.performed += OnMenu;
     }
 
-    public void Disable()
+    public void PlayerEnable()
     {
-        m_action.Disable();
+        m_action.Player.Enable();
+    }
+
+    public void PlayerDisable()
+    {
+        m_action.Player.Disable();
+    }
+
+    public void UIEnable()
+    {
+        m_action.UI.Enable();
+    }
+
+    public void UIDisable()
+    {
+        m_action.UI.Disable();
     }
 
     private void OnMove(InputAction.CallbackContext context)

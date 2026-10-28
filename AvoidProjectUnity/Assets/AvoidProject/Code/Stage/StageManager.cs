@@ -9,7 +9,7 @@ public class StageManager : MonoBehaviour
     /// 初期化時に呼ぶ 
     /// </summary>
     /// <param name="radius"></param>
-    public void Initialized(float radius)//後々引数が増えるようなら　別ごとに関数を作るか　Classで渡してあげる
+    public void Initialize(float radius)//後々引数が増えるようなら　別ごとに関数を作るか　Classで渡してあげる
     {
         m_limitRadius = radius;
     }

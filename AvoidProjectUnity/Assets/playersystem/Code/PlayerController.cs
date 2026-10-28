@@ -29,11 +29,13 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        m_inputProvider = new InputProvider();
         m_playerInteract = new PlayerInteract();
         m_rd = GetComponent<Rigidbody2D>();
         m_movement = GetComponent<Movement>();
         m_hpController = GetComponent<HpController>();
+
+        //Input Initialize
+        m_inputProvider = new InputProvider();
         m_inputProvider.OnInputMove += InputMove;
         m_inputProvider.OnInputInteract += InputInteract;
         m_inputProvider.OnInputSprint += InputSprint;
@@ -42,6 +44,22 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.OnInputAvoid += InputAvoid;
         m_inputProvider.OnInputInteractHold += InputInteractHold;
         m_inputProvider.OnInputRecoverHold += InputRecoverHold;
+
+        m_inputProvider.PlayerEnable();
+    }
+
+    private void OnEnable()
+    {
+        m_inputProvider.OnInputMove += InputMove;
+        m_inputProvider.OnInputInteract += InputInteract;
+        m_inputProvider.OnInputSprint += InputSprint;
+        m_inputProvider.OnInputAttack += InputAttack;
+        m_inputProvider.OnInputRecover += InputRecover;
+        m_inputProvider.OnInputAvoid += InputAvoid;
+        m_inputProvider.OnInputInteractHold += InputInteractHold;
+        m_inputProvider.OnInputRecoverHold += InputRecoverHold;
+
+        m_inputProvider.PlayerEnable();
     }
 
     private void OnDisable()
@@ -54,7 +72,14 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.OnInputAvoid -= InputAvoid;
         m_inputProvider.OnInputInteractHold -= InputInteractHold;
         m_inputProvider.OnInputRecoverHold -= InputRecoverHold;
-        m_inputProvider.Disable();
+
+        m_inputProvider.PlayerDisable();
+    }
+
+    public void Initialize()
+    {
+  
+
     }
 
     private void Update()

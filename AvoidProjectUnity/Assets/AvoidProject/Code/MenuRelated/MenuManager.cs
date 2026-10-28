@@ -34,8 +34,18 @@ public class MenuManager : MonoBehaviour
 
     private void OnDisable()
     {
+        if(m_inputProvider == null) return;
+
         m_inputProvider.OnInputMenu -= InputMenu;
-        m_inputProvider.Disable();
+        m_inputProvider.UIDisable();
+    }
+
+    private void OnEnable()
+    {
+        if(m_inputProvider == null) return;
+
+        m_inputProvider.OnInputMenu += InputMenu;
+        m_inputProvider.UIEnable();
     }
 
     public void Initialized()
@@ -45,6 +55,7 @@ public class MenuManager : MonoBehaviour
         m_optionSaveClass = new();
         m_inputProvider = new();
         m_inputProvider.OnInputMenu += InputMenu;
+        m_inputProvider.UIEnable();
 
         OptionSaveData data = m_optionSaveClass.LoadOptionData();
 
@@ -138,28 +149,45 @@ public class MenuManager : MonoBehaviour
 
     public void InputMenu()
     {
+        if (m_gameManager.GameState == GameManager.EnumGameState.Event ||
+            m_gameManager.GameState == GameManager.EnumGameState.GameOver) return;
+
+        if(m_gameManager.GameState == GameManager.EnumGameState.InPlay)
+        {
+            OnOpenMenu();
+
+        }
+        else if(m_gameManager.GameState == GameManager.EnumGameState.Pouse)
+        {
+            OnCloseMenu();
+            OnCloseOption();
+        }
 
     }
 
     public void OnOpenMenu()
     {
-
+        m_menu.SetActive(true);
         //GameManager State Pouse
+        m_gameManager.ChangeGameState(GameManager.EnumGameState.Pouse);
     }
 
     public void OnCloseMenu()
     {
+        m_menu.SetActive(false);
         //GameManager State InPlay
+        m_gameManager.ChangeGameState(GameManager.EnumGameState.InPlay);
+
     }
 
     public void OnOpenOption()
     {
-
+        m_option.SetActive(true);
     }
 
     public void OnCloseOption()
     {
-
+        m_option.SetActive(false);
     }
 
     public void SetGameManager(GameManager component)

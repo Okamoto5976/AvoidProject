@@ -31,10 +31,10 @@ public class InitializedManager : MonoBehaviour
 
     private void Start()
     {
-        Initialized();
+        Initialize();
     }
 
-    private void Initialized()//Event設定があるなら　解除の設定もここで？
+    private void Initialize()//Event設定があるなら　解除の設定もここで？
     {
         //RuntimeDataを降ろす
 
@@ -47,14 +47,14 @@ public class InitializedManager : MonoBehaviour
 
         //GameTypeを受け取る　制限時間か　討伐か
         //GameManagerの初期化
-        m_gameManager.Initialized(m_hasTimeLimit, m_timeLimit);
+        m_gameManager.Initialize(m_hasTimeLimit, m_timeLimit);
 
         //MenuManagerの初期化
         m_menuManager.Initialized();
         m_menuManager.SetGameManager(m_gameManager);
 
         //StageManager初期化
-        m_stageManager.Initialized(m_stageRadius);
+        m_stageManager.Initialize(m_stageRadius);
 
 
 
@@ -62,7 +62,7 @@ public class InitializedManager : MonoBehaviour
         //RunTimeDataも渡す
         //PlayerのAwake（初期化）を呼ぶ
         //PlayerのDisable
-        m_playerMovement.Initialized(m_stageManager);
+        m_playerMovement.Initialize(m_stageManager);
 
 
         //Enemyの生成--------------------------
@@ -71,7 +71,7 @@ public class InitializedManager : MonoBehaviour
         //EnemyのDisable
 
         //Cameraの初期化
-        m_cameraManager.Initialized(m_player, m_enemy);
+        m_cameraManager.Initialize(m_player, m_enemy);
 
         //それぞれPoolがあるので　あったPoolを各Managerに渡す
 
@@ -80,7 +80,7 @@ public class InitializedManager : MonoBehaviour
         //UIManagerのEventをつける
 
         //DebugManager設定
-        m_debugManager.Initialized(m_gameManager);
+        m_debugManager.Initialize(m_gameManager);
 
         //GameStartDirectorを呼ぶ
 

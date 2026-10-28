@@ -29,7 +29,7 @@ public class DebugManager : MonoBehaviour
     [SerializeField] private Canvas m_canvas;
     [SerializeField] private TMP_Text m_debugText;
 
-    public void Initialized(GameManager manager)
+    public void Initialize(GameManager manager)
     {
         m_gameManager = manager;
     }

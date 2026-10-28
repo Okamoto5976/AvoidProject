@@ -8,7 +8,7 @@ public class CameraManagerTest : MonoBehaviour
 
     private void Start()
     {
-        m_cameraManager.Initialized(m_player, m_enemy);
+        m_cameraManager.Initialize(m_player, m_enemy);
     }
 
     private void Update()

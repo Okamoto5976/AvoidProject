@@ -38,7 +38,7 @@ public class CameraManager : MonoBehaviour
 
     //-----Player‚ÆEnemy‚ÌŠÖ”-------
 
-    public void Initialized(GameObject player, GameObject enemy)
+    public void Initialize(GameObject player, GameObject enemy)
     {
         m_player = player;
         m_enemy = enemy;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameState
+    public enum EnumGameState
     {
         InPlay,
         Pouse,
@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
         GameOver,
     }
 
-    private GameState m_gameState = GameState.Event;
+    public EnumGameState GameState => m_gameState;
+    private EnumGameState m_gameState = EnumGameState.Event;
 
     //Propaty
     public bool HasTimeLimit => m_hasTimeLimit;
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
     /// 初期化時に呼ぶ　
     /// </summary>
     /// <param name="timer"></param>
-    public void Initialized(bool hasTimeLimit, float timer = 0)//後々引数が増えるようなら　別ごとに関数を作るか　Classで渡してあげる
+    public void Initialize(bool hasTimeLimit, float timer = 0)//後々引数が増えるようなら　別ごとに関数を作るか　Classで渡してあげる
     {
         m_hasTimeLimit = hasTimeLimit;
         m_timeLimit = timer;
@@ -35,12 +36,21 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        m_gameState = GameState.InPlay;
+        ChangeGameState(EnumGameState.InPlay);
     }
 
     private void Update()
     {
-        if (m_gameState != GameState.InPlay) return;
+        if(m_gameState == EnumGameState.Pouse)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+
+        if (m_gameState != EnumGameState.InPlay) return;
 
         InPlayUpdate();
     }
@@ -60,6 +70,14 @@ public class GameManager : MonoBehaviour
        
     }
 
+
+    public void ChangeGameState(EnumGameState state)
+    {
+        if(m_gameState == state) return;
+
+        m_gameState = state;
+    }
+
     //Time.Scaleの操作
     //時間制限の操作
     //ステージタイプから時間制限か　討伐か
@@ -69,7 +87,7 @@ public class GameManager : MonoBehaviour
     public void OnEnemyDead()
     {
         //GameClear（Event）時に2重になるのを防ぐ
-        if (m_gameState != GameState.InPlay) return;
+        if (m_gameState != EnumGameState.InPlay) return;
 
         GameClearEvent();
     }
@@ -83,4 +101,6 @@ public class GameManager : MonoBehaviour
     {
 
     }
+
+
 }
