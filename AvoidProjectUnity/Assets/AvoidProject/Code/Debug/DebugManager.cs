@@ -24,14 +24,22 @@ public class DebugManager : MonoBehaviour
     private GameManager m_gameManager;
     private string m_timeLimitText;
 
+    private HpController m_playerHpController;
+    private string m_playerHPText;
+
     //UI‚Å•\Ž¦‚·‚é
     [Header("UI Reference")]
     [SerializeField] private Canvas m_canvas;
     [SerializeField] private TMP_Text m_debugText;
 
-    public void Initialize(GameManager manager)
+    public void SetGameManager(GameManager manager)
     {
         m_gameManager = manager;
+    }
+
+    public void SetPlayerHPController(HpController hpController)
+    {
+        m_playerHpController = hpController;
     }
 
     private void Update()
@@ -48,9 +56,11 @@ public class DebugManager : MonoBehaviour
         }
 
         UpdateTimeLimitText();
+        UpdatePlayerHPText();
 
         m_debugText.text =
-            m_timeLimitText + "\n";
+            m_timeLimitText + "\n" +
+            m_playerHPText + "\n";
 
 
     }
@@ -65,5 +75,19 @@ public class DebugManager : MonoBehaviour
         {
             m_timeLimitText = "";
         }
+    }
+
+    private void UpdatePlayerHPText()
+    {
+        if(m_playerHpController.MaxHp > 0)
+        {
+            m_playerHPText = "PlayerHP : " + m_playerHpController.MaxHp;
+
+        }
+        else
+        {
+            m_playerHPText = "PlayerHP : " + 0;
+        }
+
     }
 }

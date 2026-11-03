@@ -986,10 +986,10 @@ MonoBehaviour:
   m_attackManager: {fileID: 108090070}
   m_attack:
     ShapeType: 0
-    Size: {x: 0, y: 0}
+    Size: {x: 5, y: 5}
     Position: {x: 0, y: 0}
-    StartupTime: 5
-    ActiveTime: 5
+    StartupTime: 2
+    ActiveTime: 2
 --- !u!1 &669795972
 GameObject:
   m_ObjectHideFlags: 0
@@ -2230,17 +2230,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961546788}
   m_CullTransparentMesh: 1
---- !u!114 &977456916 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3972608315360122793, guid: 630bd7c49f0b6db4093be8a657db5e01, type: 3}
-  m_PrefabInstance: {fileID: 1024388408017722557}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1500419983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94478c3e5e7ece342abacecaa9acad1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Movement
 --- !u!1 &1022547553
 GameObject:
   m_ObjectHideFlags: 0
@@ -4635,10 +4624,10 @@ MonoBehaviour:
   m_gameManager: {fileID: 503960966}
   m_menuManager: {fileID: 490510300}
   m_stageManager: {fileID: 432417506}
+  m_playerData: {fileID: 11400000, guid: dafe55f67ffc4a2479432c0b114b7f68, type: 2}
   m_player: {fileID: 1500419983}
   m_enemy: {fileID: 649672466}
   m_cameraManager: {fileID: 1319166042}
-  m_playerMovement: {fileID: 977456916}
   m_debugManager: {fileID: 736574456}
 --- !u!1 &2075916194
 GameObject:

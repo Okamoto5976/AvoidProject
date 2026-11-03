@@ -1,10 +1,15 @@
 using UnityEngine;
 public abstract class HpController : MonoBehaviour
 {
-    
-    private int m_maxHp = 100;
+
+    private int m_maxHp;
 
     public int MaxHp {  get { return m_maxHp; } }
+
+    public void Initialize(int hpValue)
+    {
+        m_maxHp = hpValue;
+    }
 
     public void Damage(int damage)
     {

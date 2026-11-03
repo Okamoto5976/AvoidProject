@@ -82,9 +82,9 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.PlayerDisable();
     }
 
-    public void Initialize()
+    public void Initialize(PlayerData data)
     {
-  
+        m_hpController.Initialize(data.HP);
 
     }
 
@@ -147,16 +147,16 @@ public class PlayerController : MonoBehaviour
 
     private void InputInteract()
     {
-        Debug.Log("インタラクト！",this);
+        //Debug.Log("インタラクト！",this);
     }
     private void InputAttack()
     {
         m_isRecovering = false;
-        Debug.Log("攻撃！",this);
+        //Debug.Log("攻撃！",this);
     }
     private void InputRecover()
     {
-        Debug.Log("回復！",this);
+        //Debug.Log("回復！",this);
     }
     private void InputAvoid()
     {
@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
     {
         if (m_isInvincible)
         {
-            Debug.Log("回避中のためダメージ無効！",this);
+            //Debug.Log("回避中のためダメージ無効！",this);
             return;
         }
         m_hpController.Damage(damage);
@@ -195,11 +195,11 @@ public class PlayerController : MonoBehaviour
 
         if (m_isRecovering)
         {
-            Debug.Log("回復開始！", this);
+            //Debug.Log("回復開始！", this);
         }
         else
         {
-            Debug.Log("回復終了！", this);
+            //Debug.Log("回復終了！", this);
         }
     }
 
@@ -215,7 +215,7 @@ public class PlayerController : MonoBehaviour
         // 回避移動を開始
         m_movement.Move(m_velocity, m_avoidSpeed);
 
-        Debug.Log("回避開始・無敵化！", this);
+        //Debug.Log("回避開始・無敵化！", this);
 
         // 回避時間
         yield return new WaitForSeconds(m_avoidDuration);
@@ -226,7 +226,7 @@ public class PlayerController : MonoBehaviour
         m_isInvincible = false;
         m_isAvoiding = false;
 
-        Debug.Log("回避終了・無敵解除！", this);  
+        //Debug.Log("回避終了・無敵解除！", this);  
     }
 
     public void SetHasWeapon(bool value)

@@ -20,13 +20,17 @@ public class InitializedManager : MonoBehaviour
     [SerializeField] private MenuManager m_menuManager;
     [SerializeField] private StageManager m_stageManager;
 
+    [SerializeField] private PlayerData m_playerData;
     [SerializeField] private GameObject m_player;
+    private PlayerController m_playerController;
+    private Movement m_playerMovement;
+    private HpController m_playerHpController;
+
     [SerializeField] private GameObject m_enemy;
 
 
     [SerializeField] private CameraManager m_cameraManager;
 
-    [SerializeField] private Movement m_playerMovement;
 
 
     [SerializeField] private DebugManager m_debugManager;
@@ -70,7 +74,13 @@ public class InitializedManager : MonoBehaviour
         //RunTimeDataも渡す
         //PlayerのAwake（初期化）を呼ぶ
         //PlayerのDisable
+        m_playerController = m_player.GetComponent<PlayerController>();
+        m_playerMovement = m_player.GetComponent<Movement>();
+        m_playerHpController = m_player.GetComponent<HpController>();
+
+        m_playerController.Initialize(m_playerData);
         m_playerMovement.Initialize(m_stageManager);
+        //Deadの際のイベントを入れておく
 
 
         //Enemyの生成--------------------------
@@ -88,7 +98,8 @@ public class InitializedManager : MonoBehaviour
         //UIManagerのEventをつける
 
         //DebugManager設定
-        m_debugManager.Initialize(m_gameManager);
+        m_debugManager.SetGameManager(m_gameManager);
+        m_debugManager.SetPlayerHPController(m_playerHpController);
 
         //GameStartDirectorを呼ぶ
 
