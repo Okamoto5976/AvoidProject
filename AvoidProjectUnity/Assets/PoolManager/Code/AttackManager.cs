@@ -14,6 +14,8 @@ public class Attack
     public Vector2 Position;
     public float StartupTime;
     public float ActiveTime;
+
+    public int Damage;
 }
 
 [System.Serializable]

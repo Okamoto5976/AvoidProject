@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5915251965765486494}
   - component: {fileID: 8845276549746364808}
   - component: {fileID: 8100212780785772039}
+  - component: {fileID: 4684658240679806689}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -151,3 +152,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680b92b88ca15cb4ab163bb808dccdfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReturnPool
+--- !u!114 &4684658240679806689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8365474015497140230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db85312f624c1bc45a708f58fb6868c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColliderAttack

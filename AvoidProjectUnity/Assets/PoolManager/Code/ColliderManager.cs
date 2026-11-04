@@ -38,6 +38,8 @@ public class ColliderManager : MonoBehaviour
         
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;
+        obj.GetComponent<ColliderAttack>().Damage = attack.Damage;
+
         TimedAction action = new();
         action.Attack = attack;
         action.Timer = attack.ActiveTime;

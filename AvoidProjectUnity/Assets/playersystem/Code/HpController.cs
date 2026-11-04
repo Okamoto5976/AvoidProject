@@ -1,5 +1,5 @@
 using UnityEngine;
-public abstract class HpController : MonoBehaviour
+public class HpController : MonoBehaviour
 {
     private int m_MaxHp = 100;
     private int m_Hp;

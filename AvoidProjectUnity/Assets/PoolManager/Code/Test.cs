@@ -28,6 +28,7 @@ public class Test : MonoBehaviour
         attack.StartupTime = Random.Range(1f, 5f);
         //attack.StartupTime = 0;
         attack.ActiveTime = Random.Range(1f, 5f);
+        attack.Damage = Random.Range(1, 10);
         return attack;
     }
 
