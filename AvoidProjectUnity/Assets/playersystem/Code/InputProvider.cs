@@ -9,16 +9,16 @@ public class InputProvider
     //Input Player
     private Vector2 m_inputMove;
     public event Action<Vector2> OnInputMove;
-    public event Action OnInputInteract;
+    public event System.Action OnInputInteract;
     public event Action<bool> OnInputSprint;
-    public event Action OnInputAttack;
-    public event Action OnInputRecover;
-    public event Action OnInputAvoid;
+    public event System.Action OnInputAttack;
+    public event System.Action OnInputRecover;
+    public event System.Action OnInputAvoid;
     public event Action<bool> OnInputInteractHold;
     public event Action<bool> OnInputRecoverHold;
 
     //Input UI
-    public event Action OnInputMenu;
+    public event System.Action OnInputMenu;
 
     public InputProvider()
     {
