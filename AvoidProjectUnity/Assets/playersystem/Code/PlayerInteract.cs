@@ -2,13 +2,76 @@ using UnityEngine;
 
 public class PlayerInteract
 {
-    public void Interact()
-    {
-        Debug.Log("アイテム取得処理を実行！");
-        //剣を拾うため　剣のオブジェクトを探す必要がある
+    private IInteractable m_target;
+    private Transform m_playerTransform;
+    private float m_holdTimer = 0f;
+    private bool m_isCompleted = false;
 
-        //その前の　Interact長押しは近くに　剣がある場合のみになるため
-        //まず押し初めにあるかどうか確認　ある場合　Playerの動きを一部制限
-        //押し続けることではじめ取得した剣を　そのままInteractを呼ぶ（剣のIInteractableを呼ぶ）
+    public PlayerInteract(Transform playerTransform)
+    {
+        m_playerTransform = playerTransform;
+    }
+
+    public void StartInteract(PlayerController controller, float range)
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(
+            m_playerTransform.position,
+            range
+        );
+
+        foreach (Collider2D col in colliders)
+        {
+            IInteractable interactable =
+                col.GetComponent<IInteractable>();
+
+            if (interactable != null)
+            {
+                m_target = interactable;
+                m_holdTimer = 0f;
+                m_isCompleted = false;
+
+                Debug.Log("剣を発見！長押ししてください");
+                return;
+            }
+        }
+
+        m_target = null;
+    }
+
+    public void Interact(
+        PlayerController controller,
+        float deltaTime,
+        float requiredHoldTime)
+    {
+        if (m_target == null || m_isCompleted)
+        {
+            return;
+        }
+
+        m_holdTimer += deltaTime;
+
+        if (m_holdTimer >= requiredHoldTime)
+        {
+            m_isCompleted = true;
+
+            bool result = m_target.Interact(controller);
+
+            if (result)
+            {
+                m_isCompleted = true;
+                m_target = null;
+            }
+            else
+            {
+                m_isCompleted = false;
+            }
+        }
+    }
+
+    public void EndInteract()
+    {
+        m_target = null;
+        m_holdTimer = 0f;
+        m_isCompleted = false;
     }
 }

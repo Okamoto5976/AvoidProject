@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     private InputProvider m_inputProvider;
     private PlayerInteract m_playerInteract;
+    private WeaponSword m_equippedWeapon;
   
     //InputRelated
     private bool m_isSprinting = false;
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private float m_avoidDuration = 0.2f;
     private float m_avoidSpeed = 15f;
     private float m_recoverMoveSpeed = 2f;
+    private float m_interactRange = 2.0f;
+    private float m_interactHoldTime = 1.5f;
 
     private int m_avoidFrameCount = 0;
     
@@ -35,23 +38,13 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        m_playerInteract = new PlayerInteract();
+        m_playerInteract = new PlayerInteract(transform );
         m_rd = GetComponent<Rigidbody2D>();
         m_movement = GetComponent<Movement>();
         m_hpController = GetComponent<HpController>();
 
-        //Input Initialize
         m_inputProvider = new InputProvider();
-        m_inputProvider.OnInputMove += InputMove;
-        m_inputProvider.OnInputInteract += InputInteract;
-        m_inputProvider.OnInputSprint += InputSprint;
-        m_inputProvider.OnInputAttack += InputAttack;
-        m_inputProvider.OnInputRecover += InputRecover;
-        m_inputProvider.OnInputAvoid += InputAvoid;
-        m_inputProvider.OnInputInteractHold += InputInteractHold;
-        m_inputProvider.OnInputRecoverHold += InputRecoverHold;
-
-        m_inputProvider.PlayerEnable();
+      
     }
 
     private void OnEnable()
@@ -105,7 +98,7 @@ public class PlayerController : MonoBehaviour
 
         if (m_isInteracting)
         {
-            //m_playerInteract.Interact();
+            m_playerInteract.Interact(this, Time.deltaTime, m_interactHoldTime);
         }
     }
 
@@ -184,9 +177,15 @@ public class PlayerController : MonoBehaviour
     private void InputInteractHold(bool isHolding)
     {
         m_isInteracting = isHolding;
+
         if (isHolding)
         {
             m_isRecovering = false;
+            m_playerInteract.StartInteract(this, m_interactRange);
+        }
+        else
+        {
+            m_playerInteract.EndInteract();
         }
     }
     private void InputRecoverHold(bool isHolding)
@@ -232,5 +231,12 @@ public class PlayerController : MonoBehaviour
     public void SetHasWeapon(bool value)
     {
         m_hasWeapon = value;
+    }
+
+    public void EquipWeapon(WeaponSword weapon)
+    {
+        m_equippedWeapon = weapon;
+
+        Debug.Log("åïÇëïîıÇµÇ‹ÇµÇΩÅI");
     }
 }
