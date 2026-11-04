@@ -1,16 +1,20 @@
 using UnityEngine;
+using System;
 
 public class TestEnemyAttack : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private MeleeAttack m_attack;
+    [SerializeField] private MeleeAttackData m_attackData;
+
+    public event Action<Vector2> OnMove;
+
+    private void Awake()
     {
-        
+        m_attack = new(m_attackData);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SowrdAttack()
     {
-        
+        m_attack.Execute();
     }
 }

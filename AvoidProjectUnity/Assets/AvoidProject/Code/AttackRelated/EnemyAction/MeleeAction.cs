@@ -14,6 +14,11 @@ public class MeleeAction : Action
         
     }
 
+    public override void Update()
+    {
+        
+    }
+
     public override bool IsComplete()
     {
         return m_isComplete;

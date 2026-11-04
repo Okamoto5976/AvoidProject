@@ -7,6 +7,6 @@ public class TestPlayerController : MonoBehaviour , IDamageable
     public void TakeDamage(int value)
     {
         m_PlayerHp.Damage(value);
-        Debug.Log($"hp = {m_PlayerHp.MaxHp}");
+        //Debug.Log($"hp = {m_PlayerHp.MaxHp}");
     }
 }

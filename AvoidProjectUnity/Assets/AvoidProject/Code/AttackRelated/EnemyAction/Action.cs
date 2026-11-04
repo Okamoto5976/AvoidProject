@@ -6,5 +6,7 @@ public abstract class Action
 
     public abstract void Execute();
 
+    public abstract void Update();
+
     public abstract bool IsComplete();
 }

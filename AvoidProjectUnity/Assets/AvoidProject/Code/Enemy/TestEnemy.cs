@@ -10,8 +10,17 @@ public class TestEnemy : MonoBehaviour, IDamageable
     //Rendererを持つ　flipX
     //
 
+    private Movement m_movement;
+    private TestEnemyAttack m_testEnemyAttack;
+
     [SerializeField] private AttackManager m_attackManager;
     [SerializeField] private Attack m_attack;
+
+    private void Awake()
+    {
+        m_movement = GetComponent<Movement>();
+        m_testEnemyAttack = GetComponent<TestEnemyAttack>();
+    }
 
     //AttackManagerを持ち　実際に攻撃をしてみる
     //HPの処理の確認は必要なし
