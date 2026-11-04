@@ -29,6 +29,11 @@ public class Movement : MonoBehaviour
     
     private void Update()
     {
+        if (m_stageManager == null)
+        {
+            return;
+        }
+
         transform.position = m_stageManager.LimitMovement(transform.position);
     }
 
