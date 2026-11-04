@@ -79,9 +79,9 @@ public class DebugManager : MonoBehaviour
 
     private void UpdatePlayerHPText()
     {
-        if(m_playerHpController.MaxHp > 0)
+        if(m_playerHpController.Hp > 0)
         {
-            m_playerHPText = "PlayerHP : " + m_playerHpController.MaxHp;
+            m_playerHPText = "PlayerHP : " + m_playerHpController.Hp;
 
         }
         else

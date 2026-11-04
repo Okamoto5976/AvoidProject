@@ -7,6 +7,12 @@ public class TestEnemyController : MonoBehaviour , IDamageable
     public void TakeDamage(int value)
     {
         m_EnemyHp.Damage(value);
-        Debug.Log($"hp = {m_EnemyHp.MaxHp}");
+        Debug.Log($"hp = {m_EnemyHp.Hp}");
+    }
+
+    public void TakeHeal(int value)
+    {
+        m_EnemyHp.Heal(value);
+        Debug.Log($"hp = {m_EnemyHp.Hp}");
     }
 }
