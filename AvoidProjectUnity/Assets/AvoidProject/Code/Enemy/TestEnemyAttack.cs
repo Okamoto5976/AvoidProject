@@ -10,7 +10,7 @@ public class TestEnemyAttack : MonoBehaviour
 
     private void Awake()
     {
-        m_attack = new(m_attackData);
+        //m_attack = new(m_attackData);
     }
 
     public void SowrdAttack()
