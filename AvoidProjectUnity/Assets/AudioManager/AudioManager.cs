@@ -1,100 +1,149 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
+/// <summary>
+/// 音の種類。Stopで止める対象を指定するときに使う。
+/// </summary>
 public enum SoundType
 {
     BGM,
-    SE,
-    Master
+    SE
 }
 
+/// <summary>
+/// 渡されたAudioDataを再生・停止するクラス。
+/// 音量の調整はここでは行わない（別の場所で制御する）。
+/// </summary>
 public class AudioManager : MonoBehaviour
 {
-    //音量はAudioMixerで制御する
-    [SerializeField] private AudioMixer m_mixer;
-
-    //BGM
-    [SerializeField] private string m_bgmParam = "BGMVolume";
+    /// <summary>BGM再生用のAudioSource</summary>
     [SerializeField] private AudioSource m_bgmSource;
 
-    //SE
-    [SerializeField] private string m_seParam = "SEVolume";
+    /// <summary>SE再生用のAudioSource。プールの1つ目として使い、足りなければ同じ設定で追加する</summary>
     [SerializeField] private AudioSource m_seSource;
+
+    /// <summary>SEを同時に鳴らせる最大数（AudioSourceの上限）</summary>
     [SerializeField] private int m_maxSESources = 16;
 
-    //MasterVolume
-    [SerializeField] private string m_masterParam = "MasterVolume";
-
+    /// <summary>実行中のBGMフェード処理。止めるときにキャンセルするため保持する</summary>
     private Coroutine m_bgmFadeCoroutine;
 
-    //音量設定
-    private const float MinDecibel = -50f;
-
-    private Dictionary<SoundType, string> parameters;
-
-    //同時に鳴らすSE用のAudioSource（m_seSourceを1つ目として使う）
+    /// <summary>SE用AudioSourceのプール。空いているものを使い回す</summary>
     private readonly List<AudioSource> m_sePool = new List<AudioSource>();
 
     private void Awake()
     {
-        parameters = new Dictionary<SoundType, string>
-        {
-            { SoundType.BGM, m_bgmParam },
-            { SoundType.SE,  m_seParam  },
-            { SoundType.Master, m_masterParam }
-        };
-
         if (m_seSource != null)
         {
             m_sePool.Add(m_seSource);
         }
     }
 
-    public void SetVolume(SoundType type, float volume)
+    /// <summary>
+    /// BGMを再生する。再生中なら今のBGMをフェードアウトしてから、次のBGMをフェードインする。
+    /// 同じBGMがすでに再生中なら何もしない。
+    /// </summary>
+    /// <param name="data">再生するBGMのAudioData</param>
+    /// <param name="fadeTime">フェードアウト・フェードインそれぞれにかける秒数</param>
+    public void PlayBGM(AudioData data, float fadeTime = 1f)
     {
-        float clamped = Mathf.Clamp01(volume);
+        if (m_bgmSource == null || data == null || data.Clip == null) return;
 
-        if (m_mixer != null && parameters.TryGetValue(type, out var param))
-        {
-            m_mixer.SetFloat(param, ToDecibel(clamped));
-        }
+        //同じBGMが再生中なら何もしない
+        if (m_bgmSource.clip == data.Clip && m_bgmSource.isPlaying) return;
+
+        CancelBGMFade();
+        m_bgmFadeCoroutine = StartCoroutine(PlayBGMRoutine(data, fadeTime));
     }
 
-    //現在の音量を返す
-    public float GetVolume(SoundType type)
+    /// <summary>
+    /// BGMをフェードアウトして止める。
+    /// </summary>
+    /// <param name="fadeTime">フェードアウトにかける秒数</param>
+    public void FadeOutBGM(float fadeTime = 1f)
     {
-        if (m_mixer != null
-            && parameters.TryGetValue(type, out var param)
-            && m_mixer.GetFloat(param, out float decibel))
-        {
-            return ToVolume(decibel);
-        }
-        return 0f;
+        if (m_bgmSource == null) return;
+
+        CancelBGMFade();
+        m_bgmFadeCoroutine = StartCoroutine(FadeOutBGMRoutine(fadeTime));
     }
 
-    public void DecreaseVolume(SoundType type, float amount)
-    {
-        SetVolume(type, GetVolume(type) - amount);
-    }
-
-    //SEを再生する（volume/pitch/loopはAudioDataの設定を使う）
+    /// <summary>
+    /// SEを再生する。空いているAudioSourceで鳴らすので、複数のSEが重なって再生できる。
+    /// 空きが無く上限（m_maxSESources）に達している場合は鳴らさない。
+    /// </summary>
+    /// <param name="data">再生するSEのAudioData</param>
     public void PlaySE(AudioData data)
     {
-        if (data == null || data.clip == null) return;
+        if (data == null || data.Clip == null) return;
 
         AudioSource source = GetFreeSESource();
         if (source == null) return;
 
-        source.clip = data.clip;
-        source.volume = Mathf.Clamp01(data.volume);
-        source.pitch = data.pitch;
-        source.loop = data.loop;
+        Apply(source, data);
         source.Play();
     }
 
-    //空いているSE用AudioSourceを返す。無ければ上限まで追加する
+    /// <summary>
+    /// 指定した種類の音を止める。BGMのフェード中なら、フェードも中止する。
+    /// </summary>
+    /// <param name="type">止める対象（BGM or SE）</param>
+    public void Stop(SoundType type)
+    {
+        switch (type)
+        {
+            case SoundType.BGM:
+                CancelBGMFade();
+                StopSource(m_bgmSource);
+                break;
+
+            case SoundType.SE:
+                foreach (var source in m_sePool)
+                {
+                    StopSource(source);
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// BGMとSEを全て止める。
+    /// </summary>
+    public void StopAll()
+    {
+        Stop(SoundType.BGM);
+        Stop(SoundType.SE);
+    }
+
+    /// <summary>
+    /// AudioDataの設定（clip / volume / pitch / loop）をAudioSourceに反映する。
+    /// </summary>
+    private static void Apply(AudioSource source, AudioData data)
+    {
+        source.clip = data.Clip;
+        source.volume = data.Volume;
+        source.pitch = data.Pitch;
+        source.loop = data.Loop;
+    }
+
+    /// <summary>
+    /// AudioSourceを止めて、volume / pitch / loopを初期値に戻す。
+    /// </summary>
+    private static void StopSource(AudioSource source)
+    {
+        if (source == null) return;
+
+        source.Stop();
+        source.volume = 1f;
+        source.pitch = 1f;
+        source.loop = false;
+    }
+
+    /// <summary>
+    /// 再生中でないSE用AudioSourceを返す。無ければ上限まで追加し、上限に達していればnullを返す。
+    /// 追加したAudioSourceは、m_seSourceと同じMixer Groupに出力する。
+    /// </summary>
     private AudioSource GetFreeSESource()
     {
         foreach (var source in m_sePool)
@@ -111,65 +160,9 @@ public class AudioManager : MonoBehaviour
         return added;
     }
 
-    //BGMのフェードアウトから次のBGMのフェードイン
-    //volume/pitch/loopはAudioDataの設定をAudioSourceに反映する（nullならフェードアウトのみ）
-    public void ChangeBGM(AudioData nextData, float fadeTime = 1f)
-    {
-        if (m_bgmSource == null) return;
-
-        if (nextData != null && nextData.clip != null
-            && m_bgmSource.clip == nextData.clip && m_bgmSource.isPlaying) return;
-
-        CancelBGMFade();
-        m_bgmFadeCoroutine = StartCoroutine(ChangeBGMRoutine(nextData, fadeTime));
-    }
-
-    //BGMのフェードアウト
-    public void FadeOutBGM(float fadeTime = 1f)
-    {
-        ChangeBGM(null, fadeTime);
-    }
-
-    //音源を止める
-    public void Stop(SoundType type)
-    {
-        switch (type)
-        {
-            case SoundType.Master:
-                StopAll();
-                break;
-
-            case SoundType.BGM:
-                CancelBGMFade();
-                StopSource(m_bgmSource);
-                break;
-
-            case SoundType.SE:
-                foreach (var source in m_sePool)
-                {
-                    StopSource(source);
-                }
-                break;
-        }
-    }
-
-    //全部の音源を止める
-    public void StopAll()
-    {
-        Stop(SoundType.BGM);
-        Stop(SoundType.SE);
-    }
-
-    private static void StopSource(AudioSource source)
-    {
-        if (source == null) return;
-
-        source.Stop();
-        source.volume = 1f;
-        source.pitch = 1f;
-        source.loop = false;
-    }
-
+    /// <summary>
+    /// 実行中のBGMフェード処理があれば止める。
+    /// </summary>
     private void CancelBGMFade()
     {
         if (m_bgmFadeCoroutine == null) return;
@@ -178,7 +171,11 @@ public class AudioManager : MonoBehaviour
         m_bgmFadeCoroutine = null;
     }
 
-    private IEnumerator ChangeBGMRoutine(AudioData nextData, float fadeTime)
+    /// <summary>
+    /// 今のBGMをフェードアウトし、次のBGMをフェードインで再生する。
+    /// フェードインの到達音量は、AudioDataのvolumeになる。
+    /// </summary>
+    private IEnumerator PlayBGMRoutine(AudioData data, float fadeTime)
     {
         if (m_bgmSource.isPlaying)
         {
@@ -186,19 +183,33 @@ public class AudioManager : MonoBehaviour
         }
         m_bgmSource.Stop();
 
-        if (nextData != null && nextData.clip != null)
-        {
-            m_bgmSource.clip = nextData.clip;
-            m_bgmSource.pitch = nextData.pitch;
-            m_bgmSource.loop = nextData.loop;
-            m_bgmSource.volume = 0f;
-            m_bgmSource.Play();
-            yield return FadeBGM(0f, Mathf.Clamp01(nextData.volume), fadeTime);
-        }
+        Apply(m_bgmSource, data);
+        m_bgmSource.volume = 0f;
+        m_bgmSource.Play();
+        yield return FadeBGM(0f, data.Volume, fadeTime);
 
         m_bgmFadeCoroutine = null;
     }
 
+    /// <summary>
+    /// 今のBGMをフェードアウトして止める。
+    /// </summary>
+    private IEnumerator FadeOutBGMRoutine(float fadeTime)
+    {
+        if (m_bgmSource.isPlaying)
+        {
+            yield return FadeBGM(m_bgmSource.volume, 0f, fadeTime);
+        }
+        StopSource(m_bgmSource);
+
+        m_bgmFadeCoroutine = null;
+    }
+
+    /// <summary>
+    /// BGMのAudioSourceのvolumeを、fromからtoまで時間をかけて変化させる。
+    /// ポーズ中（timeScale=0）でも進むようにunscaledDeltaTimeを使う。
+    /// </summary>
+    /// <param name="duration">かける秒数（0以下なら即座にtoにする）</param>
     private IEnumerator FadeBGM(float from, float to, float duration)
     {
         if (duration <= 0f)
@@ -215,17 +226,5 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
         m_bgmSource.volume = to;
-    }
-
-    private static float ToDecibel(float volume)
-    {
-        if (volume <= 0.0001f) return MinDecibel;
-        return Mathf.Max(MinDecibel, Mathf.Log10(volume) * 20f);
-    }
-
-    private static float ToVolume(float decibel)
-    {
-        if (decibel <= MinDecibel) return 0f;
-        return Mathf.Clamp01(Mathf.Pow(10f, decibel / 20f));
     }
 }
