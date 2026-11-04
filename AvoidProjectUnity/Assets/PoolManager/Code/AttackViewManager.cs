@@ -46,14 +46,6 @@ public class AttackViewManager : MonoBehaviour
                 break;
         }
 
-        ReturnPool returnPool;
-        if (!obj.TryGetComponent<ReturnPool>(out returnPool))
-        {
-            Debug.Log("ReturnPool‚ª‚È‚©‚Á‚½‚½‚ß’Ç‰Á‚µ‚Ü‚µ‚½");
-            returnPool = obj.AddComponent<ReturnPool>();
-        }
-        returnPool.SetReturnPool(m_AttackViewPool);
-
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;
         TimedAction action = new();

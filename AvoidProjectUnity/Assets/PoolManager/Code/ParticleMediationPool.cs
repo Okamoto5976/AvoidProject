@@ -2,30 +2,25 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EffectType
-{
-    None
-}
-
 [Serializable]
-public class EffectPool
+public class ParticlePool
 {
-    public EffectType Type;
+    public ParticleType Type;
     public PoolManager PoolManager;
 }
 
-public class EffectMediationPool : MonoBehaviour
+public class ParticleMediationPool : MonoBehaviour
 {
-    [SerializeField] private List<EffectPool> m_EffectPools;
+    [SerializeField] private List<ParticlePool> m_ParticlePools;
 
     /// <summary>
     /// エフェクトのプールを取得する関数
     /// </summary>
     /// <param name="type">エフェクトの種類</param>
     /// <returns>エフェクトのプール</returns>
-    public PoolManager GetEffectPool(EffectType type)
+    public PoolManager GetParticlePool(ParticleType type)
     {
-        foreach (EffectPool pool in m_EffectPools)
+        foreach (ParticlePool pool in m_ParticlePools)
         {
             if (pool.Type == type) return pool.PoolManager;
         }
