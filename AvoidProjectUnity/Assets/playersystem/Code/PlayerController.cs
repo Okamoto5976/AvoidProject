@@ -36,6 +36,12 @@ public class PlayerController : MonoBehaviour
     private bool m_isInvincible = false;
     private bool m_hasWeapon = false;
 
+    //PlayerHpHeal
+    private int m_hasRecoverCount = 3;
+    private float m_recoverTimer = 0;
+    private float m_recoverDuration = 2;
+    private int m_recoverValue = 10;
+
     private void Awake()
     {
         m_playerInteract = new PlayerInteract(transform );
@@ -194,14 +200,35 @@ public class PlayerController : MonoBehaviour
 
         if (m_isRecovering)
         {
+            if (m_hasRecoverCount <= 0) return;
+
+            StartCoroutine(RecoverCoroutine());
             //Debug.Log("回復開始！", this);
         }
         else
         {
+            m_recoverTimer = 0;
             //Debug.Log("回復終了！", this);
         }
     }
 
+    private IEnumerator RecoverCoroutine()
+    {
+        m_recoverTimer = 0;
+        while (true)
+        {
+            if (!m_isRecovering) yield break;
+
+            m_recoverTimer += Time.deltaTime;
+            if (m_recoverTimer >= m_recoverDuration)
+            {
+                m_hasRecoverCount--;
+                m_hpController.Heal(m_recoverValue);
+                yield break;
+            }
+            yield return null;
+        }
+    }
 
     private IEnumerator AvoidCoroutine()
     {
