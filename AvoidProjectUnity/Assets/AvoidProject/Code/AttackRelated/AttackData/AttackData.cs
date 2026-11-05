@@ -1,23 +1,24 @@
-using System;
 using UnityEngine;
+using System.Collections.Generic;
 
-[Serializable]
+[System.Serializable]
 public abstract class AttackData
 {
-    public string name;
 }
 
-[Serializable]
+[System.Serializable]
 public class MeleeAttackData : AttackData
 {
-    public int attack;
+    [SerializeField] private AttackContext m_attackContext;
 
     //ActionListを持つ
     //どのActionを持てるかがあるので　並び替えを行えるようにする　Editorでそれぞれ表示可能のものを決めておく
+
+    [SerializeReference]
+    private List<ActionData> m_actionList = new();
 }
 
-[Serializable]
+[System.Serializable]
 public class JumpAttackData : AttackData
 {
-    public int jump;
 }
