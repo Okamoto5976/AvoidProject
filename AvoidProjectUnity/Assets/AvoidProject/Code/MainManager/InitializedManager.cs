@@ -18,6 +18,7 @@ public class InitializedManager : MonoBehaviour
     [Header("GameObjectReference")]
     [SerializeField] private GameManager m_gameManager;
     [SerializeField] private MenuManager m_menuManager;
+    [SerializeField] private AudioVolumeController m_audioVolumeController;
     [SerializeField] private StageManager m_stageManager;
 
     [SerializeField] private PlayerData m_playerData;
@@ -60,8 +61,10 @@ public class InitializedManager : MonoBehaviour
         m_gameManager.Initialize(m_hasTimeLimit, m_timeLimit);
 
         //MenuManager‚Ì‰Šú‰»
-        m_menuManager.Initialized();
+        m_menuManager.Initialize();
         m_menuManager.SetGameManager(m_gameManager);
+
+        m_audioVolumeController.Initialize();
 
         //StageManager‰Šú‰»
         m_stageManager.Initialize(m_gameManager);
