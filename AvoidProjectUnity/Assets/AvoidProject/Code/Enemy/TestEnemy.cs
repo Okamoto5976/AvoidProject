@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class TestEnemy : MonoBehaviour, IDamageable
+public class TestEnemy : Enemy, IDamageable
 {
     //案山子なので動かない
     //直線の攻撃をする
@@ -32,6 +33,21 @@ public class TestEnemy : MonoBehaviour, IDamageable
 
 
     public void TakeDamage(int damage)
+    {
+
+    }
+
+
+    public event Action<Vector2> OnMove;
+
+    [EnemyAttackPoint("melee","近接攻撃","近いものに切る")]
+    public void SowrdAttack()
+    {
+        
+    }
+
+    [EnemyAttackPoint("jump","ジャンプ攻撃","ジャンプして攻撃")]
+    public void JumpAttack()
     {
 
     }
