@@ -12,9 +12,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b046f13727d1c334d9b23b8e906acb3d, type: 3}
   m_Name: TestEnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  m_enemyScript: {fileID: 0}
-  m_enemyTypeName: 
-  m_attackSettings: []
+  m_enemyScript: {fileID: 11500000, guid: c40ddde9063cdb74baf35c3d1b8f1824, type: 3}
+  m_enemyTypeName: TestEnemy
+  m_attackSettings:
+  - m_attackPointId: melee
+    m_attackData:
+      rid: 7576007973094817792
+  - m_attackPointId: jump
+    m_attackData:
+      rid: 7576007973094817870
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7576007973094817792
+      type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
+      data:
+        m_attackContext:
+          ShapeType: 0
+          Size: {x: 0, y: 0}
+          Position: {x: 0, y: 0}
+          StartupTime: 0
+          ActiveTime: 0
+          Damage: 0
+        m_actionList:
+        - rid: 7576007973094817793
+        - rid: 7576007973094817795
+    - rid: 7576007973094817793
+      type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
+      data:
+        a: 0
+    - rid: 7576007973094817795
+      type: {class: WaitActionData, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 7576007973094817870
+      type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
+      data:
+        m_attackContext:
+          ShapeType: 0
+          Size: {x: 0, y: 0}
+          Position: {x: 0, y: 0}
+          StartupTime: 0
+          ActiveTime: 0
+          Damage: 0
+        m_actionList: []

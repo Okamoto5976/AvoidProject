@@ -5,6 +5,8 @@ public class MeleeAttack : IAttack
 {
     private readonly MeleeAttackData m_data;
 
+    public event System.Action<Vector2, float> Movement;
+
     private List<Action> m_actions = new();
 
     private int m_currentIndex = 0;

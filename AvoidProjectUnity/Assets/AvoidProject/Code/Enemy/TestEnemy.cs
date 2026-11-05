@@ -33,6 +33,14 @@ public class TestEnemy : Enemy, IDamageable
         }
     }
 
+    private void Update()
+    {
+        for(int i = 0; i < m_attacks.Count; i++)
+        {
+            m_attacks[i].Update();
+        }
+    }
+
     //AttackManagerを持ち　実際に攻撃をしてみる
     //HPの処理の確認は必要なし
     [ContextMenu("TestEnemy Sword Attack")]

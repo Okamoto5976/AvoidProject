@@ -27,8 +27,8 @@ public class InitializedManager : MonoBehaviour
     private Movement m_playerMovement;
     private HpController m_playerHpController;
 
-    [SerializeField] private GameObject m_enemy;
-
+    [SerializeField] private Enemy m_enemy;
+    [SerializeField] private EnemyData m_enemyData;
 
     [SerializeField] private CameraManager m_cameraManager;
 
@@ -93,12 +93,14 @@ public class InitializedManager : MonoBehaviour
 
 
         //Enemy‚Ì¶¬--------------------------
+        m_enemy.InitializeData(m_enemyData);
+
         //Runtime‚©‚ç~‚ë‚µ‚½“G‚Ì¶¬
         //“G‚Ì‰Šú‰»iRunTime‚Ì‚à‚Ì‚ğ‰Šú‰»j
         //Enemy‚ÌDisable
 
         //Camera‚Ì‰Šú‰»
-        m_cameraManager.Initialize(m_player, m_enemy);
+        m_cameraManager.Initialize(m_player, m_enemy.gameObject);
 
         //‚»‚ê‚¼‚êPool‚ª‚ ‚é‚Ì‚Å@‚ ‚Á‚½Pool‚ğŠeManager‚É“n‚·
 

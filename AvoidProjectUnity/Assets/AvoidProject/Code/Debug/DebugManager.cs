@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 public class DebugManager : MonoBehaviour
@@ -17,20 +16,15 @@ public class DebugManager : MonoBehaviour
     //Eventスキップ
     //このシーンで敵の挙動を確認できる仕組みを組み込む
 
+    //DebugMode　管理しやすい中身を考えているが　これだけでなく　他の人がわかりやすく　調整のことを考える必要あり
+    //Playerの調整などが 一番あてはまるだろう
 
     [SerializeField] private bool m_isDebugMode;
 
 
     private GameManager m_gameManager;
-    private string m_timeLimitText;
 
     private HpController m_playerHpController;
-    private string m_playerHPText;
-
-    //UIで表示する
-    [Header("UI Reference")]
-    [SerializeField] private Canvas m_canvas;
-    [SerializeField] private TMP_Text m_debugText;
 
     public void SetGameManager(GameManager manager)
     {
@@ -42,52 +36,39 @@ public class DebugManager : MonoBehaviour
         m_playerHpController = hpController;
     }
 
-    private void Update()
+    private void OnGUI()
     {
-        if (!m_isDebugMode)
+        if (!m_isDebugMode) return;
+
+        if(m_gameManager.HasTimeLimit)
         {
-            m_canvas.enabled = false;
-            return;
+            GUI.Label(
+            new Rect(10, 10, 200, 30),
+            $"TimeLimit :" + m_gameManager.TimeLimit.ToString("F0")
+            );
         }
         else
         {
-            m_canvas.enabled = true;
-
+            GUI.Label(
+            new Rect(10, 10, 200, 30),
+            $"No Has TimeLimit"
+            );
         }
 
-        UpdateTimeLimitText();
-        UpdatePlayerHPText();
-
-        m_debugText.text =
-            m_timeLimitText + "\n" +
-            m_playerHPText + "\n";
-
-
-    }
-
-    private void UpdateTimeLimitText()
-    {
-        if (m_gameManager.HasTimeLimit)
-        {
-            m_timeLimitText = "TimeLimit" + m_gameManager.TimeLimit.ToString("F0");
-        }
-        else
-        {
-            m_timeLimitText = "";
-        }
-    }
-
-    private void UpdatePlayerHPText()
-    {
         if(m_playerHpController.Hp > 0)
         {
-            m_playerHPText = "PlayerHP : " + m_playerHpController.Hp;
-
+            GUI.Label(
+                new Rect(10, 40, 200, 30),
+                $"PlayerHP :" + m_playerHpController.Hp);
         }
         else
         {
-            m_playerHPText = "PlayerHP : " + 0;
+            GUI.Label(
+                new Rect(10, 40, 200, 30),
+                $"PlayerHP :" + 0);
         }
 
+        
     }
+
 }
