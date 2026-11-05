@@ -11,11 +11,13 @@ public enum ShapeType
 [System.Serializable]
 public class Attack
 {
-    public ShapeType ShapeType;
+    public ColliderProperty ColliderProperty = new();
     public Vector2 Size;
     public Vector2 Position;
     public float StartupTime;
     public float ActiveTime;
+
+    public Attack Clone() => (Attack)this.MemberwiseClone();
 }
 
 [System.Serializable]

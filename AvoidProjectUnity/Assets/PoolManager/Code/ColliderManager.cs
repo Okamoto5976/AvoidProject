@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ColliderManager : MonoBehaviour
 {
+    [SerializeField] private PoolManager m_CustomColliderPool;
+
     [SerializeField] private ColliderMediationPool m_MediationPool;
     [SerializeField] private Rigidbody2D m_Player;
 
@@ -32,17 +34,20 @@ public class ColliderManager : MonoBehaviour
     {
         //Debug.Log("コライダー有効化");
         GameObject obj = null;
-        PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
-        obj = pool.GenerateFromPool();
+        //PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
+        //obj = pool.GenerateFromPool();
+        obj = m_CustomColliderPool.GenerateFromPool();
         if (obj == null) return;
         
-        obj.transform.position = attack.Position;
-        obj.transform.localScale = attack.Size;
+        //obj.transform.localScale = new Vector2(1, 1);
         TimedAction action = new();
         action.Attack = attack;
         action.Timer = attack.ActiveTime;
         action.Object = obj;
         m_TimedActions.Add(action);
         m_Player.WakeUp();
+
+        ColliderController colliderController = obj.GetComponent<ColliderController>();
+        colliderController.SetColliderProperty(attack.ColliderProperty, attack.Position);
     }
 }

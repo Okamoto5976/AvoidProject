@@ -36,7 +36,7 @@ public class AttackViewManager : MonoBehaviour
         //Debug.Log("çUåÇó\çêï\é¶");
         GameObject obj = m_AttackViewPool.GenerateFromPool();
         SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
-        switch (attack.ShapeType)
+        switch (attack.ColliderProperty.ShapeType)
         {
             case ShapeType.Box:
                 spriteRenderer.sprite = m_Box;

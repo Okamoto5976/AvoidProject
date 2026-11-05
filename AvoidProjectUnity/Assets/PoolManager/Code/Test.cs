@@ -7,35 +7,23 @@ public class Test : MonoBehaviour
     [SerializeField] private SpriteRenderer m_SpriteRenderer;
 
     [SerializeField] private bool random;
-    [SerializeField] private Attack test;
+    [SerializeField] private Attack sampleAttack;
 
-    [SerializeField] private ColliderController m_ColliderController;
-    [SerializeField] private ColliderProperty property;
     private void Update()
     {
         //test
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (random) m_AttackManager.Attack(RandomAttack());
-            else m_AttackManager.Attack(test);
-        }
+            if (random) sampleAttack = RandomPosition();
 
-        if (Keyboard.current.f1Key.wasPressedThisFrame)
-        {
-            m_ColliderController.SetColliderProperty(property);
+            m_AttackManager.Attack(sampleAttack);
         }
     }
 
-    private Attack RandomAttack()
+    private Attack RandomPosition()
     {
-        Attack attack = new Attack();
-        attack.ShapeType = (ShapeType)Random.Range(0, 2);
-        float value = Random.Range(1f, 3f);
-        attack.Size = new Vector2(value, value);
+        Attack attack = sampleAttack.Clone();
         attack.Position = new Vector2(Random.Range(-5f, 5f), Random.Range(-2f, 2f));
-        attack.StartupTime = Random.Range(1f, 5f);
-        //attack.StartupTime = 0;
-        attack.ActiveTime = Random.Range(1f, 5f);
         return attack;
     }
 
