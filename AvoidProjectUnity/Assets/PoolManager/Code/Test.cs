@@ -8,6 +8,9 @@ public class Test : MonoBehaviour
 
     [SerializeField] private bool random;
     [SerializeField] private Attack test;
+
+    [SerializeField] private ColliderController m_ColliderController;
+    [SerializeField] private ColliderProperty property;
     private void Update()
     {
         //test
@@ -15,6 +18,11 @@ public class Test : MonoBehaviour
         {
             if (random) m_AttackManager.Attack(RandomAttack());
             else m_AttackManager.Attack(test);
+        }
+
+        if (Keyboard.current.f1Key.wasPressedThisFrame)
+        {
+            m_ColliderController.SetColliderProperty(property);
         }
     }
 
