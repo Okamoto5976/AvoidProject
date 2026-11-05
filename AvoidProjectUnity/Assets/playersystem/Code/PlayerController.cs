@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
 
     private InputProvider m_inputProvider;
     private PlayerInteract m_playerInteract;
-    private WeaponSword m_equippedWeapon;
   
     //InputRelated
     private bool m_isSprinting = false;
@@ -37,14 +36,17 @@ public class PlayerController : MonoBehaviour
     private bool m_hasWeapon = false;
 
     //PlayerHpHeal
-    private int m_hasRecoverCount = 3;
     private float m_recoverTimer = 0;
     private float m_recoverDuration = 2;
-    private int m_recoverValue = 10;
+    private int m_recoverValue = 100;
+
+
+    private int m_hasRecoverCount;
+
 
     private void Awake()
     {
-        m_playerInteract = new PlayerInteract(transform );
+        m_playerInteract = new PlayerInteract(transform);
         m_rd = GetComponent<Rigidbody2D>();
         m_movement = GetComponent<Movement>();
         m_hpController = GetComponent<HpController>();
@@ -81,10 +83,10 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.PlayerDisable();
     }
 
-    public void Initialize(PlayerData data)
+    public void Initialize(PlayerData pData, RuntimeData rData)
     {
-        m_hpController.Initialize(data.HP);
-
+        m_hpController.Initialize(pData.HP);
+        m_hasRecoverCount = rData.PotionAmount;
     }
 
     private void Update()
@@ -260,10 +262,4 @@ public class PlayerController : MonoBehaviour
         m_hasWeapon = value;
     }
 
-    public void EquipWeapon(WeaponSword weapon)
-    {
-        m_equippedWeapon = weapon;
-
-        Debug.Log("åïÇëïîıÇµÇ‹ÇµÇΩÅI");
-    }
 }

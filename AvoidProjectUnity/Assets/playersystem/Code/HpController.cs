@@ -1,11 +1,11 @@
 using UnityEngine;
 public class HpController : MonoBehaviour
 {
-    private int m_MaxHp = 100;
+    private int m_MaxHp;
     private int m_Hp;
     private bool m_Alive = true;
 
-    public int Hp {  get { return m_Hp; } }
+    public int Hp => m_Hp;
 
     public void Initialize(int hpValue)
     {
@@ -35,6 +35,8 @@ public class HpController : MonoBehaviour
 
     protected virtual void Dead()
     {
+        if(m_Alive == false) return;
+
         Debug.Log("Entity is dead");
         m_Alive = false;
     }

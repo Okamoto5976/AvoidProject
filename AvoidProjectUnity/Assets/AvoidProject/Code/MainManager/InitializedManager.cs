@@ -36,9 +36,14 @@ public class InitializedManager : MonoBehaviour
 
     [SerializeField] private DebugManager m_debugManager;
 
+    private RuntimeData m_runtimeData;
+
     private void Start()
     {
         Application.targetFrameRate = 60;
+
+        m_runtimeData = new RuntimeData();
+
         Initialize();
     }
 
@@ -48,6 +53,7 @@ public class InitializedManager : MonoBehaviour
     private void Initialize()//Event設定があるなら　解除の設定もここで？
     {
         //RuntimeDataを降ろす
+
 
         //アルファ版
         //HasTimeLimit
@@ -81,7 +87,7 @@ public class InitializedManager : MonoBehaviour
         m_playerMovement = m_player.GetComponent<Movement>();
         m_playerHpController = m_player.GetComponent<HpController>();
 
-        m_playerController.Initialize(m_playerData);
+        m_playerController.Initialize(m_playerData, m_runtimeData);
         m_playerMovement.Initialize(m_stageManager);
         //Deadの際のイベントを入れておく
 

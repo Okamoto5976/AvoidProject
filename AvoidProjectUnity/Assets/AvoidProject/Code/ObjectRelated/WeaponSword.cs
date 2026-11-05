@@ -14,8 +14,6 @@ public class WeaponSword : MonoBehaviour, IInteractable
         //Œ•‚ğ‘•”õ
         Debug.Log("Œ•‚ğæ“¾‚µ‚Ü‚µ‚½I");
 
-        c.EquipWeapon(this);
-
         //Anim ‚â Particel
         //ReturnObject();
 

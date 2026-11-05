@@ -12,13 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b046f13727d1c334d9b23b8e906acb3d, type: 3}
   m_Name: TestEnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  m_attackList:
-  - rid: 7576007953486708827
+  m_enemyScript: {fileID: 11500000, guid: c40ddde9063cdb74baf35c3d1b8f1824, type: 3}
+  m_enemyTypeName: TestEnemy
+  m_str: 1
+  m_speed: 5
+  m_attackSettings:
+  - m_attackPointId: melee
+    m_attackData:
+      rid: 7170619126274326646
+  - m_attackPointId: jump
+    m_attackData:
+      rid: 7170619126274326644
   references:
     version: 2
     RefIds:
-    - rid: 7576007953486708827
+    - rid: 7170619126274326644
       type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
       data:
-        name: 
-        attack: 0
+        m_attackContext:
+          radius: 0
+        m_actionList: []
+    - rid: 7170619126274326646
+      type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
+      data:
+        m_attackContext:
+          radius: 0
+        m_actionList: []
