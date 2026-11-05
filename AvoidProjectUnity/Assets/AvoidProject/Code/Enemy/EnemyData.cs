@@ -27,11 +27,9 @@ public class EnemyData : ScriptableObject
     [SerializeField, HideInInspector]
     private string m_enemyTypeName;
 
-    [SerializeField] private int m_str = 1;
-
-    [SerializeField] private float m_speed = 5f;
-
     [SerializeField] private List<EnemyAttackSetting> m_attackSettings = new();
+
+    public List<EnemyAttackSetting> AttackSettings => m_attackSettings;
 
     public bool MatchesEnemyType(System.Type enemyType)
     {

@@ -9,14 +9,14 @@ public class MeleeAttack : IAttack
 
     private int m_currentIndex = 0;
 
-    //public MeleeAttack(MeleeAttackData data)
-    //{
-    //    m_data = data;
-    //    foreach(var actionData in data.m_actionDatas)
-    //    {
-    //        m_actions.Add(actionData.CreateAction());
-    //    }
-    //}
+    public MeleeAttack(MeleeAttackData data)
+    {
+        m_data = data;
+        foreach (var actionData in data.ActionList)
+        {
+            m_actions.Add(actionData.CreateAction());
+        }
+    }
 
     public void Execute()
     {

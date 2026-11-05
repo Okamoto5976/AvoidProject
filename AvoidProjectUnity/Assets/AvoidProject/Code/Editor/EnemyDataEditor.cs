@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -200,11 +201,13 @@ public class EnemyDataEditor : Editor
         }
         else
         {
-            EditorGUILayout.PropertyField(
-                attackData,
-                new GUIContent("Attack Data"),
-                true
-            );
+            //EditorGUILayout.PropertyField(
+            //    attackData,
+            //    new GUIContent("Attack Data"),
+            //    true
+            //);
+
+            DrawAttackData(attackData);
 
             if (GUILayout.Button("AttackDataÇïœçX"))
             {
@@ -318,4 +321,198 @@ public class EnemyDataEditor : Editor
             }
         }
     }
+
+    #region AttackData
+
+    private void DrawAttackData(SerializedProperty attackData)
+    {
+        Type attackType =
+            attackData.managedReferenceValue.GetType();
+
+        SerializedProperty iterator = attackData.Copy();
+        SerializedProperty end = iterator.GetEndProperty();
+
+        bool enterChildren = true;
+
+        while (iterator.NextVisible(enterChildren) &&
+               !SerializedProperty.EqualContents(iterator, end))
+        {
+            enterChildren = false;
+
+            if (iterator.name == "m_actionList")
+            {
+                DrawActionList(iterator, attackType);
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(iterator, true);
+            }
+        }
+    }
+
+    private void DrawActionList(
+    SerializedProperty actionList,
+    Type attackType)
+    {
+        EditorGUILayout.Space(5);
+
+        actionList.isExpanded = EditorGUILayout.Foldout(
+            actionList.isExpanded,
+            "Action List",
+            true
+        );
+
+        if (!actionList.isExpanded)
+            return;
+
+        EditorGUI.indentLevel++;
+
+        for (int i = 0; i < actionList.arraySize; i++)
+        {
+            SerializedProperty element =
+                actionList.GetArrayElementAtIndex(i);
+
+            EditorGUILayout.BeginVertical("box");
+
+            if (element.managedReferenceValue == null)
+            {
+                EditorGUILayout.LabelField("ñ¢ê›íË");
+
+                if (GUILayout.Button("ActionÇëIë"))
+                {
+                    ShowActionDataMenu(
+                        actionList.propertyPath,
+                        i,
+                        attackType
+                    );
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField(
+                    element.managedReferenceValue.GetType().Name,
+                    EditorStyles.boldLabel
+                );
+
+                EditorGUILayout.PropertyField(element, true);
+
+                EditorGUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("ïœçX"))
+                {
+                    ShowActionDataMenu(
+                        actionList.propertyPath,
+                        i,
+                        attackType
+                    );
+                }
+
+                if (GUILayout.Button("Å™") && i > 0)
+                {
+                    actionList.MoveArrayElement(i, i - 1);
+                }
+
+                if (GUILayout.Button("Å´") &&
+                    i < actionList.arraySize - 1)
+                {
+                    actionList.MoveArrayElement(i, i + 1);
+                }
+
+                if (GUILayout.Button("çÌèú"))
+                {
+                    actionList.DeleteArrayElementAtIndex(i);
+                    break;
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+
+        if (GUILayout.Button("ActionÇí«â¡"))
+        {
+            ShowActionDataMenu(
+                actionList.propertyPath,
+                -1,
+                attackType
+            );
+        }
+
+        EditorGUI.indentLevel--;
+    }
+
+    private void ShowActionDataMenu(
+    string propertyPath,
+    int index,
+    Type attackType)
+    {
+        GenericMenu menu = new GenericMenu();
+
+        var types = TypeCache.GetTypesDerivedFrom<ActionData>();
+
+        foreach (Type type in types)
+        {
+            if (type.IsAbstract || type.IsGenericType)
+                continue;
+
+            if (type.GetConstructor(Type.EmptyTypes) == null)
+                continue;
+
+            var attributes =
+                type.GetCustomAttributes<ActionDataForAttribute>();
+
+            bool canUse = attributes.Any(
+                x => x.AttackDataType.IsAssignableFrom(attackType)
+            );
+
+            if (!canUse)
+                continue;
+
+            Type selectedType = type;
+
+            menu.AddItem(
+                new GUIContent(type.Name),
+                false,
+                () => SetActionData(
+                    propertyPath,
+                    index,
+                    selectedType
+                )
+            );
+        }
+
+        menu.ShowAsContext();
+    }
+
+    private void SetActionData(
+    string propertyPath,
+    int index,
+    Type type)
+    {
+        serializedObject.Update();
+
+        SerializedProperty list =
+            serializedObject.FindProperty(propertyPath);
+
+        if (list == null)
+            return;
+
+        if (index < 0)
+        {
+            index = list.arraySize;
+
+            list.InsertArrayElementAtIndex(index);
+        }
+
+        SerializedProperty element =
+            list.GetArrayElementAtIndex(index);
+
+        element.managedReferenceValue =
+            Activator.CreateInstance(type);
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    #endregion
 }

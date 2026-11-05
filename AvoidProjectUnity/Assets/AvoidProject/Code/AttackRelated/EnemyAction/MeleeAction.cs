@@ -11,7 +11,7 @@ public class MeleeAction : Action
 
     public override void Execute()
     {
-        
+        Debug.Log("UŒ‚");
     }
 
     public override void Update()

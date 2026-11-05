@@ -7,6 +7,7 @@ public abstract class ActionData
 }
 
 [System.Serializable]
+[ActionDataFor(typeof (MeleeAttackData))]
 public class MeleeActionData : ActionData
 {
     public float a;//発動タイミング
@@ -18,6 +19,8 @@ public class MeleeActionData : ActionData
 }
 
 [System.Serializable]
+[ActionDataFor(typeof (MeleeAttackData))]
+[ActionDataFor(typeof (JumpAttackData))]
 public class WaitActionData : ActionData
 {
     public override Action CreateAction()

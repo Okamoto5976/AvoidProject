@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TestEnemy : Enemy, IDamageable
 {
@@ -12,25 +13,39 @@ public class TestEnemy : Enemy, IDamageable
     //
 
     private Movement m_movement;
-    private TestEnemyAttack m_testEnemyAttack;
 
     [SerializeField] private AttackManager m_attackManager;
-    [SerializeField] private Attack m_attack;
+
+    private List<IAttack> m_attacks = new();
 
     private void Awake()
     {
         m_movement = GetComponent<Movement>();
-        m_testEnemyAttack = GetComponent<TestEnemyAttack>();
+    }
+
+    public override void InitializeData(EnemyData data)
+    {
+        base.InitializeData(data);
+
+        foreach(var attack in data.AttackSettings)
+        {
+            m_attacks.Add(attack.AttackData.CreateAttackClass());
+        }
     }
 
     //AttackManagerを持ち　実際に攻撃をしてみる
     //HPの処理の確認は必要なし
-    [ContextMenu("TestEnemy Attack")]
-    public void Attack()
+    [ContextMenu("TestEnemy Sword Attack")]
+    public void TestAttack()
     {
-        m_attackManager.Attack(m_attack);
+        SwordAttack();
     }
 
+    [ContextMenu("TestEnemy Jump Attack")]
+    public void TestJumpAttack()
+    {
+        JumpAttack();
+    }
 
     public void TakeDamage(int damage)
     {
@@ -41,14 +56,14 @@ public class TestEnemy : Enemy, IDamageable
     public event Action<Vector2> OnMove;
 
     [EnemyAttackPoint("melee","近接攻撃","近いものに切る")]
-    public void SowrdAttack()
+    public void SwordAttack()
     {
-        
+        m_attacks[0].Execute();
     }
 
     [EnemyAttackPoint("jump","ジャンプ攻撃","ジャンプして攻撃")]
     public void JumpAttack()
     {
-
+        m_attacks[1].Execute();
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    public virtual void Initialize(EnemyData data)
+    public virtual void InitializeData(EnemyData data)
     {
         if (!data.MatchesEnemyType(GetType()))
         {
