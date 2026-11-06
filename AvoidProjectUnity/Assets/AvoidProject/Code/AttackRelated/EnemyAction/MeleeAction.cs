@@ -4,7 +4,7 @@ public class MeleeAction : Action
 {
     private readonly MeleeActionData m_actionData;
 
-    public MeleeAction(MeleeActionData data, IAttack attack)
+    public MeleeAction(MeleeActionData data, AttackBase attack)
     {
         m_actionData = data;
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public abstract class AttackData
 {
-    public abstract IAttack CreateAttackClass();
+    public abstract AttackBase CreateAttackClass();
 }
 
 [System.Serializable]
@@ -12,7 +12,7 @@ public class MeleeAttackData : AttackData
 {
     public Attack m_attackContext;
 
-    public override IAttack CreateAttackClass()
+    public override AttackBase CreateAttackClass()
     {
         return new MeleeAttack(this);
     }
@@ -35,7 +35,7 @@ public class MeleeAttackData : AttackData
 [System.Serializable]
 public class JumpAttackData : AttackData
 {
-    public override IAttack CreateAttackClass()
+    public override AttackBase CreateAttackClass()
     {
         return null;
     }

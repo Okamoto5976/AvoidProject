@@ -16,7 +16,7 @@ public class TestEnemy : Enemy, IDamageable
 
     [SerializeField] private AttackManager m_attackManager;
 
-    private List<IAttack> m_attacks = new();
+    private List<AttackBase> m_attacks = new();
 
     private void Awake()
     {
@@ -30,6 +30,8 @@ public class TestEnemy : Enemy, IDamageable
         foreach(var attack in data.AttackSettings)
         {
             var attackData = attack.AttackData.CreateAttackClass();
+
+            attackData.Initialize(m_movement, this.transform, m_attackManager);
 
             m_attacks.Add(attackData);
         }

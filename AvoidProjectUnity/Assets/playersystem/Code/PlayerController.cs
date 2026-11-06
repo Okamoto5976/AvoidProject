@@ -93,13 +93,14 @@ public class PlayerController : MonoBehaviour
         pData.m_attackData.PlayerTestSetAction();
 
         m_meleeAttack = new(pData.m_attackData);
-        m_meleeAttack.SetTransfrom(this.transform);
+        //m_meleeAttack.SetTransfrom(this.transform);
     }
 
     public void SetAttackManager(AttackManager component)
     {
-        m_meleeAttack.SetAttackManager(component);
+        //m_meleeAttack.SetAttackManager(component);
 
+        m_meleeAttack.Initialize(m_movement, transform, component);
     }
 
     private void Update()
