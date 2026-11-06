@@ -28,8 +28,18 @@ public class TimedAction
 
 public class AttackManager : MonoBehaviour
 {
-    [SerializeField] private ColliderManager m_ColliderManager;
-    [SerializeField] private AttackViewManager m_AttackViewManager;
+    private ColliderManager m_ColliderManager;
+    private AttackViewManager m_AttackViewManager;
+
+    public void SetColliderManager(ColliderManager component)
+    {
+        m_ColliderManager = component;
+    }
+
+    public void SetAttackViewManager(AttackViewManager component)
+    {
+        m_AttackViewManager = component;
+    }
 
     /// <summary>
     /// UŒ‚‚·‚éŠÖ”

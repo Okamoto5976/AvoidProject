@@ -148,8 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0b58772fb5081747bad7570c36ac40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackManager
-  m_ColliderManager: {fileID: 1451021332}
-  m_AttackViewManager: {fileID: 1459263366}
 --- !u!4 &108090071
 Transform:
   m_ObjectHideFlags: 0
@@ -3071,8 +3069,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949dd4bf8d835304f8303fb450ecd144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderManager
-  m_MediationPool: {fileID: 1927167898}
-  m_Player: {fileID: 0}
 --- !u!4 &1451021333
 Transform:
   m_ObjectHideFlags: 0
@@ -3117,8 +3113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab806d28411a8fc4090a559c4e959579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackViewManager
-  m_AttackManager: {fileID: 108090070}
-  m_AttackViewPool: {fileID: 849001351}
   m_Box: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Circle: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
 --- !u!4 &1459263367
@@ -4360,10 +4354,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7a5b5706d8a8746afaae09c61a0b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InitializedManager
-  m_hasTimeLimit: 1
   m_timeLimit: 60
   m_stageRadius: 20
   m_stageWeaponCount: 4
+  m_runtimeData:
+    Gold: 0
+    PotionAmount: 3
+    HasTimeLimit: 1
   m_gameManager: {fileID: 503960966}
   m_menuManager: {fileID: 490510300}
   m_audioVolumeController: {fileID: 490510301}
@@ -4371,7 +4368,12 @@ MonoBehaviour:
   m_playerData: {fileID: 11400000, guid: dafe55f67ffc4a2479432c0b114b7f68, type: 2}
   m_player: {fileID: 1500419983}
   m_enemy: {fileID: 649672469}
-  m_enemyData: {fileID: 11400000, guid: 755b5c182c53f674fb77a923965a524e, type: 2}
+  m_enemyData: {fileID: 11400000, guid: 2fdcb7b4e0b631d4bbf65db30b4bdf13, type: 2}
+  m_attackManager: {fileID: 108090070}
+  m_attackViewManager: {fileID: 1459263366}
+  m_colliderManager: {fileID: 1451021332}
+  m_colliderMediationPool: {fileID: 1927167898}
+  m_attackViewPool: {fileID: 849001351}
   m_cameraManager: {fileID: 1319166042}
   m_debugManager: {fileID: 736574456}
 --- !u!1 &2075916194
@@ -4655,10 +4657,10 @@ SceneRoots:
   - {fileID: 432417507}
   - {fileID: 503960967}
   - {fileID: 736574457}
-  - {fileID: 649672467}
   - {fileID: 678467103}
   - {fileID: 261416260}
   - {fileID: 1299595724}
   - {fileID: 1059546139}
   - {fileID: 2078290129}
   - {fileID: 1024388408017722557}
+  - {fileID: 649672467}

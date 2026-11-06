@@ -88,12 +88,21 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.PlayerDisable();
     }
 
+    private MeleeAttack m_meleeAttack;
+
     public void Initialize(PlayerData pData, RuntimeData rData)
     {
-        Debug.Log("PlayerController Initialize ÀsI");
+        Debug.Log("PlayerController Initialize å®Ÿè¡Œï¼");
         m_hpController.Initialize(pData.HP);
 
         m_hasRecoverCount = rData.PotionAmount;
+
+        pData.m_attackData.PlayerTestSetAction();
+
+        m_meleeAttack = new(pData.m_attackData);
+        //m_meleeAttack.SetTransfrom(this.transform);
+
+ 
 
         m_moveSpeed = pData.Speed;  
         m_sprintSpeed = pData.SprintSpeed;
@@ -111,8 +120,16 @@ public class PlayerController : MonoBehaviour
         m_interactRange = pData.InteractRange;
         m_interactHoldTime = pData.InteractHoldTime;
 
-        Debug.Log("ˆÚ“®‘¬“xF" + m_moveSpeed);
+        Debug.Log("ç§»å‹•é€Ÿåº¦ï¼š" + m_moveSpeed);
     }
+
+   public void SetAttackManager(AttackManager component)
+    {
+        //m_meleeAttack.SetAttackManager(component);
+
+        m_meleeAttack.Initialize(m_movement, transform, component);
+    }
+
     private void Update()
     {
         if (m_isWaitingAvoid)
@@ -137,7 +154,7 @@ public class PlayerController : MonoBehaviour
                 m_hpController.Damage(m_pendingDamage);
                 m_pendingDamage = 0;
                
-                Debug.Log("‰ñ”ğ¸”sIƒ_ƒ[ƒW‚ğó‚¯‚Ü‚µ‚½", this);
+                Debug.Log("å›é¿å¤±æ•—ï¼ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¾ã—ãŸ", this);
                 if (m_hpController. Hp <= 0)
                 {
                     Dead();
@@ -206,19 +223,25 @@ public class PlayerController : MonoBehaviour
     private void InputInteract()
     {
         if (m_playerState == PlayerState.Dead) return;
-        //Debug.Log("ƒCƒ“ƒ^ƒ‰ƒNƒgI",this);
+        //Debug.Log("ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆï¼",this);
+
     }
+
+
     private void InputAttack()
     {
         if (m_playerState == PlayerState.Dead) return;  
         m_isRecovering = false;
         ChangeState(PlayerState.Attack);
-        //Debug.Log("UŒ‚I",this);
+        //Debug.Log("æ”»æ’ƒï¼",this);
         StartCoroutine(AttackCoroutine());
+
+        m_meleeAttack.Execute();
+
     }
     private void InputRecover()
     {
-        //Debug.Log("‰ñ•œI",this);
+        //Debug.Log("å›å¾©ï¼",this);
     }
     private void InputAvoid()
     {
@@ -230,11 +253,11 @@ public class PlayerController : MonoBehaviour
             m_pendingDamage = 0;
             m_isRecovering = false;
 
-            // ’Êí‰ñ”ğ‚Ì‘Ò‹@‚à‰ğœ
+            // é€šå¸¸å›é¿ã®å¾…æ©Ÿã‚‚è§£é™¤
             m_isWaitingAvoid = false;
             m_avoidFrameCount = 0;
 
-            Debug.Log("ƒWƒƒƒXƒg‰ñ”ğ¬Œ÷I", this);
+            Debug.Log("ã‚¸ãƒ£ã‚¹ãƒˆå›é¿æˆåŠŸï¼", this);
 
             StartCoroutine(AvoidCoroutine());
             return;
@@ -255,7 +278,7 @@ public class PlayerController : MonoBehaviour
     {
         if (m_isInvincible)
         {
-            //Debug.Log("‰ñ”ğ’†‚Ì‚½‚ßƒ_ƒ[ƒW–³ŒøI",this);
+            //Debug.Log("å›é¿ä¸­ã®ãŸã‚ãƒ€ãƒ¡ãƒ¼ã‚¸ç„¡åŠ¹ï¼",this);
             return;
         }
 
@@ -266,7 +289,7 @@ public class PlayerController : MonoBehaviour
         }
         m_pendingDamage += damage;
 
-        Debug.Log("UŒ‚HitIƒWƒƒƒXƒg‰ñ”ğó•tŠJnI", this);
+        Debug.Log("æ”»æ’ƒHitï¼ã‚¸ãƒ£ã‚¹ãƒˆå›é¿å—ä»˜é–‹å§‹ï¼", this);
     }
 
     private void InputInteractHold(bool isHolding)
@@ -290,6 +313,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     private void InputRecoverHold(bool isHolding)
     {
         if (m_playerState == PlayerState.Dead) return;
@@ -300,12 +324,12 @@ public class PlayerController : MonoBehaviour
             if (m_hasRecoverCount <= 0) return;
 
             StartCoroutine(RecoverCoroutine());
-            //Debug.Log("‰ñ•œŠJnI", this);
+            //Debug.Log("å›å¾©é–‹å§‹ï¼", this);
         }
         else
         {
             m_recoverTimer = 0;
-            //Debug.Log("‰ñ•œI—¹I", this);
+            //Debug.Log("å›å¾©çµ‚äº†ï¼", this);
         }
     }
 
@@ -333,18 +357,18 @@ public class PlayerController : MonoBehaviour
 
         ChangeState(PlayerState.Avoid);
 
-        // ‰ñ”ğŠJn‚Æ“¯‚É–³“G‰»
+        // å›é¿é–‹å§‹ã¨åŒæ™‚ã«ç„¡æ•µåŒ–
         m_isInvincible = true;
 
-        // ‰ñ”ğˆÚ“®‚ğŠJn
+        // å›é¿ç§»å‹•ã‚’é–‹å§‹
         m_movement.Move(m_velocity, m_avoidSpeed);
 
-        //Debug.Log("‰ñ”ğŠJnE–³“G‰»I", this);
+        //Debug.Log("å›é¿é–‹å§‹ãƒ»ç„¡æ•µåŒ–ï¼", this);
 
-        // ‰ñ”ğŠÔ
+        // å›é¿æ™‚é–“
         yield return new WaitForSeconds(m_avoidDuration);
 
-        // ‰ñ”ğI—¹
+        // å›é¿çµ‚äº†
         m_movement.Stop();
 
         m_isInvincible = false;
@@ -355,7 +379,7 @@ public class PlayerController : MonoBehaviour
             ChangeState(PlayerState.Idle);
         }
 
-        //Debug.Log("‰ñ”ğI—¹E–³“G‰ğœI", this);  
+        //Debug.Log("å›é¿çµ‚äº†ãƒ»ç„¡æ•µè§£é™¤ï¼", this);  
     }
 
     public void SetHasWeapon(bool value)
@@ -396,14 +420,14 @@ public class PlayerController : MonoBehaviour
 
         m_movement.Stop();
 
-        Debug.Log("ƒvƒŒƒCƒ„[€–SI", this);
+        Debug.Log("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ­»äº¡ï¼", this);
     }
-    [ContextMenu("ƒeƒXƒg—p/‹­§€–S")]
+    [ContextMenu("ãƒ†ã‚¹ãƒˆç”¨/å¼·åˆ¶æ­»äº¡")]
     private void TestDead()
     {
         Dead();
     }
-    [ContextMenu("ƒeƒXƒg—p/ƒWƒƒƒXƒg‰ñ”ğó•t")]
+    [ContextMenu("ãƒ†ã‚¹ãƒˆç”¨/ã‚¸ãƒ£ã‚¹ãƒˆå›é¿å—ä»˜")]
     private void TestJustAvoid()
     {
         Damage(10);

@@ -3,10 +3,15 @@ using UnityEngine;
 
 public class ColliderManager : MonoBehaviour
 {
-    [SerializeField] private ColliderMediationPool m_MediationPool;
-    [SerializeField] private Rigidbody2D m_Player;
+    private ColliderMediationPool m_MediationPool;
+    //[SerializeField] private Rigidbody2D m_Player;
 
     private List<TimedAction> m_TimedActions = new();
+
+    public void SetColliderMediationPool(ColliderMediationPool component)
+    {
+        m_MediationPool = component;
+    }
 
     private void Update()
     {
@@ -45,6 +50,6 @@ public class ColliderManager : MonoBehaviour
         action.Timer = attack.ActiveTime;
         action.Object = obj;
         m_TimedActions.Add(action);
-        m_Player.WakeUp();
+        //m_Player.WakeUp();
     }
 }

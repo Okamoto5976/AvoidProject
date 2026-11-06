@@ -177,10 +177,12 @@ public class EnemyDataEditor : Editor
         // İ’è‚ª‘¶İ‚µ‚È‚¢ê‡
         if (index < 0)
         {
-            if (GUILayout.Button("Attack Setting‚ğ’Ç‰Á"))
-            {
-                AddSetting(point.Id);
-            }
+            //if (GUILayout.Button("Attack Setting‚ğ’Ç‰Á"))
+            //{
+            //    AddSetting(point.Id);
+            //}
+            AddSetting(point.Id);
+            index = FindSettingIndex(point.Id);
 
             return;
         }
@@ -236,9 +238,13 @@ public class EnemyDataEditor : Editor
         return -1;
     }
 
-    // UŒ‚İ’è‚ğ’Ç‰Á
+    /// <summary>
+    /// UŒ‚İ’è‚ğ’Ç‰Á
+    /// </summary>
+    /// <param name="id"></param>
     private void AddSetting(string id)
     {
+        //“n‚³‚ê‚½ID‚©‚ç
         int index = m_attackSettings.arraySize;
 
         m_attackSettings.InsertArrayElementAtIndex(index);
