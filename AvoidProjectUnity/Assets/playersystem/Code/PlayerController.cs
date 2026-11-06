@@ -10,35 +10,40 @@ public class PlayerController : MonoBehaviour
 
     private InputProvider m_inputProvider;
     private PlayerInteract m_playerInteract;
-  
+    private PlayerState m_playerState = PlayerState.Idle;
+
     //InputRelated
     private bool m_isSprinting = false;
     private bool m_isAvoiding = false;
     private bool m_isInteracting = false;
     private bool m_isWaitingAvoid = false;
     private bool m_isRecovering = false;
-
-    //PlayerStatus
-    private float m_moveSpeed = 5f;
-    private float m_sprintSpeed = 10f;
-    private float m_avoidDelay = 5f / 60f; // ‰ñ”ğŠJn‚Ü‚Å‚ÌƒtƒŒ[ƒ€”
-    private float m_avoidDuration = 0.2f;
-    private float m_avoidSpeed = 15f;
-    private float m_recoverMoveSpeed = 2f;
-    private float m_interactRange = 2.0f;
-    private float m_interactHoldTime = 1.5f;
-
-    private int m_avoidFrameCount = 0;
-    
-    private Vector2 m_velocity;
-
     private bool m_isInvincible = false;
     private bool m_hasWeapon = false;
+    //PlayerStatus
+    private float m_moveSpeed;
+    private float m_sprintSpeed;
+    private float m_avoidDuration;
+    private float m_avoidSpeed;
+    private float m_recoverMoveSpeed;
+    private float m_interactRange;
+    private float m_interactHoldTime;
+    private float m_attackStateDuration;
+
+    private int m_avoidStartFrame;
+    private int m_avoidFrameCount = 0;
+    private int m_justAvoidFrameCount = 0;
+    private int m_pendingDamage = 0;
+    private bool m_isWaitingJustAvoid = false;
+    private int m_justAvoidFrame;
+
+    private Vector2 m_velocity;
+
 
     //PlayerHpHeal
     private float m_recoverTimer = 0;
-    private float m_recoverDuration = 2;
-    private int m_recoverValue = 100;
+    private float m_recoverDuration;
+    private int m_recoverValue;
 
 
     private int m_hasRecoverCount;
@@ -87,16 +92,38 @@ public class PlayerController : MonoBehaviour
 
     public void Initialize(PlayerData pData, RuntimeData rData)
     {
+        Debug.Log("PlayerController Initialize å®Ÿè¡Œï¼");
         m_hpController.Initialize(pData.HP);
+
         m_hasRecoverCount = rData.PotionAmount;
 
         pData.m_attackData.PlayerTestSetAction();
 
         m_meleeAttack = new(pData.m_attackData);
         //m_meleeAttack.SetTransfrom(this.transform);
+
+ 
+
+        m_moveSpeed = pData.Speed;  
+        m_sprintSpeed = pData.SprintSpeed;
+        m_attackStateDuration = pData.AttackStateDuration;
+
+        m_avoidSpeed = pData.Speed * pData.AvoidSpeedRate;
+        m_avoidStartFrame = pData.AvoidStartFrame;
+        m_avoidDuration = pData.AvoidDuration;
+        m_justAvoidFrame = pData.JustAvoidFrame;
+
+        m_recoverMoveSpeed = pData.RecoverMoveSpeed;
+        m_recoverDuration = pData.RecoverDuration;
+        m_recoverValue = pData.RecoverValue;
+
+        m_interactRange = pData.InteractRange;
+        m_interactHoldTime = pData.InteractHoldTime;
+
+        Debug.Log("ç§»å‹•é€Ÿåº¦ï¼š" + m_moveSpeed);
     }
 
-    public void SetAttackManager(AttackManager component)
+   public void SetAttackManager(AttackManager component)
     {
         //m_meleeAttack.SetAttackManager(component);
 
@@ -109,7 +136,7 @@ public class PlayerController : MonoBehaviour
         {
             m_avoidFrameCount++;
 
-            if (m_avoidFrameCount >= 5)
+            if (m_avoidFrameCount >= m_avoidStartFrame)
             {
                 m_isWaitingAvoid = false;
                 StartCoroutine(AvoidCoroutine());
@@ -117,6 +144,23 @@ public class PlayerController : MonoBehaviour
         }
        
         
+        if (m_isWaitingJustAvoid)
+        {
+            m_justAvoidFrameCount++;
+            if (m_justAvoidFrameCount >= m_justAvoidFrame)
+            {
+                m_isWaitingJustAvoid = false;
+
+                m_hpController.Damage(m_pendingDamage);
+                m_pendingDamage = 0;
+               
+                Debug.Log("å›é¿å¤±æ•—ï¼ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¾ã—ãŸ", this);
+                if (m_hpController. Hp <= 0)
+                {
+                    Dead();
+                }
+            }
+        }
 
         if (m_isInteracting)
         {
@@ -131,6 +175,10 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        if (m_playerState == PlayerState.Dead)
+        {
+            return;
+        }
         if (m_isAvoiding || m_isWaitingAvoid)
         {
             return;
@@ -141,11 +189,21 @@ public class PlayerController : MonoBehaviour
         if (m_isSprinting)
         {
             speed = m_sprintSpeed;
+            ChangeState(PlayerState.Sprint);
         }
 
-        if (m_isRecovering)
+        else if (m_isRecovering)
         {
             speed = m_recoverMoveSpeed;
+            ChangeState(PlayerState.Recover);
+        }
+        else if (m_velocity != Vector2.zero)
+        {
+            ChangeState(PlayerState.Move);
+        }
+        else
+        {
+            ChangeState(PlayerState.Idle);
         }
         m_movement.Move(m_velocity, speed);
 
@@ -153,34 +211,58 @@ public class PlayerController : MonoBehaviour
 
     private void InputSprint(bool isSprinting)
     {
+        if (m_playerState == PlayerState.Dead) return;
         m_isSprinting = !m_isSprinting;
     }
     private void InputMove(Vector2 value)
     {
+        if (m_playerState == PlayerState.Dead) return;  
         m_velocity = value;
     }
 
     private void InputInteract()
     {
-        //Debug.Log("ƒCƒ“ƒ^ƒ‰ƒNƒgI",this);
+        if (m_playerState == PlayerState.Dead) return;
+        //Debug.Log("ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆï¼",this);
 
     }
 
 
     private void InputAttack()
     {
+        if (m_playerState == PlayerState.Dead) return;  
         m_isRecovering = false;
-        //Debug.Log("UŒ‚I",this);
+        ChangeState(PlayerState.Attack);
+        //Debug.Log("æ”»æ’ƒï¼",this);
+        StartCoroutine(AttackCoroutine());
 
         m_meleeAttack.Execute();
 
     }
     private void InputRecover()
     {
-        //Debug.Log("‰ñ•œI",this);
+        //Debug.Log("å›å¾©ï¼",this);
     }
     private void InputAvoid()
     {
+        if (m_playerState == PlayerState.Dead) return;
+        if (m_isWaitingJustAvoid)
+        {
+           m_isWaitingJustAvoid = false;
+
+            m_pendingDamage = 0;
+            m_isRecovering = false;
+
+            // é€šå¸¸å›é¿ã®å¾…æ©Ÿã‚‚è§£é™¤
+            m_isWaitingAvoid = false;
+            m_avoidFrameCount = 0;
+
+            Debug.Log("ã‚¸ãƒ£ã‚¹ãƒˆå›é¿æˆåŠŸï¼", this);
+
+            StartCoroutine(AvoidCoroutine());
+            return;
+        }
+
         if (m_isAvoiding || m_isWaitingAvoid)
         {
             return;
@@ -196,29 +278,45 @@ public class PlayerController : MonoBehaviour
     {
         if (m_isInvincible)
         {
-            //Debug.Log("‰ñ”ğ’†‚Ì‚½‚ßƒ_ƒ[ƒW–³ŒøI",this);
+            //Debug.Log("å›é¿ä¸­ã®ãŸã‚ãƒ€ãƒ¡ãƒ¼ã‚¸ç„¡åŠ¹ï¼",this);
             return;
         }
-        m_hpController.Damage(damage);
+
+        if (!m_isWaitingJustAvoid)
+        {
+            m_isWaitingJustAvoid = true;
+            m_justAvoidFrameCount = 0;
+        }
+        m_pendingDamage += damage;
+
+        Debug.Log("æ”»æ’ƒHitï¼ã‚¸ãƒ£ã‚¹ãƒˆå›é¿å—ä»˜é–‹å§‹ï¼", this);
     }
 
     private void InputInteractHold(bool isHolding)
     {
+        if (m_playerState == PlayerState.Dead) return;
         m_isInteracting = isHolding;
 
         if (isHolding)
         {
             m_isRecovering = false;
+            ChangeState(PlayerState.Interact);
             m_playerInteract.StartInteract(this, m_interactRange);
         }
         else
         {
             m_playerInteract.EndInteract();
+
+            if (!m_isAvoiding)
+            {
+                ChangeState(PlayerState.Idle);
+            }
         }
     }
 
     private void InputRecoverHold(bool isHolding)
     {
+        if (m_playerState == PlayerState.Dead) return;
         m_isRecovering = isHolding;
 
         if (m_isRecovering)
@@ -226,12 +324,12 @@ public class PlayerController : MonoBehaviour
             if (m_hasRecoverCount <= 0) return;
 
             StartCoroutine(RecoverCoroutine());
-            //Debug.Log("‰ñ•œŠJnI", this);
+            //Debug.Log("å›å¾©é–‹å§‹ï¼", this);
         }
         else
         {
             m_recoverTimer = 0;
-            //Debug.Log("‰ñ•œI—¹I", this);
+            //Debug.Log("å›å¾©çµ‚äº†ï¼", this);
         }
     }
 
@@ -256,26 +354,32 @@ public class PlayerController : MonoBehaviour
     private IEnumerator AvoidCoroutine()
     {
         m_isAvoiding = true;
-       
 
-        // ‰ñ”ğŠJn‚Æ“¯‚É–³“G‰»
+        ChangeState(PlayerState.Avoid);
+
+        // å›é¿é–‹å§‹ã¨åŒæ™‚ã«ç„¡æ•µåŒ–
         m_isInvincible = true;
 
-        // ‰ñ”ğˆÚ“®‚ğŠJn
+        // å›é¿ç§»å‹•ã‚’é–‹å§‹
         m_movement.Move(m_velocity, m_avoidSpeed);
 
-        //Debug.Log("‰ñ”ğŠJnE–³“G‰»I", this);
+        //Debug.Log("å›é¿é–‹å§‹ãƒ»ç„¡æ•µåŒ–ï¼", this);
 
-        // ‰ñ”ğŠÔ
+        // å›é¿æ™‚é–“
         yield return new WaitForSeconds(m_avoidDuration);
 
-        // ‰ñ”ğI—¹
+        // å›é¿çµ‚äº†
         m_movement.Stop();
 
         m_isInvincible = false;
         m_isAvoiding = false;
 
-        //Debug.Log("‰ñ”ğI—¹E–³“G‰ğœI", this);  
+        if (m_playerState == PlayerState.Avoid)
+        {
+            ChangeState(PlayerState.Idle);
+        }
+
+        //Debug.Log("å›é¿çµ‚äº†ãƒ»ç„¡æ•µè§£é™¤ï¼", this);  
     }
 
     public void SetHasWeapon(bool value)
@@ -283,4 +387,50 @@ public class PlayerController : MonoBehaviour
         m_hasWeapon = value;
     }
 
+    private void ChangeState(PlayerState newState)
+    {
+        if (m_playerState == newState) return;
+        m_playerState = newState;
+        Debug.Log("Player State: " + m_playerState, this);
+    }
+
+    private IEnumerator AttackCoroutine()
+    {
+        yield return new WaitForSeconds(m_attackStateDuration);
+
+        if (m_playerState == PlayerState.Attack)
+        {
+            ChangeState(PlayerState.Idle);
+        }
+    }
+
+    private void Dead()
+    {
+        ChangeState(PlayerState.Dead);
+
+        m_velocity = Vector2.zero;
+        m_isSprinting = false;
+        m_isRecovering = false;
+        m_isInteracting = false;
+
+        m_isWaitingAvoid = false;
+        m_isWaitingJustAvoid = false;
+        m_isAvoiding = false;
+        m_isInvincible = false;
+
+        m_movement.Stop();
+
+        Debug.Log("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ­»äº¡ï¼", this);
+    }
+    [ContextMenu("ãƒ†ã‚¹ãƒˆç”¨/å¼·åˆ¶æ­»äº¡")]
+    private void TestDead()
+    {
+        Dead();
+    }
+    [ContextMenu("ãƒ†ã‚¹ãƒˆç”¨/ã‚¸ãƒ£ã‚¹ãƒˆå›é¿å—ä»˜")]
+    private void TestJustAvoid()
+    {
+        Damage(10);
+    }
 }
+
