@@ -83,10 +83,23 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.PlayerDisable();
     }
 
+    private MeleeAttack m_meleeAttack;
+
     public void Initialize(PlayerData pData, RuntimeData rData)
     {
         m_hpController.Initialize(pData.HP);
         m_hasRecoverCount = rData.PotionAmount;
+
+        pData.m_attackData.PlayerTestSetAction();
+
+        m_meleeAttack = new(pData.m_attackData);
+        m_meleeAttack.SetTransfrom(this.transform);
+    }
+
+    public void SetAttackManager(AttackManager component)
+    {
+        m_meleeAttack.SetAttackManager(component);
+
     }
 
     private void Update()
@@ -149,11 +162,17 @@ public class PlayerController : MonoBehaviour
     private void InputInteract()
     {
         //Debug.Log("インタラクト！",this);
+
     }
+
+
     private void InputAttack()
     {
         m_isRecovering = false;
         //Debug.Log("攻撃！",this);
+
+        m_meleeAttack.Execute();
+
     }
     private void InputRecover()
     {
@@ -196,6 +215,7 @@ public class PlayerController : MonoBehaviour
             m_playerInteract.EndInteract();
         }
     }
+
     private void InputRecoverHold(bool isHolding)
     {
         m_isRecovering = isHolding;

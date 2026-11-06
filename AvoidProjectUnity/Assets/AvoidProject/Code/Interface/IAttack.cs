@@ -6,4 +6,6 @@ public interface IAttack
     void Execute();
 
     void Update();
+
+    public void Attack();
 }

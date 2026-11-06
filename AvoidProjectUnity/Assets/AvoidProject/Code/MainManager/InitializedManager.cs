@@ -6,13 +6,14 @@ public class InitializedManager : MonoBehaviour
     [Header("InitializedValue : Test")]
 
     //GameManager
-    [SerializeField] private bool m_hasTimeLimit;
     [SerializeField] private float m_timeLimit;
 
     //StartManager
     [SerializeField] private float m_stageRadius = 5f;
 
     [SerializeField] private int m_stageWeaponCount = 4;
+
+    [SerializeField] private RuntimeData m_runtimeData = new();
 
     //GameObjectReference
     [Header("GameObjectReference")]
@@ -30,19 +31,24 @@ public class InitializedManager : MonoBehaviour
     [SerializeField] private Enemy m_enemy;
     [SerializeField] private EnemyData m_enemyData;
 
+    [SerializeField] private AttackManager m_attackManager;
+    [SerializeField] private AttackViewManager m_attackViewManager;
+    [SerializeField] private ColliderManager m_colliderManager;
+    [SerializeField] private ColliderMediationPool m_colliderMediationPool;
+    [SerializeField] private PoolManager m_attackViewPool;
+     
     [SerializeField] private CameraManager m_cameraManager;
+
 
 
 
     [SerializeField] private DebugManager m_debugManager;
 
-    private RuntimeData m_runtimeData;
+    
 
     private void Start()
     {
         Application.targetFrameRate = 60;
-
-        m_runtimeData = new RuntimeData();
 
         Initialize();
     }
@@ -59,12 +65,13 @@ public class InitializedManager : MonoBehaviour
         //HasTimeLimit
         //TimeLimit
         //回復薬
-        
+
         //PlayerData(SO)
 
         //GameTypeを受け取る　制限時間か　討伐か
         //GameManagerの初期化
-        m_gameManager.Initialize(m_hasTimeLimit, m_timeLimit);
+        bool hasTimeLimit = m_runtimeData.HasTimeLimit;
+        m_gameManager.Initialize(hasTimeLimit, m_timeLimit);
 
         //MenuManagerの初期化
         m_menuManager.Initialize();
@@ -88,6 +95,7 @@ public class InitializedManager : MonoBehaviour
         m_playerHpController = m_player.GetComponent<HpController>();
 
         m_playerController.Initialize(m_playerData, m_runtimeData);
+        m_playerController.SetAttackManager(m_attackManager);
         m_playerMovement.Initialize(m_stageManager);
         //Deadの際のイベントを入れておく
 
@@ -103,6 +111,13 @@ public class InitializedManager : MonoBehaviour
         m_cameraManager.Initialize(m_player, m_enemy.gameObject);
 
         //それぞれPoolがあるので　あったPoolを各Managerに渡す
+        m_attackManager.SetAttackViewManager(m_attackViewManager);
+        m_attackManager.SetColliderManager(m_colliderManager);
+
+        m_attackViewManager.SetAttackManager(m_attackManager);
+        m_attackViewManager.SetAttackViewPool(m_attackViewPool);
+
+        m_colliderManager.SetColliderMediationPool(m_colliderMediationPool);
 
         //それぞれに　必要なManagerを渡す Attack時に必要なものとか
 

@@ -16,4 +16,6 @@ public class PlayerData : ScriptableObject
     public float AvoidSpeedRate => m_avoidSpeedRate;
     public float HitRadius => m_hitRadius;
     public int JustAvoidFlame => m_justAvoidFlame;
+
+    public MeleeAttackData m_attackData = new();
 }

@@ -3,12 +3,22 @@ using UnityEngine;
 
 public class AttackViewManager : MonoBehaviour
 {
-    [SerializeField] private AttackManager m_AttackManager;
-    [SerializeField] private PoolManager m_AttackViewPool;
+    private AttackManager m_AttackManager;
+    private PoolManager m_AttackViewPool;
     [SerializeField] private Sprite m_Box;
     [SerializeField] private Sprite m_Circle;
 
     private List<TimedAction> m_TimedActions = new();
+
+    public void SetAttackManager(AttackManager component)
+    {
+        m_AttackManager = component;
+    }
+
+    public void SetAttackViewPool(PoolManager component)
+    {
+        m_AttackViewPool = component;
+    }
 
     private void Update()
     {

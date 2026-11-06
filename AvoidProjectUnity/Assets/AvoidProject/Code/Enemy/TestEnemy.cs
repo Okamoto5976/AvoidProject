@@ -29,8 +29,11 @@ public class TestEnemy : Enemy, IDamageable
 
         foreach(var attack in data.AttackSettings)
         {
-            m_attacks.Add(attack.AttackData.CreateAttackClass());
+            var attackData = attack.AttackData.CreateAttackClass();
+
+            m_attacks.Add(attackData);
         }
+
     }
 
     private void Update()
