@@ -12,6 +12,7 @@ public class TestEnemy : Enemy, IDamageable
     //Renderer‚ğ‚Â@flipX
     //
 
+    private Rigidbody2D m_rd;
     private Movement m_movement;
 
     [SerializeField] private AttackManager m_attackManager;
@@ -20,7 +21,8 @@ public class TestEnemy : Enemy, IDamageable
 
     private void Awake()
     {
-        m_movement = GetComponent<Movement>();
+        m_rd = GetComponent<Rigidbody2D>();
+        m_movement = new Movement(m_rd, transform);
     }
 
     public override void InitializeData(EnemyData data)

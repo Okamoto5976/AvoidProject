@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     {
         m_playerInteract = new PlayerInteract(transform);
         m_rd = GetComponent<Rigidbody2D>();
-        m_movement = GetComponent<Movement>();
+        m_movement = new Movement(m_rd, transform);
         m_hpController = GetComponent<HpController>();
 
         m_inputProvider = new InputProvider();
@@ -88,9 +88,8 @@ public class PlayerController : MonoBehaviour
         m_inputProvider.PlayerDisable();
     }
 
-    public void Initialize(PlayerData pData, RuntimeData rData)
+    public void Initialize(PlayerData pData, RuntimeData rData, StageManager stageManager)
     {
-        Debug.Log("PlayerController Initialize 実行！");
         m_hpController.Initialize(pData.HP);
 
         m_hasRecoverCount = rData.PotionAmount;
@@ -111,10 +110,12 @@ public class PlayerController : MonoBehaviour
         m_interactRange = pData.InteractRange;
         m_interactHoldTime = pData.InteractHoldTime;
 
-        Debug.Log("移動速度：" + m_moveSpeed);
+      　m_movement.Initialize(stageManager);
     }
     private void Update()
     {
+        m_movement.LimitMovement();
+
         if (m_isWaitingAvoid)
         {
             m_avoidFrameCount++;
