@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     //component or class
     private Rigidbody2D m_rd;
@@ -49,6 +49,10 @@ public class PlayerController : MonoBehaviour
     private int m_hasRecoverCount;
 
 
+    [SerializeField] private Team m_team;
+    public Team Team => m_team;
+
+
     private void Awake()
     {
         m_playerInteract = new PlayerInteract(transform);
@@ -92,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     public void Initialize(PlayerData pData, RuntimeData rData)
     {
-        Debug.Log("PlayerController Initialize 実行！");
+        //Debug.Log("PlayerController Initialize 実行！");
         m_hpController.Initialize(pData.HP);
 
         m_hasRecoverCount = rData.PotionAmount;
@@ -120,7 +124,7 @@ public class PlayerController : MonoBehaviour
         m_interactRange = pData.InteractRange;
         m_interactHoldTime = pData.InteractHoldTime;
 
-        Debug.Log("移動速度：" + m_moveSpeed);
+        //Debug.Log("移動速度：" + m_moveSpeed);
     }
 
    public void SetAttackManager(AttackManager component)
@@ -154,7 +158,7 @@ public class PlayerController : MonoBehaviour
                 m_hpController.Damage(m_pendingDamage);
                 m_pendingDamage = 0;
                
-                Debug.Log("回避失敗！ダメージを受けました", this);
+                //Debug.Log("回避失敗！ダメージを受けました", this);
                 if (m_hpController. Hp <= 0)
                 {
                     Dead();
@@ -234,9 +238,12 @@ public class PlayerController : MonoBehaviour
         m_isRecovering = false;
         ChangeState(PlayerState.Attack);
         //Debug.Log("攻撃！",this);
-        StartCoroutine(AttackCoroutine());
 
         m_meleeAttack.Execute();
+
+
+        StartCoroutine(AttackCoroutine());
+
 
     }
     private void InputRecover()
@@ -257,7 +264,7 @@ public class PlayerController : MonoBehaviour
             m_isWaitingAvoid = false;
             m_avoidFrameCount = 0;
 
-            Debug.Log("ジャスト回避成功！", this);
+            //Debug.Log("ジャスト回避成功！", this);
 
             StartCoroutine(AvoidCoroutine());
             return;
@@ -274,7 +281,7 @@ public class PlayerController : MonoBehaviour
         m_avoidFrameCount = 0;
     }
 
-    public void Damage(int damage)
+    public void TakeDamage(int damage)
     {
         if (m_isInvincible)
         {
@@ -289,7 +296,7 @@ public class PlayerController : MonoBehaviour
         }
         m_pendingDamage += damage;
 
-        Debug.Log("攻撃Hit！ジャスト回避受付開始！", this);
+        //Debug.Log("攻撃Hit！ジャスト回避受付開始！", this);
     }
 
     private void InputInteractHold(bool isHolding)
@@ -391,7 +398,7 @@ public class PlayerController : MonoBehaviour
     {
         if (m_playerState == newState) return;
         m_playerState = newState;
-        Debug.Log("Player State: " + m_playerState, this);
+        //Debug.Log("Player State: " + m_playerState, this);
     }
 
     private IEnumerator AttackCoroutine()
@@ -420,7 +427,7 @@ public class PlayerController : MonoBehaviour
 
         m_movement.Stop();
 
-        Debug.Log("プレイヤー死亡！", this);
+        //Debug.Log("プレイヤー死亡！", this);
     }
     [ContextMenu("テスト用/強制死亡")]
     private void TestDead()
@@ -430,7 +437,7 @@ public class PlayerController : MonoBehaviour
     [ContextMenu("テスト用/ジャスト回避受付")]
     private void TestJustAvoid()
     {
-        Damage(10);
+        TakeDamage(10);
     }
 }
 

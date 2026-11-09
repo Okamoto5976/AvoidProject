@@ -12,6 +12,10 @@ public class TestEnemy : Enemy, IDamageable
     //Renderer‚ðŽ‚Â@flipX
     //
 
+    [SerializeField] private Team m_team;
+    
+    public Team Team => m_team;
+
     private Movement m_movement;
 
     [SerializeField] private AttackManager m_attackManager;

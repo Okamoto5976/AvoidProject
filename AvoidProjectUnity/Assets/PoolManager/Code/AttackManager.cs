@@ -9,6 +9,8 @@ public enum ShapeType
 [System.Serializable]
 public class Attack
 {
+    public Team Team;
+
     public ShapeType ShapeType;
     public Vector2 Size;
     public Vector2 Position;
