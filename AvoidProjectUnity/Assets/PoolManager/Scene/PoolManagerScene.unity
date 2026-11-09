@@ -260,8 +260,17 @@ MonoBehaviour:
       Length: 5
       Thickness: 0.5
       Angle: 180
-    Size: {x: 2, y: 2}
-    Position: {x: 5, y: 3}
+      Vertices:
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
+    Position: {x: 0, y: 0}
+    Rotation: 0
     StartupTime: 2
     ActiveTime: 2
 --- !u!61 &417548083

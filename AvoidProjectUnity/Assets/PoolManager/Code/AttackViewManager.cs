@@ -40,14 +40,25 @@ public class AttackViewManager : MonoBehaviour
         {
             case ShapeType.Box:
                 spriteRenderer.sprite = m_Box;
+                float width = attack.ColliderProperty.Width;
+                float height = attack.ColliderProperty.Height;
+                obj.transform.localScale = new Vector2(width, height);
                 break;
             case ShapeType.Circle:
                 spriteRenderer.sprite = m_Circle;
+                float diameter = attack.ColliderProperty.Radius * 2;
+                obj.transform.localScale = new Vector2(diameter, diameter);
+                break;
+            case ShapeType.Line:
+                spriteRenderer.sprite = m_Box;
+                width = attack.ColliderProperty.Thickness;
+                height = attack.ColliderProperty.Length;
+                obj.transform.localScale = new Vector2(width, height);
                 break;
         }
 
         obj.transform.position = attack.Position;
-        obj.transform.localScale = attack.Size;
+        obj.transform.rotation = Quaternion.Euler(attack.RotationEuler);
         TimedAction action = new();
         action.Attack = attack;
         action.Timer = attack.StartupTime;

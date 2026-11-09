@@ -1,25 +1,5 @@
 using UnityEngine;
 
-public enum ShapeType
-{
-    Box,
-    Circle,
-    Line,
-    Sector
-}
-
-[System.Serializable]
-public class Attack
-{
-    public ColliderProperty ColliderProperty = new();
-    public Vector2 Size;
-    public Vector2 Position;
-    public float StartupTime;
-    public float ActiveTime;
-
-    public Attack Clone() => (Attack)this.MemberwiseClone();
-}
-
 [System.Serializable]
 public class TimedAction
 {
@@ -39,6 +19,13 @@ public class AttackManager : MonoBehaviour
     /// <param name="attack">攻撃のデータ</param>
     public void Attack(Attack attack)
     {
+        //特殊処理
+        if (attack.ColliderProperty.ShapeType == ShapeType.Line)
+        {
+            attack.Position.y += attack.ColliderProperty.Length / 2;
+        }
+
+        attack.RotationEuler = new Vector3(0f, 0f, attack.Rotation);
         //Debug.Log("攻撃スタート");
         if (attack.StartupTime > 0)
         {

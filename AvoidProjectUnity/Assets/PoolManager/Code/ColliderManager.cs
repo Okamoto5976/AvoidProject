@@ -48,6 +48,6 @@ public class ColliderManager : MonoBehaviour
         m_Player.WakeUp();
 
         ColliderController colliderController = obj.GetComponent<ColliderController>();
-        colliderController.SetColliderProperty(attack.ColliderProperty, attack.Position);
+        colliderController.SetColliderProperty(attack.ColliderProperty, attack.Position, attack.RotationEuler);
     }
 }

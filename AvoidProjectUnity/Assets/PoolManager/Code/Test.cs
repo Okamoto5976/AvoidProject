@@ -16,6 +16,7 @@ public class Test : MonoBehaviour
         {
             if (random) sampleAttack = RandomPosition();
 
+            Debug.Log(sampleAttack.Position);
             m_AttackManager.Attack(sampleAttack);
         }
     }
