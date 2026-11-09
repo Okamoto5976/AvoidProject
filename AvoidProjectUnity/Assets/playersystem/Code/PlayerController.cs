@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         m_playerInteract = new PlayerInteract(transform);
         m_rd = GetComponent<Rigidbody2D>();
-        m_movement = GetComponent<Movement>();
+        m_movement = new Movement(m_rd, transform);
         m_hpController = GetComponent<HpController>();
 
         m_inputProvider = new InputProvider();
@@ -91,11 +91,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         m_inputProvider.PlayerDisable();
     }
-
     private MeleeAttack m_meleeAttack;
 
-    public void Initialize(PlayerData pData, RuntimeData rData)
+    public void Initialize(PlayerData pData, RuntimeData rData, StageManager stageManager)
     {
+
+
         //Debug.Log("PlayerController Initialize 実行！");
         m_hpController.Initialize(pData.HP);
 
@@ -124,6 +125,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_interactRange = pData.InteractRange;
         m_interactHoldTime = pData.InteractHoldTime;
 
+
+      //m_movement.Initialize(stageManager);
         //Debug.Log("移動速度：" + m_moveSpeed);
     }
 
@@ -136,6 +139,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        m_movement.LimitMovement();
+
         if (m_isWaitingAvoid)
         {
             m_avoidFrameCount++;

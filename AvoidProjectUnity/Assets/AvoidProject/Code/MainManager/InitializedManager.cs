@@ -25,7 +25,6 @@ public class InitializedManager : MonoBehaviour
     [SerializeField] private PlayerData m_playerData;
     [SerializeField] private GameObject m_player;
     private PlayerController m_playerController;
-    private Movement m_playerMovement;
     private HpController m_playerHpController;
 
     [SerializeField] private Enemy m_enemy;
@@ -53,64 +52,62 @@ public class InitializedManager : MonoBehaviour
         Initialize();
     }
 
-    //•Ê‚ÌƒXƒNƒŠƒvƒg‚ğ“n‚·‚Æ‚«@‚»‚ÌƒXƒNƒŠƒvƒg‚Í‰Šú‰»‚ğI‚¦‚Ä‚é‚©‚ğŒ©‚é
-    //GameManager‚ğ‰Šú‰»Œã‚É@StageManager‚É“n‚·‚æ‚¤‚È
+    //åˆ¥ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’æ¸¡ã™ã¨ãã€€ãã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯åˆæœŸåŒ–ã‚’çµ‚ãˆã¦ã‚‹ã‹ã‚’è¦‹ã‚‹
+    //GameManagerã‚’åˆæœŸåŒ–å¾Œã«ã€€StageManagerã«æ¸¡ã™ã‚ˆã†ãª
 
-    private void Initialize()//Eventİ’è‚ª‚ ‚é‚È‚ç@‰ğœ‚Ìİ’è‚à‚±‚±‚ÅH
+    private void Initialize()//Eventè¨­å®šãŒã‚ã‚‹ãªã‚‰ã€€è§£é™¤ã®è¨­å®šã‚‚ã“ã“ã§ï¼Ÿ
     {
-        //RuntimeData‚ğ~‚ë‚·
+        //RuntimeDataã‚’é™ã‚ã™
 
 
-        //ƒAƒ‹ƒtƒ@”Å
+        //ã‚¢ãƒ«ãƒ•ã‚¡ç‰ˆ
         //HasTimeLimit
         //TimeLimit
-        //‰ñ•œ–ò
+        //å›å¾©è–¬
 
         //PlayerData(SO)
 
-        //GameType‚ğó‚¯æ‚é@§ŒÀŠÔ‚©@“¢”°‚©
-        //GameManager‚Ì‰Šú‰»
+        //GameTypeã‚’å—ã‘å–ã‚‹ã€€åˆ¶é™æ™‚é–“ã‹ã€€è¨ä¼ã‹
+        //GameManagerã®åˆæœŸåŒ–
         bool hasTimeLimit = m_runtimeData.HasTimeLimit;
         m_gameManager.Initialize(hasTimeLimit, m_timeLimit);
 
-        //MenuManager‚Ì‰Šú‰»
+        //MenuManagerã®åˆæœŸåŒ–
         m_menuManager.Initialize();
         m_menuManager.SetGameManager(m_gameManager);
 
         m_audioVolumeController.Initialize();
 
-        //StageManager‰Šú‰»
+        //StageManageråˆæœŸåŒ–
         m_stageManager.Initialize(m_gameManager);
         m_stageManager.StageRadiusInitialize(m_stageRadius);
         m_stageManager.StageWeaponInitialize(m_stageWeaponCount);
 
 
 
-        //Player‚Ì¶¬-------------------------
-        //RunTimeData‚à“n‚·
-        //Player‚ÌAwakei‰Šú‰»j‚ğŒÄ‚Ô
-        //Player‚ÌDisable
+        //Playerã®ç”Ÿæˆ-------------------------
+        //RunTimeDataã‚‚æ¸¡ã™
+        //Playerã®Awakeï¼ˆåˆæœŸåŒ–ï¼‰ã‚’å‘¼ã¶
+        //Playerã®Disable
         m_playerController = m_player.GetComponent<PlayerController>();
-        m_playerMovement = m_player.GetComponent<Movement>();
         m_playerHpController = m_player.GetComponent<HpController>();
 
-        m_playerController.Initialize(m_playerData, m_runtimeData);
+        m_playerController.Initialize(m_playerData, m_runtimeData, m_stageManager);
         m_playerController.SetAttackManager(m_attackManager);
-        m_playerMovement.Initialize(m_stageManager);
-        //Dead‚ÌÛ‚ÌƒCƒxƒ“ƒg‚ğ“ü‚ê‚Ä‚¨‚­
+        //Deadã®éš›ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’å…¥ã‚Œã¦ãŠã
 
 
-        //Enemy‚Ì¶¬--------------------------
+        //Enemyã®ç”Ÿæˆ--------------------------
         m_enemy.InitializeData(m_enemyData);
 
-        //Runtime‚©‚ç~‚ë‚µ‚½“G‚Ì¶¬
-        //“G‚Ì‰Šú‰»iRunTime‚Ì‚à‚Ì‚ğ‰Šú‰»j
-        //Enemy‚ÌDisable
+        //Runtimeã‹ã‚‰é™ã‚ã—ãŸæ•µã®ç”Ÿæˆ
+        //æ•µã®åˆæœŸåŒ–ï¼ˆRunTimeã®ã‚‚ã®ã‚’åˆæœŸåŒ–ï¼‰
+        //Enemyã®Disable
 
-        //Camera‚Ì‰Šú‰»
+        //Cameraã®åˆæœŸåŒ–
         m_cameraManager.Initialize(m_player, m_enemy.gameObject);
 
-        //‚»‚ê‚¼‚êPool‚ª‚ ‚é‚Ì‚Å@‚ ‚Á‚½Pool‚ğŠeManager‚É“n‚·
+        //ãã‚Œãã‚ŒPoolãŒã‚ã‚‹ã®ã§ã€€ã‚ã£ãŸPoolã‚’å„Managerã«æ¸¡ã™
         m_attackManager.SetAttackViewManager(m_attackViewManager);
         m_attackManager.SetColliderManager(m_colliderManager);
 
@@ -119,25 +116,25 @@ public class InitializedManager : MonoBehaviour
 
         m_colliderManager.SetColliderMediationPool(m_colliderMediationPool);
 
-        //‚»‚ê‚¼‚ê‚É@•K—v‚ÈManager‚ğ“n‚· Attack‚É•K—v‚È‚à‚Ì‚Æ‚©
+        //ãã‚Œãã‚Œã«ã€€å¿…è¦ãªManagerã‚’æ¸¡ã™ Attackæ™‚ã«å¿…è¦ãªã‚‚ã®ã¨ã‹
 
-        //UIManager‚ÌEvent‚ğ‚Â‚¯‚é
+        //UIManagerã®Eventã‚’ã¤ã‘ã‚‹
 
-        //DebugManagerİ’è
+        //DebugManagerè¨­å®š
         m_debugManager.SetGameManager(m_gameManager);
         m_debugManager.SetPlayerHPController(m_playerHpController);
 
-        //GameStartDirector‚ğŒÄ‚Ô
+        //GameStartDirectorã‚’å‘¼ã¶
 
 
-        //------------ˆÈ‰º@GameStartDirector ---------------------
-        //‰¼‚ÅGameStart
+        //------------ä»¥ä¸‹ã€€GameStartDirector ---------------------
+        //ä»®ã§GameStart
         m_stageManager.GenerateStageWeapon();
 
         m_gameManager.StartGame();
         
     }
 
-    //“¢”°‚ÉƒNƒŠƒA”»’è‚ğ‚·‚é•K—v‚ª‚ ‚é@EnemyManager‚ª“G‚Ì€–S‚ğŠm”F‚·‚é‚×‚«
-    //‚»‚µ‚ÄGameManager‚É’Ê’m‚·‚é
+    //è¨ä¼æ™‚ã«ã‚¯ãƒªã‚¢åˆ¤å®šã‚’ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€€EnemyManagerãŒæ•µã®æ­»äº¡ã‚’ç¢ºèªã™ã‚‹ã¹ã
+    //ãã—ã¦GameManagerã«é€šçŸ¥ã™ã‚‹
 }
