@@ -2,12 +2,17 @@ using UnityEngine;
 
 public class ColliderAttack : MonoBehaviour
 {
-    public int Damage = 0;
+    public int m_damage = 0;
+    public Team m_team;
 
     void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log(other.gameObject.name);
-        TestPlayerController playerController = other.gameObject.GetComponent<TestPlayerController>();
-        playerController.TakeDamage(Damage);
+        IDamageable entity = other.gameObject.GetComponentInParent<IDamageable>();
+
+        if (entity.Team == m_team) return;
+ 
+
+        entity.TakeDamage(m_damage);
     }
 }

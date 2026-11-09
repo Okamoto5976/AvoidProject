@@ -40,6 +40,11 @@ public class DebugManager : MonoBehaviour
     {
         if (!m_isDebugMode) return;
 
+        if(m_gameManager == null)
+        {
+            Debug.LogError("Null GameManager");
+        }
+
         if(m_gameManager.HasTimeLimit)
         {
             GUI.Label(

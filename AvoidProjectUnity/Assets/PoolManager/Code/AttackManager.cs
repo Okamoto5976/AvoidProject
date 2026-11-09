@@ -9,6 +9,8 @@ public enum ShapeType
 [System.Serializable]
 public class Attack
 {
+    public Team Team;
+
     public ShapeType ShapeType;
     public Vector2 Size;
     public Vector2 Position;
@@ -28,8 +30,18 @@ public class TimedAction
 
 public class AttackManager : MonoBehaviour
 {
-    [SerializeField] private ColliderManager m_ColliderManager;
-    [SerializeField] private AttackViewManager m_AttackViewManager;
+    private ColliderManager m_ColliderManager;
+    private AttackViewManager m_AttackViewManager;
+
+    public void SetColliderManager(ColliderManager component)
+    {
+        m_ColliderManager = component;
+    }
+
+    public void SetAttackViewManager(AttackViewManager component)
+    {
+        m_AttackViewManager = component;
+    }
 
     /// <summary>
     /// UŒ‚‚·‚éŠÖ”
