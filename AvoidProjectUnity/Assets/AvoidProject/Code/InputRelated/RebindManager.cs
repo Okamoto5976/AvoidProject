@@ -5,16 +5,31 @@ public class RebindManager : MonoBehaviour
 {
     private InputActionRebindingExtensions.RebindingOperation m_rebindingOperation;
 
+    private InputProvider m_inputProvider;
+
+    public void Initialize(InputProvider provider)
+    {
+        m_inputProvider = provider;
+    }
+
+    [ContextMenu("Change Input")]
+    public void TestRebind()
+    {
+        StartRebind(
+            m_inputProvider.InputActions.Player.Attack, 0);
+    }
+
+    
     public void StartRebind(InputAction action, int bindingIndex)
     {
-        m_rebindingOperation?.Dispose();
+        if (m_rebindingOperation != null) return;
 
         m_rebindingOperation = action.PerformInteractiveRebinding(bindingIndex)
             .WithControlsHavingToMatchPath("<Keyboard>")//キーボード以外の入力除外
             .WithCancelingThrough("<Keyboard>/escape")
             .OnComplete(operation =>
             {
-                SaveRebing();
+                //m_inputProvider.SaveRebing();
 
                 operation.Dispose();
                 m_rebindingOperation = null;

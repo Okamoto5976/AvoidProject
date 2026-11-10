@@ -6,6 +6,8 @@ public class InputProvider
 {
     private InputSystem_Actions m_action;
 
+    public InputSystem_Actions InputActions => m_action;
+
     //Input Player
     private Vector2 m_inputMove;
     public event Action<Vector2> OnInputMove;
