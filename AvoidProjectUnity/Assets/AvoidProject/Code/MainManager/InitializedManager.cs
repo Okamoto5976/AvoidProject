@@ -18,6 +18,10 @@ public class InitializedManager : MonoBehaviour
     //GameObjectReference
     [Header("GameObjectReference")]
     [SerializeField] private GameManager m_gameManager;
+
+    private InputProvider m_inputProvider;
+
+    [SerializeField] private RebindManager m_rebuildManager;
     [SerializeField] private MenuManager m_menuManager;
     [SerializeField] private AudioVolumeController m_audioVolumeController;
     [SerializeField] private StageManager m_stageManager;
@@ -37,7 +41,6 @@ public class InitializedManager : MonoBehaviour
     [SerializeField] private PoolManager m_attackViewPool;
      
     [SerializeField] private CameraManager m_cameraManager;
-
 
 
 
@@ -67,13 +70,22 @@ public class InitializedManager : MonoBehaviour
 
         //PlayerData(SO)
 
+        m_inputProvider = new();
+
+        m_inputProvider.PlayerEnable();
+        m_inputProvider.UIEnable();
+
         //GameTypeを受け取る　制限時間か　討伐か
         //GameManagerの初期化
         bool hasTimeLimit = m_runtimeData.HasTimeLimit;
         m_gameManager.Initialize(hasTimeLimit, m_timeLimit);
 
+
+
+        m_rebuildManager.Initialize(m_inputProvider);
+
         //MenuManagerの初期化
-        m_menuManager.Initialize();
+        m_menuManager.Initialize(m_inputProvider);
         m_menuManager.SetGameManager(m_gameManager);
 
         m_audioVolumeController.Initialize();
@@ -92,7 +104,12 @@ public class InitializedManager : MonoBehaviour
         m_playerController = m_player.GetComponent<PlayerController>();
         m_playerHpController = m_player.GetComponent<HpController>();
 
-        m_playerController.Initialize(m_playerData, m_runtimeData, m_stageManager);
+        m_playerController.Initialize(
+            m_playerData, 
+            m_runtimeData, 
+            m_stageManager, 
+            m_inputProvider);
+
         m_playerController.SetAttackManager(m_attackManager);
         //Deadの際のイベントを入れておく
 

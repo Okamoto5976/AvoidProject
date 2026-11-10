@@ -7,7 +7,7 @@ public class ColliderAttack : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.gameObject.name);
+        //Debug.Log(other.gameObject.name);
         IDamageable entity = other.gameObject.GetComponentInParent<IDamageable>();
 
         if (entity.Team == m_team) return;

@@ -59,27 +59,26 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_rd = GetComponent<Rigidbody2D>();
         m_movement = new Movement(m_rd, transform);
         m_hpController = GetComponent<HpController>();
-
-        m_inputProvider = new InputProvider();
-      
     }
 
     private void OnEnable()
     {
-        m_inputProvider.OnInputMove += InputMove;
-        m_inputProvider.OnInputInteract += InputInteract;
-        m_inputProvider.OnInputSprint += InputSprint;
-        m_inputProvider.OnInputAttack += InputAttack;
-        m_inputProvider.OnInputRecover += InputRecover;
-        m_inputProvider.OnInputAvoid += InputAvoid;
-        m_inputProvider.OnInputInteractHold += InputInteractHold;
-        m_inputProvider.OnInputRecoverHold += InputRecoverHold;
+        if (m_inputProvider == null) return;
 
         m_inputProvider.PlayerEnable();
     }
 
     private void OnDisable()
     {
+        if (m_inputProvider == null) return;
+
+        m_inputProvider.PlayerDisable();
+    }
+
+    private void OnDestroy()
+    {
+        if (m_inputProvider == null) return;
+
         m_inputProvider.OnInputMove -= InputMove;
         m_inputProvider.OnInputInteract -= InputInteract;
         m_inputProvider.OnInputSprint -= InputSprint;
@@ -88,14 +87,25 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_inputProvider.OnInputAvoid -= InputAvoid;
         m_inputProvider.OnInputInteractHold -= InputInteractHold;
         m_inputProvider.OnInputRecoverHold -= InputRecoverHold;
-
-        m_inputProvider.PlayerDisable();
     }
     private MeleeAttack m_meleeAttack;
 
-    public void Initialize(PlayerData pData, RuntimeData rData, StageManager stageManager)
+    public void Initialize(
+        PlayerData pData, 
+        RuntimeData rData, 
+        StageManager stageManager,
+        InputProvider inputProvider)
     {
+        m_inputProvider = inputProvider;
 
+        m_inputProvider.OnInputMove += InputMove;
+        m_inputProvider.OnInputInteract += InputInteract;
+        m_inputProvider.OnInputSprint += InputSprint;
+        m_inputProvider.OnInputAttack += InputAttack;
+        m_inputProvider.OnInputRecover += InputRecover;
+        m_inputProvider.OnInputAvoid += InputAvoid;
+        m_inputProvider.OnInputInteractHold += InputInteractHold;
+        m_inputProvider.OnInputRecoverHold += InputRecoverHold;
 
         //Debug.Log("PlayerController Initialize 実行！");
         m_hpController.Initialize(pData.HP);

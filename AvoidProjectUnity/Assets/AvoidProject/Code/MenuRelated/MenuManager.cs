@@ -35,13 +35,12 @@ public class MenuManager : MonoBehaviour
         m_inputProvider.UIEnable();
     }
 
-    public void Initialize()
+    public void Initialize(InputProvider inputProvider)
     {
         //OptionSave‚©‚çŒ»İİ’è‚³‚ê‚Ä‚¢‚éVolume‚ğMixer‚ÆSlider‚Éİ’è
 
-        m_inputProvider = new();
+        m_inputProvider = inputProvider;
         m_inputProvider.OnInputMenu += InputMenu;
-        m_inputProvider.UIEnable();
     }
 
     public void InputMenu()

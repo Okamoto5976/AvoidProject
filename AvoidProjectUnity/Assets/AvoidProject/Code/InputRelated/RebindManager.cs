@@ -16,7 +16,7 @@ public class RebindManager : MonoBehaviour
     public void TestRebind()
     {
         StartRebind(
-            m_inputProvider.InputActions.Player.Attack, 0);
+            m_inputProvider.InputActions.Player.Attack, 1);
     }
 
     
@@ -24,28 +24,29 @@ public class RebindManager : MonoBehaviour
     {
         if (m_rebindingOperation != null) return;
 
+        action.Disable();
+
         m_rebindingOperation = action.PerformInteractiveRebinding(bindingIndex)
             .WithControlsHavingToMatchPath("<Keyboard>")//キーボード以外の入力除外
             .WithCancelingThrough("<Keyboard>/escape")
             .OnComplete(operation =>
             {
-                //m_inputProvider.SaveRebing();
-
                 operation.Dispose();
                 m_rebindingOperation = null;
+
+                action.Enable();
+
+                m_inputProvider.SaveRebind();
             })
             .OnCancel(operation =>
             {
                 operation.Dispose();
                 m_rebindingOperation = null;
+
+                action.Enable();
             });
 
         m_rebindingOperation.Start();
-    }
-
-    private void SaveRebing()
-    {
-
     }
 
     private void OnDestroy()
