@@ -2,13 +2,17 @@ using UnityEngine;
 
 public class ColliderAttack : MonoBehaviour
 {
-    public int Damage = 0;
+    public int m_damage = 0;
+    public Team m_team;
 
     void OnTriggerStay2D(Collider2D other)
     {
-        Debug.Log(other.gameObject.name);
-        TestPlayerController playerController = other.gameObject.GetComponent<TestPlayerController>();
-        //Player‚É–³“G”»’è‚â‰ñ”ğ”»’è‚ª‚ ‚Á‚½‚çreturn‚·‚é@Œã‚©‚ç’Ç‰Á
-        playerController.TakeDamage(Damage);
+        //Debug.Log(other.gameObject.name);
+        IDamageable entity = other.gameObject.GetComponentInParent<IDamageable>();
+        //Playerï¿½É–ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ğ”»’è‚ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½returnï¿½ï¿½ï¿½ï¿½@ï¿½ã‚©ï¿½ï¿½Ç‰ï¿½
+        if (entity.Team == m_team) return;
+ 
+
+        entity.TakeDamage(m_damage);
     }
 }

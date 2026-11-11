@@ -4,13 +4,18 @@ using System.Collections.Generic;
 
 public class TestEnemy : Enemy, IDamageable
 {
-    //ˆÄRq‚È‚Ì‚Å“®‚©‚È‚¢
-    //’¼ü‚ÌUŒ‚‚ğ‚·‚é
+    //æ¡ˆå±±å­ãªã®ã§å‹•ã‹ãªã„
+    //ç›´ç·šã®æ”»æ’ƒã‚’ã™ã‚‹
 
-    //movement‚ğ‚Â
-    //Attack‚ğ‚Â
-    //Renderer‚ğ‚Â@flipX
+    //movementã‚’æŒã¤
+    //Attackã‚’æŒã¤
+    //Rendererã‚’æŒã¤ã€€flipX
     //
+
+    private Rigidbody2D m_rd;
+    [SerializeField] private Team m_team;
+    
+    public Team Team => m_team;
 
     private Movement m_movement;
 
@@ -20,7 +25,8 @@ public class TestEnemy : Enemy, IDamageable
 
     private void Awake()
     {
-        m_movement = GetComponent<Movement>();
+        m_rd = GetComponent<Rigidbody2D>();
+        m_movement = new Movement(m_rd, transform);
     }
 
     public override void InitializeData(EnemyData data)
@@ -46,8 +52,8 @@ public class TestEnemy : Enemy, IDamageable
         }
     }
 
-    //AttackManager‚ğ‚¿@ÀÛ‚ÉUŒ‚‚ğ‚µ‚Ä‚İ‚é
-    //HP‚Ìˆ—‚ÌŠm”F‚Í•K—v‚È‚µ
+    //AttackManagerã‚’æŒã¡ã€€å®Ÿéš›ã«æ”»æ’ƒã‚’ã—ã¦ã¿ã‚‹
+    //HPã®å‡¦ç†ã®ç¢ºèªã¯å¿…è¦ãªã—
     [ContextMenu("TestEnemy Sword Attack")]
     public void TestAttack()
     {
@@ -68,13 +74,13 @@ public class TestEnemy : Enemy, IDamageable
 
     public event Action<Vector2> OnMove;
 
-    [EnemyAttackPoint("melee","‹ßÚUŒ‚","‹ß‚¢‚à‚Ì‚ÉØ‚é")]
+    [EnemyAttackPoint("melee","è¿‘æ¥æ”»æ’ƒ","è¿‘ã„ã‚‚ã®ã«åˆ‡ã‚‹")]
     public void SwordAttack()
     {
         m_attacks[0].Execute();
     }
 
-    [EnemyAttackPoint("jump","ƒWƒƒƒ“ƒvUŒ‚","ƒWƒƒƒ“ƒv‚µ‚ÄUŒ‚")]
+    [EnemyAttackPoint("jump","ã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒ","ã‚¸ãƒ£ãƒ³ãƒ—ã—ã¦æ”»æ’ƒ")]
     public void JumpAttack()
     {
         m_attacks[1].Execute();

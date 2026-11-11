@@ -28,6 +28,7 @@ MonoBehaviour:
       type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
       data:
         m_attackContext:
+          Team: 1
           ShapeType: 1
           Size: {x: 2, y: 2}
           Position: {x: 0, y: 0}
@@ -48,6 +49,7 @@ MonoBehaviour:
       type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
       data:
         m_attackContext:
+          Team: 1
           ShapeType: 0
           Size: {x: 0, y: 0}
           Position: {x: 0, y: 0}

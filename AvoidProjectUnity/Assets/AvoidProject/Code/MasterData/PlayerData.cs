@@ -3,25 +3,21 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "Scriptable Objects/Data/PlayerData")]
 public class PlayerData : ScriptableObject
 {
-    [Header("��{�ݒ�")]
     [SerializeField] private int m_hp = 3;
     [SerializeField] private int m_dhp = 0;
     [SerializeField] private float m_speed = 5f;
     [SerializeField] private float m_sprintSpeed = 10f;
     [SerializeField] private float m_attackStateDuration = 0.3f;
 
-    [Header("���ݒ�")]
     [SerializeField] private float m_avoidSpeedRate = 1.5f;
     [SerializeField] private int m_avoidStartFrame = 5;
     [SerializeField] private float m_avoidDuration = 0.2f;
     [SerializeField] private int m_justAvoidFrame = 5;
 
-    [Header("�C���^���N�g�ݒ�")]
     [SerializeField] private float m_hitRadius = 1f;
     [SerializeField] private float m_interactRange = 2f;
     [SerializeField] private float m_interactHoldTime = 1.5f;
 
-    [Header("�񕜐ݒ�")]
     [SerializeField] private float m_recoverMoveSpeed = 2f;
     [SerializeField] private float m_recoverDuration = 2f;
     [SerializeField] private int m_recoverValue = 100;

@@ -49,7 +49,13 @@ public class ColliderManager : MonoBehaviour
 
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;
-        obj.GetComponent<ColliderAttack>().Damage = attack.Damage;
+
+        var component = obj.GetComponent<ColliderAttack>();
+
+        component.m_damage = attack.Damage;
+        component.m_team = attack.Team;
+
+        obj.GetComponent<ColliderAttack>().m_damage = attack.Damage;
 
         TimedAction action = new();
         action.Attack = attack;
