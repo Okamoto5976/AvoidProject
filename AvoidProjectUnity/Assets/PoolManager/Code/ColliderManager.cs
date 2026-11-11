@@ -8,6 +8,10 @@ public class ColliderManager : MonoBehaviour
 
     private List<TimedAction> m_TimedActions = new();
 
+    private List<Collider2D> m_DrawColliders = new();
+
+    private Color m_ColliderColor = Color.green;
+
     public void SetColliderMediationPool(ColliderMediationPool component)
     {
         m_MediationPool = component;
@@ -20,6 +24,8 @@ public class ColliderManager : MonoBehaviour
             m_TimedActions[i].Timer -= Time.deltaTime;
             if (m_TimedActions[i].Timer < 0)
             {
+                RemoveGizmo(m_TimedActions[i].Object.GetComponent<Collider2D>());
+
                 //Debug.Log("コライダー無効化");
                 ReturnPool returnPool = m_TimedActions[i].Object.GetComponent<ReturnPool>();
                 returnPool.Return();
@@ -40,7 +46,7 @@ public class ColliderManager : MonoBehaviour
         PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
         obj = pool.GenerateFromPool();
         if (obj == null) return;
-        
+
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;
 
@@ -57,5 +63,53 @@ public class ColliderManager : MonoBehaviour
         action.Object = obj;
         m_TimedActions.Add(action);
         //m_Player.WakeUp();
+
+        AddGizmo(obj.GetComponent<Collider2D>());
+    }
+
+    private void AddGizmo(Collider2D col)
+    {
+        m_DrawColliders.Add(col);
+    }
+
+    private void RemoveGizmo(Collider2D col)
+    {
+        m_DrawColliders.Remove(col);
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach (Collider2D col in m_DrawColliders)
+        {
+            if (col == null || !col.enabled) continue;
+
+            Gizmos.color = m_ColliderColor;
+            Gizmos.matrix = col.transform.localToWorldMatrix;
+
+            switch (col)
+            {
+                case BoxCollider2D box:
+                    //Gizmos.DrawCube(box.offset, box.size);
+                    Gizmos.DrawWireCube(box.offset, box.size);
+                    break;
+                case CircleCollider2D circle:
+                    //Gizmos.DrawSphere(circle.offset, circle.radius);
+                    DrawWireCircle(circle.offset, circle.radius);
+                    break;
+            }
+        }
+        Gizmos.matrix = Matrix4x4.identity;
+    }
+
+    private void DrawWireCircle(Vector2 center, float radius, int segments = 32)
+    {
+        Vector3 prev = center + new Vector2(radius, 0f);
+        for (int i = 1; i <= segments; i++)
+        {
+            float a = 2f * Mathf.PI * i / segments;
+            Vector3 next = center + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * radius;
+            Gizmos.DrawLine(prev, next);
+            prev = next;
+        }
     }
 }

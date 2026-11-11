@@ -18,6 +18,18 @@ public class Attack
     public float ActiveTime;
 
     public int Damage;
+
+    public Attack Clone()
+    {
+        Attack attack = new Attack();
+        attack.ShapeType = ShapeType;
+        attack.Size = Size;
+        attack.Position = Position;
+        attack.StartupTime = StartupTime;
+        attack.ActiveTime = ActiveTime;
+        attack.Damage = Damage;
+        return attack;
+    }
 }
 
 [System.Serializable]
@@ -50,13 +62,14 @@ public class AttackManager : MonoBehaviour
     public void Attack(Attack attack)
     {
         //Debug.Log("攻撃スタート");
-        if (attack.StartupTime > 0)
+        Attack cloneAttack = attack.Clone();
+        if (cloneAttack.StartupTime > 0)
         {
-            m_AttackViewManager.AttackView(attack);
+            m_AttackViewManager.AttackView(cloneAttack);
         }
         else
         {
-            m_ColliderManager.ActiveCollider(attack);
+            m_ColliderManager.ActiveCollider(cloneAttack);
         }
     }
 

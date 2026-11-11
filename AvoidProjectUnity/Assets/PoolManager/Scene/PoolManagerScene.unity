@@ -148,8 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0b58772fb5081747bad7570c36ac40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackManager
-  m_ColliderManager: {fileID: 1117417019}
-  m_AttackViewManager: {fileID: 2028312072}
 --- !u!4 &13313497
 Transform:
   m_ObjectHideFlags: 0
@@ -253,13 +251,17 @@ MonoBehaviour:
   m_AttackManager: {fileID: 13313496}
   m_SpriteRenderer: {fileID: 417548085}
   random: 1
-  test:
+  testAttack:
     ShapeType: 0
-    Size: {x: 0, y: 0}
+    Size: {x: 2, y: 2}
     Position: {x: 0, y: 0}
-    StartupTime: 0
-    ActiveTime: 0
-    Damage: 0
+    StartupTime: 2
+    ActiveTime: 2
+    Damage: 10
+  m_ColliderManager: {fileID: 1117417019}
+  m_AttackViewManager: {fileID: 2028312072}
+  m_AttackViewPool: {fileID: 2076295954}
+  m_ColliderMediationPool: {fileID: 1693244352}
 --- !u!61 &417548083
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -466,8 +468,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949dd4bf8d835304f8303fb450ecd144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderManager
-  m_MediationPool: {fileID: 1693244352}
-  m_Player: {fileID: 417548084}
 --- !u!4 &1117417020
 Transform:
   m_ObjectHideFlags: 0
@@ -794,8 +794,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab806d28411a8fc4090a559c4e959579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackViewManager
-  m_AttackManager: {fileID: 13313496}
-  m_AttackViewPool: {fileID: 2076295954}
   m_Box: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Circle: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
 --- !u!4 &2028312073
