@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private bool m_isAvoiding = false;
     private bool m_isInteracting = false;
     private bool m_isWaitingAvoid = false;
+    private bool m_isWaitingAvoidInput = false; 
     private bool m_isRecovering = false;
     private bool m_isInvincible = false;
     private bool m_hasWeapon = false;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private int m_justAvoidFrame;
 
     private Vector2 m_velocity;
+    private Vector2 m_avoidDirection;
 
 
     //PlayerHpHeal
@@ -194,11 +196,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Move()
     {
-        if (m_playerState == PlayerState.Dead)
-        {
-            return;
-        }
-        if (m_isAvoiding || m_isWaitingAvoid)
+        if (m_playerState == PlayerState.Dead) return;
+
+        if (m_isAvoiding || m_isWaitingAvoid || m_isWaitingAvoidInput)
         {
             return;
         }
@@ -210,7 +210,6 @@ public class PlayerController : MonoBehaviour, IDamageable
             speed = m_sprintSpeed;
             ChangeState(PlayerState.Sprint);
         }
-
         else if (m_isRecovering)
         {
             speed = m_recoverMoveSpeed;
@@ -224,8 +223,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             ChangeState(PlayerState.Idle);
         }
-        m_movement.Move(m_velocity, speed);
 
+        m_movement.Move(m_velocity, speed);
     }
 
     private void InputSprint(bool isSprinting)
@@ -235,8 +234,25 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     private void InputMove(Vector2 value)
     {
-        if (m_playerState == PlayerState.Dead) return;  
+        if (m_playerState == PlayerState.Dead) return;
+
+        // 現在の移動入力を更新
         m_velocity = value;
+
+        // 回避準備中に移動入力があった場合
+        if (m_isWaitingAvoidInput && value != Vector2.zero)
+        {
+            m_isWaitingAvoidInput = false;
+
+            // 入力された方向を回避方向にする
+            m_avoidDirection = value.normalized;
+
+            // 回避開始までのフレーム待機
+            m_isWaitingAvoid = true;
+            m_avoidFrameCount = 0;
+
+            //Debug.Log("回避方向：" + m_avoidDirection, this);
+        }
     }
 
     private void InputInteract()
@@ -268,32 +284,33 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void InputAvoid()
     {
         if (m_playerState == PlayerState.Dead) return;
-        if (m_isWaitingJustAvoid)
-        {
-           m_isWaitingJustAvoid = false;
 
-            m_pendingDamage = 0;
-            m_isRecovering = false;
-
-            // 通常回避の待機も解除
-            m_isWaitingAvoid = false;
-            m_avoidFrameCount = 0;
-
-            //Debug.Log("ジャスト回避成功！", this);
-
-            StartCoroutine(AvoidCoroutine());
-            return;
-        }
-
-        if (m_isAvoiding || m_isWaitingAvoid)
+        if (m_isAvoiding || m_isWaitingAvoid || m_isWaitingAvoidInput)
         {
             return;
         }
 
         m_isRecovering = false;
 
-        m_isWaitingAvoid = true;
-        m_avoidFrameCount = 0;
+        // すでに移動している場合
+        if (m_velocity != Vector2.zero)
+        {
+            // 現在の移動方向を回避方向にする
+            m_avoidDirection = m_velocity.normalized;
+
+            // 回避開始までのフレーム待機
+            m_isWaitingAvoid = true;
+            m_avoidFrameCount = 0;
+
+            //Debug.Log("移動中に回避準備！", this);
+        }
+        else
+        {
+            // 移動していない場合は移動入力を待つ
+            m_isWaitingAvoidInput = true;
+
+            //Debug.Log("回避準備！移動キーを押してください", this);
+        }
     }
 
     public void TakeDamage(int damage)
@@ -376,18 +393,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     private IEnumerator AvoidCoroutine()
     {
         m_isAvoiding = true;
-
         ChangeState(PlayerState.Avoid);
 
-        // 回避開始と同時に無敵化
         m_isInvincible = true;
 
-        // 回避移動を開始
-        m_movement.Move(m_velocity, m_avoidSpeed);
+        // 回避方向に移動
+        m_movement.Move(m_avoidDirection, m_avoidSpeed);
 
-        //Debug.Log("回避開始・無敵化！", this);
-
-        // 回避時間
         yield return new WaitForSeconds(m_avoidDuration);
 
         // 回避終了
@@ -396,12 +408,15 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_isInvincible = false;
         m_isAvoiding = false;
 
-        if (m_playerState == PlayerState.Avoid)
+        // 移動入力が残っていれば通常移動に戻る
+        if (m_velocity != Vector2.zero)
+        {
+            ChangeState(PlayerState.Move);
+        }
+        else
         {
             ChangeState(PlayerState.Idle);
         }
-
-        //Debug.Log("回避終了・無敵解除！", this);  
     }
 
     public void SetHasWeapon(bool value)
@@ -439,6 +454,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_isWaitingJustAvoid = false;
         m_isAvoiding = false;
         m_isInvincible = false;
+        m_isWaitingAvoidInput = false;
 
         m_movement.Stop();
 
