@@ -20,12 +20,12 @@ public class AttackManager : MonoBehaviour
     public void Attack(Attack attack)
     {
         //特殊処理
-        if (attack.ColliderProperty.ShapeType == ShapeType.Line)
-        {
-            attack.Position.y += attack.ColliderProperty.Length / 2;
-        }
+        //if (attack.ColliderProperty.ShapeType == ShapeType.Line)
+        //{
+        //    attack.Position.y += attack.ColliderProperty.Length / 2;
+        //}
 
-        attack.RotationEuler = new Vector3(0f, 0f, attack.Rotation);
+
         //Debug.Log("攻撃スタート");
         if (attack.StartupTime > 0)
         {

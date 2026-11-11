@@ -8,8 +8,7 @@ public class Attack
     //public List<ColliderProperty> ColliderProperties = new();
     public ColliderProperty ColliderProperty = new();
     public Vector2 Position;
-    public float Rotation;
-    [NonSerialized] public Vector3 RotationEuler;
+    public Transform Parent;
     public float StartupTime;
     public float ActiveTime;
 

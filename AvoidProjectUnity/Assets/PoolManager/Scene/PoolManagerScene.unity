@@ -254,23 +254,16 @@ MonoBehaviour:
   sampleAttack:
     ColliderProperty:
       ShapeType: 0
-      Radius: 1
+      Radius: 2
+      Direction: 45
       Width: 2
       Height: 2
-      Length: 5
+      Rotate: 45
       Thickness: 0.5
+      Length: 5
       Angle: 180
-      Vertices:
-      - {x: 0, y: 0}
-      - {x: 0, y: 0}
-      - {x: 0, y: 0}
-      - {x: 0, y: 0}
-      - {x: 0, y: 0}
-      - {x: 0, y: 0}
-      - {x: 0, y: 0}
-      - {x: 0, y: 0}
     Position: {x: 0, y: 0}
-    Rotation: 0
+    Parent: {fileID: 0}
     StartupTime: 2
     ActiveTime: 2
 --- !u!61 &417548083

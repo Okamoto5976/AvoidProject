@@ -39,7 +39,6 @@ public class ColliderManager : MonoBehaviour
         obj = m_CustomColliderPool.GenerateFromPool();
         if (obj == null) return;
         
-        //obj.transform.localScale = new Vector2(1, 1);
         TimedAction action = new();
         action.Attack = attack;
         action.Timer = attack.ActiveTime;
@@ -48,6 +47,6 @@ public class ColliderManager : MonoBehaviour
         m_Player.WakeUp();
 
         ColliderController colliderController = obj.GetComponent<ColliderController>();
-        colliderController.SetColliderProperty(attack.ColliderProperty, attack.Position, attack.RotationEuler);
+        colliderController.SetColliderProperty(attack.ColliderProperty, attack.Position, attack.Parent);
     }
 }
