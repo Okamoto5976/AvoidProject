@@ -7,32 +7,56 @@ public class Test : MonoBehaviour
     [SerializeField] private SpriteRenderer m_SpriteRenderer;
 
     [SerializeField] private bool random;
-    [SerializeField] private Attack test;
+    [SerializeField] private Attack testAttack;
+
+    [SerializeField] private ColliderManager m_ColliderManager;
+    [SerializeField] private AttackViewManager m_AttackViewManager;
+    [SerializeField] private PoolManager m_AttackViewPool;
+    [SerializeField] private ColliderMediationPool m_ColliderMediationPool;
+
+    private void Awake()
+    {
+        ComponentInitialize();
+    }
+
+    private void ComponentInitialize()
+    {
+        //AttackManagerSet
+        m_AttackManager.SetColliderManager(m_ColliderManager);
+        m_AttackManager.SetAttackViewManager(m_AttackViewManager);
+
+        //AttackViewManagerSet
+        m_AttackViewManager.SetAttackViewPool(m_AttackViewPool);
+        m_AttackViewManager.SetAttackManager(m_AttackManager);
+
+        //ColliderManagerSet
+        m_ColliderManager.SetColliderMediationPool(m_ColliderMediationPool);
+    }
+
     private void Update()
     {
         //test
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (random) m_AttackManager.Attack(RandomAttack());
-            else m_AttackManager.Attack(test);
+            if (random) RandomAttack();
+
+            m_AttackManager.Attack(testAttack);
         }
     }
 
-    private Attack RandomAttack()
+    private void RandomAttack()
     {
-        Attack attack = new Attack();
-        attack.ShapeType = (ShapeType)Random.Range(0, 2);
+        testAttack.ShapeType = (ShapeType)Random.Range(0, 2);
         float value = Random.Range(1f, 3f);
-        attack.Size = new Vector2(value, value);
-        attack.Position = new Vector2(Random.Range(-5f, 5f), Random.Range(-2f, 2f));
-        attack.StartupTime = Random.Range(1f, 5f);
-        //attack.StartupTime = 0;
-        attack.ActiveTime = Random.Range(1f, 5f);
-        attack.Damage = Random.Range(1, 10);
-        return attack;
+        testAttack.Size = new Vector2(value, value);
+        testAttack.Position = new Vector2(Random.Range(-5f, 5f), Random.Range(-2f, 2f));
+        //testAttack.StartupTime = Random.Range(1f, 5f);
+        //testAttack.StartupTime = 0;
+        //testAttack.ActiveTime = Random.Range(1f, 5f);
+        //testAttack.Damage = Random.Range(1, 10);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
         //Debug.Log($"TriggerŠJŽn: {other.name}");
         m_SpriteRenderer.color = Color.black;
