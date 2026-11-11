@@ -78,12 +78,12 @@ public class MenuManager : MonoBehaviour
 
     public void OnOpenOption()
     {
-        m_option.SetActive(true);
+        //m_option.SetActive(true);
     }
 
     public void OnCloseOption()
     {
-        m_option.SetActive(false);
+        //m_option.SetActive(false);
     }
 
     public void SetGameManager(GameManager component)

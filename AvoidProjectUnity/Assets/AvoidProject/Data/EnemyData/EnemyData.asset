@@ -32,36 +32,28 @@ MonoBehaviour:
           ShapeType: 1
           Size: {x: 2, y: 2}
           Position: {x: 0, y: 0}
-          StartupTime: 0
+          StartupTime: 1
           ActiveTime: 1
           Damage: 1
         m_actionList:
         - rid: 7576007996673097807
-        - rid: 7576007996673097808
     - rid: 7576007996673097807
       type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
       data:
         a: 0
-    - rid: 7576007996673097808
-      type: {class: WaitActionData, ns: , asm: Assembly-CSharp}
-      data: 
     - rid: 7576007996673097809
       type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
       data:
         m_attackContext:
           Team: 1
           ShapeType: 0
-          Size: {x: 0, y: 0}
+          Size: {x: 2, y: 2}
           Position: {x: 0, y: 0}
-          StartupTime: 0
-          ActiveTime: 0
-          Damage: 0
+          StartupTime: 1
+          ActiveTime: 1
+          Damage: 1
         m_actionList:
-        - rid: 7576007996673097810
         - rid: 7576007996673097811
-    - rid: 7576007996673097810
-      type: {class: WaitActionData, ns: , asm: Assembly-CSharp}
-      data: 
     - rid: 7576007996673097811
       type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
       data:

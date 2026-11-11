@@ -173,11 +173,11 @@ public class PlayerController : MonoBehaviour, IDamageable
                 m_hpController.Damage(m_pendingDamage);
                 m_pendingDamage = 0;
                
-                //Debug.Log("回避失敗！ダメージを受けました", this);
-                if (m_hpController. Hp <= 0)
-                {
-                    Dead();
-                }
+                Debug.Log("回避失敗！ダメージを受けました", this);
+                //if (m_hpController. Hp <= 0)
+                //{
+                //    Dead();
+                //}
             }
         }
 
@@ -300,7 +300,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (m_isInvincible)
         {
-            //Debug.Log("回避中のためダメージ無効！",this);
+            Debug.Log("回避中のためダメージ無効！",this);
             return;
         }
 
@@ -311,7 +311,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
         m_pendingDamage += damage;
 
-        //Debug.Log("攻撃Hit！ジャスト回避受付開始！", this);
+        Debug.Log("攻撃Hit！ジャスト回避受付開始！", this);
     }
 
     private void InputInteractHold(bool isHolding)
@@ -426,7 +426,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
     }
 
-    private void Dead()
+    public void Dead()
     {
         ChangeState(PlayerState.Dead);
 

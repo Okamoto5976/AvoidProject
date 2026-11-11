@@ -52,10 +52,7 @@ public class ColliderManager : MonoBehaviour
 
         var component = obj.GetComponent<ColliderAttack>();
 
-        component.m_damage = attack.Damage;
-        component.m_team = attack.Team;
-
-        obj.GetComponent<ColliderAttack>().m_damage = attack.Damage;
+        component.Initialize(attack.Damage, attack.Team);
 
         TimedAction action = new();
         action.Attack = attack;

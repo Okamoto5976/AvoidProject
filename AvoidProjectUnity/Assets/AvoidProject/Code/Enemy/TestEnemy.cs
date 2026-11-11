@@ -42,7 +42,10 @@ public class TestEnemy : Enemy, IDamageable
             m_attacks.Add(attackData);
         }
 
+
     }
+
+    private float m_testTime;
 
     private void Update()
     {
@@ -50,6 +53,16 @@ public class TestEnemy : Enemy, IDamageable
         {
             m_attacks[i].Update();
         }
+
+        m_testTime += Time.deltaTime;
+
+        if(m_testTime > 6f)
+        {
+            m_testTime = 0;
+            SwordAttack();
+        }
+
+
     }
 
     //AttackManagerを持ち　実際に攻撃をしてみる

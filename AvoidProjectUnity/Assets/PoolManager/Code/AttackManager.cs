@@ -22,6 +22,7 @@ public class Attack
     public Attack Clone()
     {
         Attack attack = new Attack();
+        attack.Team = Team;
         attack.ShapeType = ShapeType;
         attack.Size = Size;
         attack.Position = Position;

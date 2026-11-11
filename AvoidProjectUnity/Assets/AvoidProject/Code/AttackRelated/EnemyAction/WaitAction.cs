@@ -11,7 +11,7 @@ public class WaitAction : Action
 
     public override void Execute()
     {
-        Debug.Log("‘Ò‚Â");
+        //Debug.Log("‘Ò‚Â");
         m_isComplete = true;
     }
 

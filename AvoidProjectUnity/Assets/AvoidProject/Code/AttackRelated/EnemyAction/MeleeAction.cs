@@ -13,7 +13,7 @@ public class MeleeAction : Action
 
     public override void Execute()
     {
-        //Debug.Log("UŒ‚");
+        Debug.Log("Enemy‚ÌUŒ‚");
 
         m_attackClass.Attack();
 

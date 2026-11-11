@@ -2,15 +2,31 @@ using UnityEngine;
 
 public class ColliderAttack : MonoBehaviour
 {
-    public int m_damage = 0;
-    public Team m_team;
+    private int m_damage = 0;
+    private Team m_team;
+
+    public void Initialize(int damage, Team team)
+    {
+        m_damage = damage;
+        m_team = team;
+    }
 
     void OnTriggerStay2D(Collider2D other)
     {
         //Debug.Log(other.gameObject.name);
         IDamageable entity = other.gameObject.GetComponentInParent<IDamageable>();
-        //Player�ɖ��G������𔻒肪��������return����@�ォ��ǉ�
-        if (entity.Team == m_team) return;
+
+        if(entity == null)
+        {
+            //Debug.Log("Not idamageble");
+            return;
+        }
+
+        if (entity.Team == m_team)
+        {
+            //Debug.Log($"my team is {m_team} : entity team is {entity.Team}");
+            return;
+        }
  
 
         entity.TakeDamage(m_damage);
