@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ public class ColliderManager : MonoBehaviour
     private List<Collider2D> m_DrawColliders = new();
 
     private Color m_ColliderColor = Color.green;
+
+    //àÍèuÇæÇØï\é¶Ç∑ÇÈèÍçáóp
+    private float m_GizmoViewDelay = 2f;
 
     public void SetColliderMediationPool(ColliderMediationPool component)
     {
@@ -47,6 +51,9 @@ public class ColliderManager : MonoBehaviour
         obj = pool.GenerateFromPool();
         if (obj == null) return;
 
+        Collider2D col = obj.GetComponent<Collider2D>();
+        col.excludeLayers = 0;
+
         obj.transform.position = attack.Position;
         obj.transform.localScale = attack.Size;
 
@@ -54,14 +61,30 @@ public class ColliderManager : MonoBehaviour
 
         component.Initialize(attack.Damage, attack.Team);
 
+        AddGizmo(col);
+
         TimedAction action = new();
         action.Attack = attack;
-        action.Timer = attack.ActiveTime;
         action.Object = obj;
+        if (attack.ActiveTime > 0)
+        {
+            action.Timer = attack.ActiveTime;
+        }
+        else
+        {
+            action.Timer = m_GizmoViewDelay;
+            StartCoroutine(OnceFlameCollider(col));
+        }
         m_TimedActions.Add(action);
         //m_Player.WakeUp();
+    }
 
-        AddGizmo(obj.GetComponent<Collider2D>());
+    private IEnumerator OnceFlameCollider(Collider2D col)
+    {
+        //Debug.Log("OnceFlameCollider");
+        yield return new WaitForFixedUpdate(); 
+        yield return new WaitForFixedUpdate();
+        col.excludeLayers = ~0;
     }
 
     private void AddGizmo(Collider2D col)

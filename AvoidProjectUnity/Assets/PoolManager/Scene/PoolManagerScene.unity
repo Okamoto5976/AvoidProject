@@ -252,11 +252,12 @@ MonoBehaviour:
   m_SpriteRenderer: {fileID: 417548085}
   random: 1
   testAttack:
+    Team: 0
     ShapeType: 0
     Size: {x: 2, y: 2}
     Position: {x: 0, y: 0}
     StartupTime: 2
-    ActiveTime: 2
+    ActiveTime: 0
     Damage: 10
   m_ColliderManager: {fileID: 1117417019}
   m_AttackViewManager: {fileID: 2028312072}
