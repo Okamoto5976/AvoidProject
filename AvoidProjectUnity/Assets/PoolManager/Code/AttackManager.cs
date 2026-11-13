@@ -10,37 +10,48 @@ public class TimedAction
 
 public class AttackManager : MonoBehaviour
 {
-    [SerializeField] private ColliderManager m_ColliderManager;
-    [SerializeField] private AttackViewManager m_AttackViewManager;
+    private ColliderManager m_ColliderManager;
+    private AttackViewManager m_AttackViewManager;
+
+    public void SetColliderManager(ColliderManager component)
+    {
+        m_ColliderManager = component;
+    }
+
+    public void SetAttackViewManager(AttackViewManager component)
+    {
+        m_AttackViewManager = component;
+    }
 
     /// <summary>
-    /// UŒ‚‚·‚éŠÖ”
+    /// æ”»æ’ƒã™ã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="attack">UŒ‚‚Ìƒf[ƒ^</param>
+    /// <param name="attack">æ”»æ’ƒã®ãƒ‡ãƒ¼ã‚¿</param>
     public void Attack(Attack attack)
     {
-        //“Áêˆ—
+        //ç‰¹æ®Šå‡¦ç†
         //if (attack.ColliderProperty.ShapeType == ShapeType.Line)
         //{
         //    attack.Position.y += attack.ColliderProperty.Length / 2;
         //}
 
 
-        //Debug.Log("UŒ‚ƒXƒ^[ƒg");
-        if (attack.StartupTime > 0)
+        //Debug.Log("æ”»æ’ƒã‚¹ã‚¿ãƒ¼ãƒˆ");
+        Attack cloneAttack = attack.Clone();
+        if (cloneAttack.StartupTime > 0)
         {
-            m_AttackViewManager.AttackView(attack);
+            m_AttackViewManager.AttackView(cloneAttack);
         }
         else
         {
-            m_ColliderManager.ActiveCollider(attack);
+            m_ColliderManager.ActiveCollider(cloneAttack);
         }
     }
 
     /// <summary>
-    /// UŒ‚—\‚ğ•\¦‚·‚éŠÔ‚ğI‚¦‚½‚çŒÄ‚Î‚ê‚éŠÖ”
+    /// æ”»æ’ƒäºˆå‘Šã‚’è¡¨ç¤ºã™ã‚‹æ™‚é–“ã‚’çµ‚ãˆãŸã‚‰å‘¼ã°ã‚Œã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="attack">UŒ‚‚Ìƒf[ƒ^</param>
+    /// <param name="attack">æ”»æ’ƒã®ãƒ‡ãƒ¼ã‚¿</param>
     public void EndAttackView(Attack attack)
     {
         m_ColliderManager.ActiveCollider(attack);

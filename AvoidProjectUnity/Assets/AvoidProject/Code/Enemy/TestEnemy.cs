@@ -1,29 +1,101 @@
+using System;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class TestEnemy : MonoBehaviour, IDamageable
+public class TestEnemy : Enemy, IDamageable
 {
-    //ˆÄRq‚È‚Ì‚Å“®‚©‚È‚¢
-    //’¼ü‚ÌUŒ‚‚ğ‚·‚é
+    //æ¡ˆå±±å­ãªã®ã§å‹•ã‹ãªã„
+    //ç›´ç·šã®æ”»æ’ƒã‚’ã™ã‚‹
 
-    //movement‚ğ‚Â
-    //Attack‚ğ‚Â
-    //Renderer‚ğ‚Â@flipX
+    //movementã‚’æŒã¤
+    //Attackã‚’æŒã¤
+    //Rendererã‚’æŒã¤ã€€flipX
     //
 
-    [SerializeField] private AttackManager m_attackManager;
-    [SerializeField] private Attack m_attack;
+    private Rigidbody2D m_rd;
+    [SerializeField] private Team m_team;
+    
+    public Team Team => m_team;
 
-    //AttackManager‚ğ‚¿@ÀÛ‚ÉUŒ‚‚ğ‚µ‚Ä‚İ‚é
-    //HP‚Ìˆ—‚ÌŠm”F‚Í•K—v‚È‚µ
-    [ContextMenu("TestEnemy Attack")]
-    public void Attack()
+    private Movement m_movement;
+
+    [SerializeField] private AttackManager m_attackManager;
+
+    private List<AttackBase> m_attacks = new();
+
+    private void Awake()
     {
-        m_attackManager.Attack(m_attack);
+        m_rd = GetComponent<Rigidbody2D>();
+        m_movement = new Movement(m_rd, transform);
     }
 
+    public override void InitializeData(EnemyData data)
+    {
+        base.InitializeData(data);
+
+        foreach(var attack in data.AttackSettings)
+        {
+            var attackData = attack.AttackData.CreateAttackClass();
+
+            attackData.Initialize(m_movement, this.transform, m_attackManager);
+
+            m_attacks.Add(attackData);
+        }
+
+
+    }
+
+    private float m_testTime;
+
+    private void Update()
+    {
+        for(int i = 0; i < m_attacks.Count; i++)
+        {
+            m_attacks[i].Update();
+        }
+
+        m_testTime += Time.deltaTime;
+
+        if(m_testTime > 6f)
+        {
+            m_testTime = 0;
+            SwordAttack();
+        }
+
+
+    }
+
+    //AttackManagerã‚’æŒã¡ã€€å®Ÿéš›ã«æ”»æ’ƒã‚’ã—ã¦ã¿ã‚‹
+    //HPã®å‡¦ç†ã®ç¢ºèªã¯å¿…è¦ãªã—
+    [ContextMenu("TestEnemy Sword Attack")]
+    public void TestAttack()
+    {
+        SwordAttack();
+    }
+
+    [ContextMenu("TestEnemy Jump Attack")]
+    public void TestJumpAttack()
+    {
+        JumpAttack();
+    }
 
     public void TakeDamage(int damage)
     {
 
+    }
+
+
+    public event Action<Vector2> OnMove;
+
+    [EnemyAttackPoint("melee","è¿‘æ¥æ”»æ’ƒ","è¿‘ã„ã‚‚ã®ã«åˆ‡ã‚‹")]
+    public void SwordAttack()
+    {
+        m_attacks[0].Execute();
+    }
+
+    [EnemyAttackPoint("jump","ã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒ","ã‚¸ãƒ£ãƒ³ãƒ—ã—ã¦æ”»æ’ƒ")]
+    public void JumpAttack()
+    {
+        m_attacks[1].Execute();
     }
 }

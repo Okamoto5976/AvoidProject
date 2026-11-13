@@ -4,6 +4,8 @@ public class TestEnemyController : MonoBehaviour , IDamageable
 {
     [SerializeField] private EnemyHp m_EnemyHp;
 
+    public Team Team { get; }
+
     public void TakeDamage(int value)
     {
         m_EnemyHp.Damage(value);

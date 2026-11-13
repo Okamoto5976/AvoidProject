@@ -29,14 +29,14 @@ public class Test : MonoBehaviour
         return attack;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
-        //Debug.Log($"Trigger開始: {other.name}");
+        //Debug.Log($"TriggerﾅJﾅｽn: {other.name}");
         m_SpriteRenderer.color = Color.black;
     }
     void OnTriggerExit2D(Collider2D other)
     {
-        //Debug.Log($"Trigger終了: {other.name}");
+        //Debug.Log($"Triggerﾂ終窶板ｹ: {other.name}");
         m_SpriteRenderer.color = Color.white;
     }
 }

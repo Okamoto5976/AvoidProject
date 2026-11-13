@@ -148,8 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0b58772fb5081747bad7570c36ac40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackManager
-  m_ColliderManager: {fileID: 1117417019}
-  m_AttackViewManager: {fileID: 2028312072}
 --- !u!4 &13313497
 Transform:
   m_ObjectHideFlags: 0
@@ -229,6 +227,8 @@ GameObject:
   - component: {fileID: 417548084}
   - component: {fileID: 417548083}
   - component: {fileID: 417548082}
+  - component: {fileID: 417548088}
+  - component: {fileID: 417548087}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Untagged
@@ -413,6 +413,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &417548087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417548081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 926fb9da1e4a0df4e98425f5b7045984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHp
+--- !u!114 &417548088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417548081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0bba95cab1e99d4f8f51d5cc8b7df74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TestPlayerController
+  m_PlayerHp: {fileID: 417548087}
 --- !u!1 &610319537 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8365474015497140230, guid: e8c6632b08ffebd46ab3210913dd6ff1, type: 3}
@@ -822,8 +847,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab806d28411a8fc4090a559c4e959579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackViewManager
-  m_AttackManager: {fileID: 13313496}
-  m_AttackViewPool: {fileID: 2076295954}
   m_Box: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Circle: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
 --- !u!4 &2028312073

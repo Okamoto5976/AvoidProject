@@ -4,7 +4,11 @@ using UnityEngine.InputSystem;
 
 public class InputProvider
 {
+    private const string REBIND_KEY = "Player_Rebinds";
+
     private InputSystem_Actions m_action;
+
+    public InputSystem_Actions InputActions => m_action;
 
     //Input Player
     private Vector2 m_inputMove;
@@ -24,6 +28,9 @@ public class InputProvider
     {
         m_action = new InputSystem_Actions();
 
+        LoadRebind();
+
+
         m_action.Player.Move.performed += OnMove;
         m_action.Player.Move.canceled += OnMove;
         m_action.Player.Interact.performed += OnInteract;
@@ -39,6 +46,7 @@ public class InputProvider
 
 
         m_action.UI.Menu.performed += OnMenu;
+
     }
 
     public void PlayerEnable()
@@ -100,5 +108,23 @@ public class InputProvider
     private void OnMenu(InputAction.CallbackContext context)
     {
         OnInputMenu?.Invoke();
+    }
+
+    public void SaveRebind()
+    {
+        string json = m_action.SaveBindingOverridesAsJson();
+
+        PlayerPrefs.SetString(REBIND_KEY, json);
+        PlayerPrefs.Save();
+    }
+
+    private void LoadRebind()
+    {
+        if (!PlayerPrefs.HasKey(REBIND_KEY))
+            return;
+
+        string json = PlayerPrefs.GetString(REBIND_KEY);
+
+        m_action.LoadBindingOverridesFromJson(json);
     }
 }

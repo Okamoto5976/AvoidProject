@@ -1,19 +1,20 @@
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class Movement 
 {
     private Rigidbody2D m_rd;
-
+    private Transform m_transform;
     private StageManager m_stageManager;
+
+    public Movement(Rigidbody2D rd, Transform target)
+    {
+        m_rd = rd;
+        m_transform = target;
+    }
 
     public void Initialize(StageManager manager)
     {
         m_stageManager = manager;
-    }
-
-    private void Awake()
-    {
-        m_rd = GetComponent<Rigidbody2D>();
     }
 
     public void Move(Vector2 direction, float speed)
@@ -27,9 +28,14 @@ public class Movement : MonoBehaviour
         m_rd.linearVelocity = Vector2.zero;
     }
     
-    private void Update()
+    public void LimitMovement()
     {
-        transform.position = m_stageManager.LimitMovement(transform.position);
+        if (m_stageManager == null)
+        {
+            return;
+        }
+
+        m_transform.position = m_stageManager.LimitMovement(m_transform.position);
     }
 
 }

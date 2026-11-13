@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -10,15 +11,19 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private float m_minSize = 5f;
     [SerializeField] private float m_maxSize = 12f;
 
-    //EnemyとPlayerの外側の余白
+    //映したいオブジェクトの外側の余白
     [SerializeField] private float m_padding = 2f;
 
     //ズームの滑らかさ(小さい値程素早くズーム)
     [SerializeField] private float m_zoomSmoothTime = 0.25f;
 
     private Camera m_camera;
-    private GameObject m_player;
-    private GameObject m_enemy;
+
+    //カメラに映したいオブジェクト(2つ以上でもOK)
+    private readonly List<GameObject> m_targets = new List<GameObject>();
+
+    //追従とズームを行っているか(Stopでfalseになる)
+    private bool m_isTracking;
 
     private Vector3 m_basePosition;
     private Vector3 m_followVelocity;
@@ -36,34 +41,71 @@ public class CameraManager : MonoBehaviour
     }
 
 
-    //-----PlayerとEnemyの関数-------
+    //-----初期化(InitializedManagerから呼ばれる)-------
 
+    /// <summary>
+    /// PlayerとEnemyを渡して追従を開始する。
+    /// 開始時はカメラを滑らせず、一瞬で正しい位置とサイズに合わせる。
+    /// </summary>
     public void Initialize(GameObject player, GameObject enemy)
     {
-        m_player = player;
-        m_enemy = enemy;
+        StartTracking(player, enemy);
 
         if (m_camera == null) m_camera = GetComponent<Camera>();
-        if (TryGetTargetPosition(out Vector3 pos))
+        if (TryGetBounds(out Bounds bounds))
         {
-            m_basePosition = new Vector3(pos.x, pos.y, transform.position.z);
+            m_basePosition = new Vector3(bounds.center.x, bounds.center.y, transform.position.z);
             transform.position = m_basePosition;
+            m_camera.orthographicSize = CalcTargetSize(bounds);
         }
-        m_camera.orthographicSize = CalcTargetSize();
+    }
+
+
+    //-----追従の開始と停止-------
+
+    /// <summary>
+    /// 渡されたオブジェクトが全て映るように、カメラが動きながら追従とズームを行う。
+    /// 呼び直すと映す対象を入れ替える(Stop中に呼ぶと再開する)。
+    /// </summary>
+    public void StartTracking(params GameObject[] targets)
+    {
+        m_targets.Clear();
+
+        if (targets != null)
+        {
+            foreach (GameObject target in targets)
+            {
+                if (target != null) m_targets.Add(target);
+            }
+        }
+
+        m_followVelocity = Vector3.zero;
+        m_zoomVelocity = 0f;
+        m_isTracking = true;
+    }
+
+    /// <summary>
+    /// 追従とズームを止める。カメラはその位置とサイズで止まる(シェイクは動く)。
+    /// </summary>
+    public void Stop()
+    {
+        m_isTracking = false;
         m_followVelocity = Vector3.zero;
         m_zoomVelocity = 0f;
     }
 
+
+
     private void LateUpdate()
     {
-        if (TryGetTargetPosition(out Vector3 target))
+        if (m_isTracking && TryGetBounds(out Bounds bounds))
         {
-            Vector3 goal = new Vector3(target.x, target.y, m_basePosition.z);
+            Vector3 goal = new Vector3(bounds.center.x, bounds.center.y, m_basePosition.z);
             m_basePosition = Vector3.SmoothDamp(m_basePosition, goal, ref m_followVelocity, m_followSmoothTime);
-        }
 
-        m_camera.orthographicSize = Mathf.SmoothDamp(
-            m_camera.orthographicSize, CalcTargetSize(), ref m_zoomVelocity, m_zoomSmoothTime);
+            m_camera.orthographicSize = Mathf.SmoothDamp(
+                m_camera.orthographicSize, CalcTargetSize(bounds), ref m_zoomVelocity, m_zoomSmoothTime);
+        }
 
         transform.position = m_basePosition + CalcShakeOffset();
     }
@@ -92,31 +134,37 @@ public class CameraManager : MonoBehaviour
         Vector2 offset = Random.insideUnitCircle * CurrentShakeMagnitude();
         return new Vector3(offset.x, offset.y, 0f);
     }
-    private bool TryGetTargetPosition(out Vector3 position)
+
+    //映したいオブジェクト全てを囲む範囲を取得(Destroyされたものは除く)
+    private bool TryGetBounds(out Bounds bounds)
     {
-        bool hasPlayer = m_player != null;
-        bool hasEnemy = m_enemy != null;
+        bool found = false;
+        bounds = new Bounds();
 
-        if (hasPlayer && hasEnemy)
+        foreach (GameObject target in m_targets)
         {
-            position = (m_player.transform.position + m_enemy.transform.position) * 0.5f;
-            return true;
-        }
-        if (hasPlayer) { position = m_player.transform.position; return true; }
-        if (hasEnemy) { position = m_enemy.transform.position; return true; }
+            if (target == null) continue;
 
-        position = Vector3.zero;
-        return false;
+            Vector3 position = target.transform.position;
+            if (!found)
+            {
+                bounds = new Bounds(position, Vector3.zero);
+                found = true;
+            }
+            else
+            {
+                bounds.Encapsulate(position);
+            }
+        }
+
+        return found;
     }
 
-    //PlayerとEnemyが収まるのに必要なカメラのサイズの計算
-    private float CalcTargetSize()
+    //全てのオブジェクトが収まるのに必要なカメラのサイズの計算
+    private float CalcTargetSize(Bounds bounds)
     {
-        if (m_player == null || m_enemy == null) return m_minSize;
-
-        Vector3 diff = m_player.transform.position - m_enemy.transform.position;
-        float halfWidth = Mathf.Abs(diff.x) * 0.5f + m_padding;
-        float halfHeight = Mathf.Abs(diff.y) * 0.5f + m_padding;
+        float halfWidth = bounds.extents.x + m_padding;
+        float halfHeight = bounds.extents.y + m_padding;
 
         float sizeByWidth = halfWidth / m_camera.aspect;
         float size = Mathf.Max(halfHeight, sizeByWidth);

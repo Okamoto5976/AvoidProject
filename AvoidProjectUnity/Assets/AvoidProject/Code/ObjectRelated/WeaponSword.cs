@@ -12,9 +12,10 @@ public class WeaponSword : MonoBehaviour, IInteractable
     public bool Interact(PlayerController c)
     {
         //Œ•‚ğ‘•”õ
+        Debug.Log("Œ•‚ğæ“¾‚µ‚Ü‚µ‚½I");
 
         //Anim ‚â Particel
-        ReturnObject();
+        //ReturnObject();
 
         return true;
     }
