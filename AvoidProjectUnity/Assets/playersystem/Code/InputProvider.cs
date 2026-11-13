@@ -127,4 +127,11 @@ public class InputProvider
 
         m_action.LoadBindingOverridesFromJson(json);
     }
+
+    public void DeleteRebind()
+    {
+        PlayerPrefs.DeleteKey(REBIND_KEY);
+        PlayerPrefs.Save();
+
+    }
 }

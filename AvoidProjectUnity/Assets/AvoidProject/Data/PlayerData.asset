@@ -29,18 +29,26 @@ MonoBehaviour:
   m_recoverValue: 100
   m_attackData:
     m_attackContext:
-      ShapeType: 1
-      Size: {x: 2, y: 2}
-      Position: {x: -1.2999995, y: 0}
+      ColliderProperty:
+        ShapeType: 0
+        Radius: 0
+        Direction: 0
+        Width: 2
+        Height: 2
+        Rotate: 0
+        Thickness: 0
+        Length: 0
+        Angle: 0
+      Position: {x: -1.7485278, y: -0.07279245}
+      Parent: {fileID: 0}
       StartupTime: 0
       ActiveTime: 1
-      Damage: 0
     m_actionList:
-    - rid: 7576007999706628179
+    - rid: 7170619308091637886
   references:
     version: 2
     RefIds:
-    - rid: 7576007999706628179
+    - rid: 7170619308091637886
       type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
       data:
         a: 0
