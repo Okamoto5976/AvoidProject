@@ -29,11 +29,10 @@ public class AttackManager : MonoBehaviour
     /// <param name="attack">攻撃のデータ</param>
     public void Attack(Attack attack)
     {
-        //特殊処理
-        //if (attack.ColliderProperty.ShapeType == ShapeType.Line)
-        //{
-        //    attack.Position.y += attack.ColliderProperty.Length / 2;
-        //}
+        if (CheckError(attack.ColliderProperty))
+        {
+            Debug.LogWarning($"値の設定が間違っており、攻撃できませんでした。(ShapeType == {attack.ColliderProperty.ShapeType})");
+        }
 
 
         //Debug.Log("攻撃スタート");
@@ -46,6 +45,29 @@ public class AttackManager : MonoBehaviour
         {
             m_ColliderManager.ActiveCollider(cloneAttack);
         }
+    }
+
+    private bool CheckError(ColliderProperty property)
+    {
+        switch (property.ShapeType)
+        {
+            case ShapeType.Circle:
+                if (property.Radius == 0)    return true;
+                break;
+            case ShapeType.Box:
+                if (property.Width == 0)     return true;
+                if (property.Height == 0)    return true;
+                break;
+            case ShapeType.Line:
+                if (property.Thickness == 0) return true;
+                if (property.Length == 0)    return true;
+                break;
+            case ShapeType.Sector:
+                if (property.Radius == 0)    return true;
+                if (property.Angle == 0)     return true;
+                break;
+        }
+        return false;
     }
 
     /// <summary>
