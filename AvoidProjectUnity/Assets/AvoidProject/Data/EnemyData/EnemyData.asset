@@ -28,13 +28,20 @@ MonoBehaviour:
       type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
       data:
         m_attackContext:
-          Team: 1
-          ShapeType: 1
-          Size: {x: 2, y: 2}
+          ColliderProperty:
+            ShapeType: 0
+            Radius: 2
+            Direction: 2
+            Width: 0
+            Height: 0
+            Rotate: 45
+            Thickness: 0
+            Length: 0
+            Angle: 45
           Position: {x: 0, y: 0}
+          Parent: {fileID: 0}
           StartupTime: 1
           ActiveTime: 1
-          Damage: 1
         m_actionList:
         - rid: 7576007996673097807
     - rid: 7576007996673097807
@@ -45,13 +52,20 @@ MonoBehaviour:
       type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
       data:
         m_attackContext:
-          Team: 1
-          ShapeType: 0
-          Size: {x: 2, y: 2}
+          ColliderProperty:
+            ShapeType: 0
+            Radius: 0
+            Direction: 0
+            Width: 2
+            Height: 2
+            Rotate: 0
+            Thickness: 0
+            Length: 0
+            Angle: 0
           Position: {x: 0, y: 0}
+          Parent: {fileID: 0}
           StartupTime: 1
           ActiveTime: 1
-          Damage: 1
         m_actionList:
         - rid: 7576007996673097811
     - rid: 7576007996673097811

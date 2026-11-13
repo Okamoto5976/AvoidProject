@@ -1213,7 +1213,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &497806220
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1390,7 +1390,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0aa9d0c86d84f9943bc2b051795a2e6c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2822,6 +2822,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913007524}
   m_CullTransparentMesh: 1
+--- !u!1 &967659295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 967659296}
+  - component: {fileID: 967659297}
+  m_Layer: 0
+  m_Name: CustomColliderPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &967659296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967659295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2078290129}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &967659297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967659295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1d2a67bdc76a97489cd7e27d94047fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  m_poolObj: {fileID: 2973449711832538634, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+  m_count: 10
 --- !u!1 &1020021374
 GameObject:
   m_ObjectHideFlags: 0
@@ -4234,8 +4280,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949dd4bf8d835304f8303fb450ecd144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderManager
-  m_CustomColliderPool: {fileID: 0}
-  m_Player: {fileID: 0}
+  m_CustomColliderPool: {fileID: 967659297}
+  m_Player: {fileID: 1500419984}
 --- !u!4 &1451021333
 Transform:
   m_ObjectHideFlags: 0
@@ -4437,6 +4483,11 @@ CanvasRenderer:
 --- !u!1 &1500419983 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2953645378532087243, guid: 630bd7c49f0b6db4093be8a657db5e01, type: 3}
+  m_PrefabInstance: {fileID: 1024388408017722557}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &1500419984 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 4960408359565414131, guid: 630bd7c49f0b6db4093be8a657db5e01, type: 3}
   m_PrefabInstance: {fileID: 1024388408017722557}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1554139080
@@ -5761,7 +5812,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1927167898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6403,6 +6454,7 @@ Transform:
   - {fileID: 1459263367}
   - {fileID: 849001352}
   - {fileID: 1927167899}
+  - {fileID: 967659296}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2124625128
