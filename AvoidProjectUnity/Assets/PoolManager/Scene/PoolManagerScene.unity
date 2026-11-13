@@ -251,18 +251,21 @@ MonoBehaviour:
   m_AttackManager: {fileID: 13313496}
   m_SpriteRenderer: {fileID: 417548085}
   random: 1
-  testAttack:
-    Team: 0
-    ShapeType: 0
-    Size: {x: 2, y: 2}
+  sampleAttack:
+    ColliderProperty:
+      ShapeType: 0
+      Radius: 2
+      Direction: 45
+      Width: 2
+      Height: 2
+      Rotate: 45
+      Thickness: 0.5
+      Length: 5
+      Angle: 180
     Position: {x: 0, y: 0}
+    Parent: {fileID: 0}
     StartupTime: 2
-    ActiveTime: 0
-    Damage: 10
-  m_ColliderManager: {fileID: 1117417019}
-  m_AttackViewManager: {fileID: 2028312072}
-  m_AttackViewPool: {fileID: 2076295954}
-  m_ColliderMediationPool: {fileID: 1693244352}
+    ActiveTime: 2
 --- !u!61 &417548083
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -440,6 +443,52 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8365474015497140230, guid: e8c6632b08ffebd46ab3210913dd6ff1, type: 3}
   m_PrefabInstance: {fileID: 6380368448316360435}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &914712596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 914712598}
+  - component: {fileID: 914712597}
+  m_Layer: 0
+  m_Name: CustomColliderPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &914712597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914712596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1d2a67bdc76a97489cd7e27d94047fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  m_poolObj: {fileID: 2973449711832538634, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+  m_count: 10
+--- !u!4 &914712598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914712596}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1117417018
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,6 +518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949dd4bf8d835304f8303fb450ecd144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderManager
+  m_CustomColliderPool: {fileID: 914712597}
+  m_MediationPool: {fileID: 1693244352}
+  m_Player: {fileID: 417548084}
 --- !u!4 &1117417020
 Transform:
   m_ObjectHideFlags: 0
@@ -919,6 +971,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4e2cbd1668fb1e48be68da4233af4be, type: 3}
+--- !u!1001 &3229629321722815693
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2973449711832538634, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_Name
+      value: CustomCollider
+      objectReference: {fileID: 0}
+    - target: {fileID: 2973449711832538634, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7250984351021261964, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 701dcd32aa29c1e4eb8a1b2361dae426, type: 3}
 --- !u!1001 &6380368448316360435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1058,3 +1171,5 @@ SceneRoots:
   - {fileID: 1117417020}
   - {fileID: 1693244351}
   - {fileID: 1873670260}
+  - {fileID: 3229629321722815693}
+  - {fileID: 914712598}

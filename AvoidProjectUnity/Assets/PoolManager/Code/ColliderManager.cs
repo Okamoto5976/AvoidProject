@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ColliderManager : MonoBehaviour
 {
+    [SerializeField] private PoolManager m_CustomColliderPool;
+
+    [SerializeField] private Rigidbody2D m_Player;
     private ColliderMediationPool m_MediationPool;
     //[SerializeField] private Rigidbody2D m_Player;
 
@@ -13,7 +16,7 @@ public class ColliderManager : MonoBehaviour
 
     private Color m_ColliderColor = Color.green;
 
-    //ˆêu‚¾‚¯•\¦‚·‚éê‡—p
+    //ä¸€ç¬ã ã‘è¡¨ç¤ºã™ã‚‹å ´åˆç”¨
     private float m_GizmoViewDelay = 2f;
 
     public void SetColliderMediationPool(ColliderMediationPool component)
@@ -30,7 +33,7 @@ public class ColliderManager : MonoBehaviour
             {
                 RemoveGizmo(m_TimedActions[i].Object.GetComponent<Collider2D>());
 
-                //Debug.Log("ƒRƒ‰ƒCƒ_[–³Œø‰»");
+                //Debug.Log("ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ç„¡åŠ¹åŒ–");
                 ReturnPool returnPool = m_TimedActions[i].Object.GetComponent<ReturnPool>();
                 returnPool.Return();
                 m_TimedActions[i] = m_TimedActions[m_TimedActions.Count - 1];
@@ -40,16 +43,18 @@ public class ColliderManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ”»’è—p‚ÌCollider‚ğ¶¬‚·‚éŠÖ”
+    /// åˆ¤å®šç”¨ã®Colliderã‚’ç”Ÿæˆã™ã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="attack">UŒ‚‚Ìƒf[ƒ^</param>
+    /// <param name="attack">æ”»æ’ƒã®ãƒ‡ãƒ¼ã‚¿</param>
     public void ActiveCollider(Attack attack)
     {
-        //Debug.Log("ƒRƒ‰ƒCƒ_[—LŒø‰»");
+        //Debug.Log("ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æœ‰åŠ¹åŒ–");
         GameObject obj = null;
-        PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
-        obj = pool.GenerateFromPool();
+        //PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
+        //obj = pool.GenerateFromPool();
+        obj = m_CustomColliderPool.GenerateFromPool();
         if (obj == null) return;
+        
 
         Collider2D col = obj.GetComponent<Collider2D>();
         col.excludeLayers = 0;
@@ -76,6 +81,10 @@ public class ColliderManager : MonoBehaviour
             StartCoroutine(OnceFlameCollider(col));
         }
         m_TimedActions.Add(action);
+        m_Player.WakeUp();
+
+        ColliderController colliderController = obj.GetComponent<ColliderController>();
+        colliderController.SetColliderProperty(attack.ColliderProperty, attack.Position, attack.Parent);
         //m_Player.WakeUp();
     }
 
