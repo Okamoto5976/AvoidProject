@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class AttackViewManager : MonoBehaviour
 {
@@ -51,7 +49,10 @@ public class AttackViewManager : MonoBehaviour
         SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
 
         transform.localPosition = attack.Position;
-        transform.parent = attack.Parent;
+        if (attack.Parent != null)
+        {
+            transform.parent = attack.Parent;
+        }
 
         switch (attack.ColliderProperty.ShapeType)
         {
@@ -63,6 +64,9 @@ public class AttackViewManager : MonoBehaviour
                 break;
             case ShapeType.Line:
                 ShapingLine(attack.ColliderProperty, spriteRenderer, transform);
+                break;
+            case ShapeType.Sector:
+                ShapingSector(attack.ColliderProperty, spriteRenderer, transform);
                 break;
         }
 
@@ -80,7 +84,7 @@ public class AttackViewManager : MonoBehaviour
         float height = cp.Height;
         float rotate = cp.Rotate;
         tf.localScale = new Vector2(width, height);
-        tf.rotation = new Quaternion(0, 0, rotate, 0);
+        tf.rotation = Quaternion.Euler(0, 0, rotate);
     }
 
     private void ShapingCircle(ColliderProperty cp, SpriteRenderer sr, Transform tf)
@@ -102,5 +106,12 @@ public class AttackViewManager : MonoBehaviour
         Vector2 center = dir * (length * 0.5f);
         tf.localPosition += (Vector3)center;
         tf.rotation = Quaternion.Euler(0, 0, direction);
+    }
+
+    private void ShapingSector(ColliderProperty cp, SpriteRenderer sr, Transform tf)
+    {
+        sr.sprite = m_Circle;
+        float diameter = cp.Radius * 2;
+        tf.localScale = new Vector2(diameter, diameter);
     }
 }

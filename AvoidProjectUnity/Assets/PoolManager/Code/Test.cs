@@ -3,11 +3,38 @@ using UnityEngine.InputSystem;
 
 public class Test : MonoBehaviour
 {
+
+    [Header("攻撃テスト用")]
     [SerializeField] private AttackManager m_AttackManager;
     [SerializeField] private SpriteRenderer m_SpriteRenderer;
 
     [SerializeField] private bool random;
     [SerializeField] private Attack sampleAttack;
+
+    [Header("ComponentInitalize用")]
+    [SerializeField] private ColliderManager m_ColliderManager;
+    [SerializeField] private AttackViewManager m_AttackViewManager;
+    [SerializeField] private PoolManager m_AttackViewPool;
+    [SerializeField] private ColliderMediationPool m_ColliderMediationPool;
+
+    private void Awake()
+    {
+        ComponentInitialize();
+    }
+
+    private void ComponentInitialize()
+    {
+        //AttackManagerSet
+        m_AttackManager.SetColliderManager(m_ColliderManager);
+        m_AttackManager.SetAttackViewManager(m_AttackViewManager);
+
+        //AttackViewManagerSet
+        m_AttackViewManager.SetAttackViewPool(m_AttackViewPool);
+        m_AttackViewManager.SetAttackManager(m_AttackManager);
+
+        //ColliderManagerSet
+        m_ColliderManager.SetColliderMediationPool(m_ColliderMediationPool);
+    }
 
     private void Update()
     {

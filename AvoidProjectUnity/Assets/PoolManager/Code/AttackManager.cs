@@ -32,8 +32,8 @@ public class AttackManager : MonoBehaviour
         if (CheckError(attack.ColliderProperty))
         {
             Debug.LogWarning($"値の設定が間違っており、攻撃できませんでした。(ShapeType == {attack.ColliderProperty.ShapeType})");
+            return;
         }
-
 
         //Debug.Log("攻撃スタート");
         Attack cloneAttack = attack.Clone();

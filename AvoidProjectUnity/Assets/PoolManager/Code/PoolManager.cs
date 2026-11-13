@@ -87,6 +87,7 @@ public class PoolManager : MonoBehaviour
     public void ReturnToPool(GameObject obj)
     {
         obj.SetActive(false);
+        obj.transform.parent = transform;
         m_Pool.Add(obj);
     }
 
