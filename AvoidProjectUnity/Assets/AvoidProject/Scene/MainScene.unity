@@ -4234,6 +4234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949dd4bf8d835304f8303fb450ecd144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderManager
+  m_CustomColliderPool: {fileID: 0}
+  m_Player: {fileID: 0}
 --- !u!4 &1451021333
 Transform:
   m_ObjectHideFlags: 0

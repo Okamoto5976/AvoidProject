@@ -60,11 +60,11 @@ public class ColliderManager : MonoBehaviour
         col.excludeLayers = 0;
 
         obj.transform.position = attack.Position;
-        obj.transform.localScale = attack.Size;
+        //obj.transform.localScale = attack.Size;
 
         var component = obj.GetComponent<ColliderAttack>();
 
-        component.Initialize(attack.Damage, attack.Team);
+        //component.Initialize(attack.Damage, attack.Team);
 
         AddGizmo(col);
 
