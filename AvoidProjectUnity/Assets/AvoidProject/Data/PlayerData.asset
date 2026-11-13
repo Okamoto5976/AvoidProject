@@ -39,16 +39,16 @@ MonoBehaviour:
         Thickness: 0
         Length: 0
         Angle: 0
-      Position: {x: -1.7485278, y: -0.07279245}
+      Position: {x: -0.7331042, y: -2.971568}
       Parent: {fileID: 0}
       StartupTime: 0
-      ActiveTime: 1
+      ActiveTime: 0
     m_actionList:
-    - rid: 7170619308091637886
+    - rid: 7170619308091637890
   references:
     version: 2
     RefIds:
-    - rid: 7170619308091637886
+    - rid: 7170619308091637890
       type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
       data:
         a: 0
