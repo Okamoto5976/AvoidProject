@@ -13,13 +13,13 @@ public class InputProvider
     //Input Player
     private Vector2 m_inputMove;
     public event Action<Vector2> OnInputMove;
-    public event System.Action OnInputInteract;
     public event Action<bool> OnInputSprint;
     public event System.Action OnInputAttack;
     public event System.Action OnInputRecover;
     public event System.Action OnInputAvoid;
     public event Action<bool> OnInputInteractHold;
     public event Action<bool> OnInputRecoverHold;
+    public event System.Action OnPlayerDead;   
 
     //Input UI
     public event System.Action OnInputMenu;
@@ -33,7 +33,6 @@ public class InputProvider
 
         m_action.Player.Move.performed += OnMove;
         m_action.Player.Move.canceled += OnMove;
-        m_action.Player.Interact.performed += OnInteract;
         m_action.Player.Interact.started += OnInteractHold;
         m_action.Player.Interact.canceled += OnInteractHold;
         m_action.Player.Sprint.performed += OnSprint;
@@ -43,6 +42,7 @@ public class InputProvider
         m_action.Player.Recover.started += OnRecoverHold;
         m_action.Player.Recover.canceled += OnRecoverHold;
         m_action.Player.Avoid.performed += OnAvoid;
+
 
 
         m_action.UI.Menu.performed += OnMenu;
@@ -74,11 +74,6 @@ public class InputProvider
         m_inputMove = context.ReadValue<Vector2>();
 
         OnInputMove?.Invoke(m_inputMove);
-    }
-
-    private void OnInteract(InputAction.CallbackContext context)
-    {
-        OnInputInteract?.Invoke();
     }
     private void OnSprint(InputAction.CallbackContext context)
     {
@@ -133,5 +128,9 @@ public class InputProvider
         PlayerPrefs.DeleteKey(REBIND_KEY);
         PlayerPrefs.Save();
 
+    }
+    public void PlayerDead()
+    {
+        OnPlayerDead?.Invoke();
     }
 }

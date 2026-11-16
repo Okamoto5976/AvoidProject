@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private int m_justAvoidFrameCount = 0;
     private int m_pendingDamage = 0;
     private int m_justAvoidFrame;
+    private int m_dhp;
 
     private Vector2 m_velocity;
     private Vector2 m_avoidDirection;
@@ -88,12 +89,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (m_inputProvider == null) return;
 
         m_inputProvider.OnInputMove -= InputMove;
-        m_inputProvider.OnInputInteract -= InputInteract;
         m_inputProvider.OnInputSprint -= InputSprint;
         m_inputProvider.OnInputAttack -= InputAttack;
         m_inputProvider.OnInputRecover -= InputRecover;
         m_inputProvider.OnInputAvoid -= InputAvoid;
-        m_inputProvider.OnInputInteractHold -= InputInteractHold;
+        m_inputProvider.OnInputInteractHold -= InputInteract;
         m_inputProvider.OnInputRecoverHold -= InputRecoverHold;
     }
     private MeleeAttack m_meleeAttack;
@@ -107,12 +107,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_inputProvider = inputProvider;
 
         m_inputProvider.OnInputMove += InputMove;
-        m_inputProvider.OnInputInteract += InputInteract;
         m_inputProvider.OnInputSprint += InputSprint;
         m_inputProvider.OnInputAttack += InputAttack;
         m_inputProvider.OnInputRecover += InputRecover;
         m_inputProvider.OnInputAvoid += InputAvoid;
-        m_inputProvider.OnInputInteractHold += InputInteractHold;
+        m_inputProvider.OnInputInteractHold += InputInteract;
         m_inputProvider.OnInputRecoverHold += InputRecoverHold;
 
         //Debug.Log("PlayerController Initialize 実行！");
@@ -125,7 +124,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_meleeAttack = new(pData.m_attackData);
         //m_meleeAttack.SetTransfrom(this.transform);
 
- 
+        m_dhp = pData.Dhp;
 
         m_moveSpeed = pData.Speed;  
         m_sprintSpeed = pData.SprintSpeed;
@@ -186,17 +185,23 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (m_isWaitingJustAvoid)
         {
             m_justAvoidFrameCount++;
+
             if (m_justAvoidFrameCount >= m_justAvoidFrame)
             {
                 m_isWaitingJustAvoid = false;
 
                 int damage = m_pendingDamage;
                 m_pendingDamage = 0;
-               
+
+
                 if (damage > 0)
                 {
                     m_hpController.Damage(damage);
-
+                    if (m_hpController.Hp <= 0)
+                    {
+                        Dead();
+                        return;
+                    }
                     m_isDamageInvincible = true;
                     m_damageInvicibleTimer = 0f;
                     Debug.Log("回避失敗！ダメージを受けました", this);
@@ -300,17 +305,42 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
     }
 
-    private void InputInteract()
+    private void InputInteract(bool isHolding)
     {
         if (m_playerState == PlayerState.Dead) return;
-        //Debug.Log("インタラクト！",this);
 
+        m_isInteracting = isHolding;
+
+        if (isHolding)
+        {
+            m_isRecovering = false;
+            ChangeState(PlayerState.Interact);
+            m_playerInteract.StartInteract(this, m_interactRange);
+        }
+        else
+        {
+            m_playerInteract.EndInteract();
+
+            if (!m_isAvoiding)
+            {
+                ChangeState(PlayerState.Idle);
+            }
+        }
     }
+
 
 
     private void InputAttack()
     {
         if (m_playerState == PlayerState.Dead) return;  
+
+        if (!m_hasWeapon)
+        {
+            Debug.Log("武器を持っていないため攻撃できません！", this);
+            return;
+        }
+
+       
         m_isRecovering = false;
         ChangeState(PlayerState.Attack);
         //Debug.Log("攻撃！",this);
@@ -399,30 +429,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         // 最初の攻撃分だけ記録する
         m_pendingDamage = damage;
 
+    
+
         Debug.Log("攻撃Hit！ジャスト回避受付開始！", this);
     }
 
-    private void InputInteractHold(bool isHolding)
-    {
-        if (m_playerState == PlayerState.Dead) return;
-        m_isInteracting = isHolding;
-
-        if (isHolding)
-        {
-            m_isRecovering = false;
-            ChangeState(PlayerState.Interact);
-            m_playerInteract.StartInteract(this, m_interactRange);
-        }
-        else
-        {
-            m_playerInteract.EndInteract();
-
-            if (!m_isAvoiding)
-            {
-                ChangeState(PlayerState.Idle);
-            }
-        }
-    }
 
     private void InputRecoverHold(bool isHolding)
     {
@@ -541,17 +552,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         m_movement.Stop();
 
+        m_inputProvider?.PlayerDead();
+
         //Debug.Log("プレイヤー死亡！", this);
     }
-    [ContextMenu("テスト用/強制死亡")]
-    private void TestDead()
+    public void SetIsInvincible(bool value)
     {
-        Dead();
+        m_isInvincible = value;
     }
-    [ContextMenu("テスト用/ジャスト回避受付")]
-    private void TestJustAvoid()
-    {
-        TakeDamage(10);
-    }
+
 }
 

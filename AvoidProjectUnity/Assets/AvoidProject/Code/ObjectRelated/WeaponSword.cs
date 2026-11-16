@@ -14,8 +14,11 @@ public class WeaponSword : MonoBehaviour, IInteractable
         //剣を装備
         Debug.Log("剣を取得しました！");
 
-        //Anim や Particel
-        //ReturnObject();
+        // プレイヤーの剣所持状態を変更
+        c.SetHasWeapon(true);
+
+        // 剣をプールに戻す
+        ReturnObject();
 
         return true;
     }

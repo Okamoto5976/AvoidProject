@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
     [SerializeField] private int m_hp = 3;
-    [SerializeField] private int m_dhp = 0;
+    [SerializeField] private int m_dhp = 1;
     [SerializeField] private float m_speed = 5f;
     [SerializeField] private float m_sprintSpeed = 10f;
     [SerializeField] private float m_attackStateDuration = 0.3f;

@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public bool HasTimeLimit => m_hasTimeLimit;
     public float TimeLimit => m_timeLimit;
 
-
+    private InputProvider m_inputProvider;
 
     private bool m_hasTimeLimit;
 
@@ -34,6 +34,12 @@ public class GameManager : MonoBehaviour
         m_timeLimit = timer;
     }
 
+    public void InitializeInput(InputProvider inputProvider)
+    {
+        m_inputProvider = inputProvider;
+
+        m_inputProvider.OnPlayerDead += GameOverEvent;
+    }
     public void StartGame()
     {
         ChangeGameState(EnumGameState.InPlay);
@@ -70,6 +76,12 @@ public class GameManager : MonoBehaviour
        
     }
 
+    private void OnDestroy()
+    {
+        if (m_inputProvider == null) return;
+
+        m_inputProvider.OnPlayerDead -= GameOverEvent;
+    }
 
     public void ChangeGameState(EnumGameState state)
     {
@@ -94,13 +106,18 @@ public class GameManager : MonoBehaviour
 
     public void GameOverEvent()
     {
+        if (m_gameState == EnumGameState.GameOver) return;
 
+        ChangeGameState(EnumGameState.GameOver);
+
+        Debug.Log("GameOverÅI");
     }
 
     public void GameClearEvent()
     {
 
     }
+
 
 
 }

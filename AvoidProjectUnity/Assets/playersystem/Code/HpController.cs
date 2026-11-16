@@ -33,6 +33,7 @@ public class HpController : MonoBehaviour
         }
     }
 
+
     protected virtual void Dead()
     {
         if(m_Alive == false) return;

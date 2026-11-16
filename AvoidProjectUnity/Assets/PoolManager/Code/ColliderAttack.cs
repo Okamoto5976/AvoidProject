@@ -9,6 +9,7 @@ public class ColliderAttack : MonoBehaviour
     {
         m_damage = damage;
         m_team = team;
+
     }
 
     void OnTriggerStay2D(Collider2D other)
