@@ -266,6 +266,10 @@ MonoBehaviour:
     Parent: {fileID: 0}
     StartupTime: 2
     ActiveTime: 2
+  m_ColliderManager: {fileID: 1117417019}
+  m_AttackViewManager: {fileID: 2028312072}
+  m_AttackViewPool: {fileID: 2076295954}
+  m_ColliderMediationPool: {fileID: 1693244352}
 --- !u!61 &417548083
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -519,7 +523,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderManager
   m_CustomColliderPool: {fileID: 914712597}
-  m_MediationPool: {fileID: 1693244352}
   m_Player: {fileID: 417548084}
 --- !u!4 &1117417020
 Transform:
