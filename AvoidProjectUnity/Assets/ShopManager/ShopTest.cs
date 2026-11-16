@@ -42,6 +42,9 @@ public class ShopTest : MonoBehaviour
             case PurchaseResult.InvalidId:
                 Debug.Log($"[ShopTest] ID {id}: ë∂ç›ÇµÇ»Ç¢è§ïiÇ≈Ç∑");
                 break;
+            case PurchaseResult.AlreadyPurchased:
+                Debug.Log($"[ShopTest] ID {id}: çwì¸çœÇ›Ç≈Ç∑");
+                break;
         }
     }
 }

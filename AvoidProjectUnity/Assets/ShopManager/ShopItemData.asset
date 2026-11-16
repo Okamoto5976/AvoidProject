@@ -12,6 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef68829327645014aa6c94fc314766a8, type: 3}
   m_Name: ShopItemData
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  m_Id: 1
-  m_ItemName: "\u307D\u3057\u3087\u3093"
-  m_Price: 100
+  m_Items:
+  - m_Id: 1
+    m_ItemName: "\u30DD\u30FC\u30B7\u30E7\u30F3"
+    m_Price: 100
+  - m_Id: 2
+    m_ItemName: "\u30A8\u30ED\u672C"
+    m_Price: 200
+  - m_Id: 3
+    m_ItemName: "\u3080\u3075\u3075\u672C"
+    m_Price: 300
