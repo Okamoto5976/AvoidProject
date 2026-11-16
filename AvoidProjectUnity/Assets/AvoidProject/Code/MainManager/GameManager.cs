@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     private float m_timeLimit;
 
+    private UIManager m_uiManager;
+
 
     /// <summary>
     /// ‰Šú‰»‚ÉŒÄ‚Ô@
@@ -94,11 +96,17 @@ public class GameManager : MonoBehaviour
 
     public void GameOverEvent()
     {
+        ChangeGameState(EnumGameState.GameOver);
 
+
+        m_uiManager.ShowGameOver();
     }
 
     public void GameClearEvent()
     {
+        ChangeGameState(EnumGameState.Event);
+
+        m_uiManager.ShowGameClear();
 
     }
 

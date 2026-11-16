@@ -13,11 +13,13 @@ public class TestEnemy : Enemy, IDamageable
     //
 
     private Rigidbody2D m_rd;
-    [SerializeField] private Team m_team;
-    
+
+    private Team m_team;
+
     public Team Team => m_team;
 
     private Movement m_movement;
+    private HpController m_hpController;
 
     [SerializeField] private AttackManager m_attackManager;
 
@@ -26,12 +28,18 @@ public class TestEnemy : Enemy, IDamageable
     private void Awake()
     {
         m_rd = GetComponent<Rigidbody2D>();
+        m_hpController = GetComponent<HpController>();
+
+        m_hpController.Initialize(10);
+
         m_movement = new Movement(m_rd, transform);
     }
 
     public override void InitializeData(EnemyData data)
     {
         base.InitializeData(data);
+
+        m_team = data.Team;
 
         foreach(var attack in data.AttackSettings)
         {
@@ -81,7 +89,7 @@ public class TestEnemy : Enemy, IDamageable
 
     public void TakeDamage(int damage)
     {
-
+        m_hpController.Damage(damage);
     }
 
 
@@ -97,5 +105,10 @@ public class TestEnemy : Enemy, IDamageable
     public void JumpAttack()
     {
         m_attacks[1].Execute();
+    }
+
+    public void Dead()
+    {
+
     }
 }

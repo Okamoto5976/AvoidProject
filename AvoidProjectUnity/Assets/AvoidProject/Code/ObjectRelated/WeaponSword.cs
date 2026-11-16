@@ -15,7 +15,8 @@ public class WeaponSword : MonoBehaviour, IInteractable
         Debug.Log("Œ•‚ğæ“¾‚µ‚Ü‚µ‚½I");
 
         //Anim ‚â Particel
-        //ReturnObject();
+        ReturnObject();
+
 
         return true;
     }

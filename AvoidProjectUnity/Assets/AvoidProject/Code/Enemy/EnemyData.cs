@@ -19,6 +19,10 @@ public class EnemyAttackSetting
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptable Objects/EnemyData")]
 public class EnemyData : ScriptableObject
 {
+    [SerializeField] private Team m_team;
+
+    public Team Team => m_team;
+
 #if UNITY_EDITOR
     [SerializeField] private MonoScript m_enemyScript;
 #endif

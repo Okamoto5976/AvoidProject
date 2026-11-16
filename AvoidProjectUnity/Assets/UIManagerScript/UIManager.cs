@@ -5,14 +5,14 @@ using UnityEngine.UI;
 public enum UIPanelType
 {
     None,
-    GameClear,
+    GameResult,
     GameOver
 }
 
 public class UIManager : MonoBehaviour
 {
     //Gameover,GameStartのPanelを管理(呼び出せるぜ)
-    [SerializeField] private GameObject m_gameStartPanel;
+    [SerializeField] private GameObject m_gameResultPanel;
     [SerializeField] private GameObject m_gameOverPanel;
 
     //HP表示(ハートの見た目はHeartViewのPrefab側で自由に変えられる)
@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     {
         panels = new Dictionary<UIPanelType, GameObject>
         {
-            { UIPanelType.GameClear, m_gameStartPanel },
+            { UIPanelType.GameResult, m_gameResultPanel },
             { UIPanelType.GameOver , m_gameOverPanel  }
         };
 
@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
 
     public void HideAll() => ShowPanel(UIPanelType.None);
 
-    public void ShowGameStart() => ShowPanel(UIPanelType.GameClear);
+    public void ShowGameClear() => ShowPanel(UIPanelType.GameResult);
     public void ShowGameOver() => ShowPanel(UIPanelType.GameOver);
 
     public void SetupHearts(int maxHP)

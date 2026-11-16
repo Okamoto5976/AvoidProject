@@ -41,7 +41,7 @@ public class EnemyHPTest : MonoBehaviour
 
         if (m_currentHP <= 0)
         {
-            m_uiManager.ShowPanel(UIPanelType.GameClear);
+            m_uiManager.ShowPanel(UIPanelType.GameResult);
         }
     }
 }
