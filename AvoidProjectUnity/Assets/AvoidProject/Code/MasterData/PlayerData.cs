@@ -21,6 +21,7 @@ public class PlayerData : ScriptableObject
     [SerializeField] private float m_recoverMoveSpeed = 2f;
     [SerializeField] private float m_recoverDuration = 2f;
     [SerializeField] private int m_recoverValue = 100;
+    [SerializeField] private float m_damageInvincibleDuration = 1.5f;
 
     public int HP => m_hp;
     public int Dhp => m_dhp;
@@ -41,6 +42,7 @@ public class PlayerData : ScriptableObject
     public float RecoverMoveSpeed => m_recoverMoveSpeed;
     public float RecoverDuration => m_recoverDuration;
     public int RecoverValue => m_recoverValue;
+    public float DamageInvincibleDuration => m_damageInvincibleDuration;
 
 
     public MeleeAttackData m_attackData = new();
