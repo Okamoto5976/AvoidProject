@@ -86,13 +86,13 @@ public class DebugManager : MonoBehaviour
         if(m_enemyHPController.Hp > 0)
         {
             GUI.Label(
-                new Rect(10, 40, 200, 30),
+                new Rect(10, 70, 200, 30),
                 $"EnemyHP :" + 0);
         }
         else
         {
             GUI.Label(
-                new Rect(10, 40, 200, 30),
+                new Rect(10, 70, 200, 30),
                 $"EnemyHP :" + 0);
         }
         

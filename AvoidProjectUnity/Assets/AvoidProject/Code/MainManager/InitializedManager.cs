@@ -33,6 +33,7 @@ public class InitializedManager : MonoBehaviour
 
     [SerializeField] private Enemy m_enemy;
     [SerializeField] private EnemyData m_enemyData;
+    private HpController m_enemyHpController;
 
     [SerializeField] private AttackManager m_attackManager;
     [SerializeField] private AttackViewManager m_attackViewManager;
@@ -115,6 +116,8 @@ public class InitializedManager : MonoBehaviour
 
 
         //Enemyの生成--------------------------
+        m_enemyHpController = m_enemy.GetComponent<HpController>();
+
         m_enemy.InitializeData(m_enemyData);
 
         //Runtimeから降ろした敵の生成
@@ -140,6 +143,7 @@ public class InitializedManager : MonoBehaviour
         //DebugManager設定
         m_debugManager.SetGameManager(m_gameManager);
         m_debugManager.SetPlayerHPController(m_playerHpController);
+        m_debugManager.SetEnemyHPController(m_enemyHpController);
 
         //GameStartDirectorを呼ぶ
 

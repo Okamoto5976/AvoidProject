@@ -6,6 +6,7 @@ public class RebindManager : MonoBehaviour
 {
     [SerializeField] private List<RebindEntry> m_rebindList;
 
+    [SerializeField] private GameObject m_somethingInputGuidePanel;
 
     private InputActionRebindingExtensions.RebindingOperation m_rebindingOperation;
 
@@ -55,7 +56,7 @@ public class RebindManager : MonoBehaviour
     {
         if (m_rebindingOperation != null) return;
 
-
+        m_somethingInputGuidePanel.SetActive(true);
 
         entry.m_action.Disable();
 
@@ -72,6 +73,7 @@ public class RebindManager : MonoBehaviour
                 m_inputProvider.SaveRebind();
 
                 UpdateDisplay(entry);
+                m_somethingInputGuidePanel.SetActive(false);
 
             })
             .OnCancel(operation =>
@@ -80,6 +82,8 @@ public class RebindManager : MonoBehaviour
                 m_rebindingOperation = null;
 
                 entry.m_action.Enable();
+                m_somethingInputGuidePanel.SetActive(false);
+
             });
 
         m_rebindingOperation.Start();
