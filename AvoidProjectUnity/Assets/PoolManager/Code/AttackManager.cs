@@ -1,38 +1,5 @@
 using UnityEngine;
 
-public enum ShapeType
-{
-    Box,
-    Circle
-}
-
-[System.Serializable]
-public class Attack
-{
-    public Team Team;
-
-    public ShapeType ShapeType;
-    public Vector2 Size;
-    public Vector2 Position;
-    public float StartupTime;
-    public float ActiveTime;
-
-    public int Damage;
-
-    public Attack Clone()
-    {
-        Attack attack = new Attack();
-        attack.Team = Team;
-        attack.ShapeType = ShapeType;
-        attack.Size = Size;
-        attack.Position = Position;
-        attack.StartupTime = StartupTime;
-        attack.ActiveTime = ActiveTime;
-        attack.Damage = Damage;
-        return attack;
-    }
-}
-
 [System.Serializable]
 public class TimedAction
 {
@@ -57,12 +24,18 @@ public class AttackManager : MonoBehaviour
     }
 
     /// <summary>
-    /// UŒ‚‚·‚éŠÖ”
+    /// æ”»æ’ƒã™ã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="attack">UŒ‚‚Ìƒf[ƒ^</param>
+    /// <param name="attack">æ”»æ’ƒã®ãƒ‡ãƒ¼ã‚¿</param>
     public void Attack(Attack attack)
     {
-        //Debug.Log("UŒ‚ƒXƒ^[ƒg");
+        if (CheckError(attack.ColliderProperty))
+        {
+            Debug.LogWarning($"å€¤ã®è¨­å®šãŒé–“é•ã£ã¦ãŠã‚Šã€æ”»æ’ƒã§ãã¾ã›ã‚“ã§ã—ãŸã€‚(ShapeType == {attack.ColliderProperty.ShapeType})");
+            return;
+        }
+
+        //Debug.Log("æ”»æ’ƒã‚¹ã‚¿ãƒ¼ãƒˆ");
         Attack cloneAttack = attack.Clone();
         if (cloneAttack.StartupTime > 0)
         {
@@ -74,10 +47,33 @@ public class AttackManager : MonoBehaviour
         }
     }
 
+    private bool CheckError(ColliderProperty property)
+    {
+        switch (property.ShapeType)
+        {
+            case ShapeType.Circle:
+                if (property.Radius == 0)    return true;
+                break;
+            case ShapeType.Box:
+                if (property.Width == 0)     return true;
+                if (property.Height == 0)    return true;
+                break;
+            case ShapeType.Line:
+                if (property.Thickness == 0) return true;
+                if (property.Length == 0)    return true;
+                break;
+            case ShapeType.Sector:
+                if (property.Radius == 0)    return true;
+                if (property.Angle == 0)     return true;
+                break;
+        }
+        return false;
+    }
+
     /// <summary>
-    /// UŒ‚—\‚ğ•\¦‚·‚éŠÔ‚ğI‚¦‚½‚çŒÄ‚Î‚ê‚éŠÖ”
+    /// æ”»æ’ƒäºˆå‘Šã‚’è¡¨ç¤ºã™ã‚‹æ™‚é–“ã‚’çµ‚ãˆãŸã‚‰å‘¼ã°ã‚Œã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="attack">UŒ‚‚Ìƒf[ƒ^</param>
+    /// <param name="attack">æ”»æ’ƒã®ãƒ‡ãƒ¼ã‚¿</param>
     public void EndAttackView(Attack attack)
     {
         m_ColliderManager.ActiveCollider(attack);

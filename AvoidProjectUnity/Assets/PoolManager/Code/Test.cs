@@ -3,12 +3,15 @@ using UnityEngine.InputSystem;
 
 public class Test : MonoBehaviour
 {
+
+    [Header("謾ｻ謦�繝�繧ｹ繝育畑")]
     [SerializeField] private AttackManager m_AttackManager;
     [SerializeField] private SpriteRenderer m_SpriteRenderer;
 
     [SerializeField] private bool random;
-    [SerializeField] private Attack testAttack;
+    [SerializeField] private Attack sampleAttack;
 
+    [Header("ComponentInitalize逕ｨ")]
     [SerializeField] private ColliderManager m_ColliderManager;
     [SerializeField] private AttackViewManager m_AttackViewManager;
     [SerializeField] private PoolManager m_AttackViewPool;
@@ -38,32 +41,29 @@ public class Test : MonoBehaviour
         //test
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (random) RandomAttack();
+            if (random) sampleAttack = RandomPosition();
 
-            m_AttackManager.Attack(testAttack);
+            Debug.Log(sampleAttack.Position);
+            transform.position = sampleAttack.Position;
+            m_AttackManager.Attack(sampleAttack);
         }
     }
 
-    private void RandomAttack()
+    private Attack RandomPosition()
     {
-        testAttack.ShapeType = (ShapeType)Random.Range(0, 2);
-        float value = Random.Range(1f, 3f);
-        testAttack.Size = new Vector2(value, value);
-        testAttack.Position = new Vector2(Random.Range(-5f, 5f), Random.Range(-2f, 2f));
-        //testAttack.StartupTime = Random.Range(1f, 5f);
-        //testAttack.StartupTime = 0;
-        //testAttack.ActiveTime = Random.Range(1f, 5f);
-        //testAttack.Damage = Random.Range(1, 10);
+        Attack attack = sampleAttack.Clone();
+        attack.Position = new Vector2(Random.Range(-5f, 5f), Random.Range(-2f, 2f));
+        return attack;
     }
 
     void OnTriggerStay2D(Collider2D other)
     {
-        //Debug.Log($"Trigger開始: {other.name}");
+        //Debug.Log($"TriggerﾅJﾅｽn: {other.name}");
         m_SpriteRenderer.color = Color.black;
     }
     void OnTriggerExit2D(Collider2D other)
     {
-        //Debug.Log($"Trigger終了: {other.name}");
+        //Debug.Log($"Triggerﾂ終窶板ｹ: {other.name}");
         m_SpriteRenderer.color = Color.white;
     }
 }
