@@ -5,6 +5,10 @@ using System.Collections.Generic;
 [Serializable]
 public class Attack
 {
+    public Team Team;
+
+    public int Damage;
+
     //public List<ColliderProperty> ColliderProperties = new();
     public ColliderProperty ColliderProperty = new();
     public Vector2 Position;

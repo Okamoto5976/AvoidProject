@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2573693782705288613}
   - component: {fileID: 313075666853275819}
   - component: {fileID: 1834541624984370677}
+  - component: {fileID: 6354187128002753932}
   m_Layer: 0
   m_Name: CustomCollider
   m_TagString: Untagged
@@ -96,3 +97,15 @@ CustomCollider2D:
   m_CustomShapes:
     m_Shapes: []
     m_Vertices: []
+--- !u!114 &6354187128002753932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2973449711832538634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db85312f624c1bc45a708f58fb6868c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColliderAttack

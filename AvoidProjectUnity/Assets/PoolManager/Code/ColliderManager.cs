@@ -64,7 +64,7 @@ public class ColliderManager : MonoBehaviour
 
         var component = obj.GetComponent<ColliderAttack>();
 
-        //component.Initialize(attack.Damage, attack.Team);
+        component.Initialize(attack.Damage, attack.Team);
 
         AddGizmo(col);
 

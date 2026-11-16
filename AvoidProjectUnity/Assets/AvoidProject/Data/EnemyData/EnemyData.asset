@@ -32,8 +32,8 @@ MonoBehaviour:
             ShapeType: 0
             Radius: 2
             Direction: 2
-            Width: 0
-            Height: 0
+            Width: 2
+            Height: 2
             Rotate: 45
             Thickness: 0
             Length: 0

@@ -85,7 +85,7 @@ public class TestEnemy : Enemy, IDamageable
     }
 
 
-    public event Action<Vector2> OnMove;
+    //public event Action<Vector2> OnMove;
 
     [EnemyAttackPoint("melee","近接攻撃","近いものに切る")]
     public void SwordAttack()

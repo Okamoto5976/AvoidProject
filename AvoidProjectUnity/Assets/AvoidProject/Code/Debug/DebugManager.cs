@@ -45,7 +45,10 @@ public class DebugManager : MonoBehaviour
             Debug.LogError("Null GameManager");
         }
 
-        if(m_gameManager.HasTimeLimit)
+        GUI.contentColor = Color.black;
+
+
+        if (m_gameManager.HasTimeLimit)
         {
             GUI.Label(
             new Rect(10, 10, 200, 30),
