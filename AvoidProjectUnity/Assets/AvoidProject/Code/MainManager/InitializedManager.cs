@@ -43,7 +43,7 @@ public class InitializedManager : MonoBehaviour
      
     [SerializeField] private CameraManager m_cameraManager;
 
-
+    [SerializeField] private UIManager m_uiManager;
 
     [SerializeField] private DebugManager m_debugManager;
 
@@ -139,6 +139,8 @@ public class InitializedManager : MonoBehaviour
         //それぞれに　必要なManagerを渡す Attack時に必要なものとか
 
         //UIManagerのEventをつける
+        m_uiManager.SetUpHearts(m_playerData.HP, m_playerData.Dhp);
+        m_playerHpController.OnUpdateHPUI += m_uiManager.UpdateHearts;
 
         //DebugManager設定
         m_debugManager.SetGameManager(m_gameManager);

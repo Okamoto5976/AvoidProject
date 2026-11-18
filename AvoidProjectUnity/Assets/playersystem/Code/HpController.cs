@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+
 public class HpController : MonoBehaviour
 {
     private int m_MaxHp;
@@ -9,6 +11,9 @@ public class HpController : MonoBehaviour
     public int Hp => m_Hp;
     public int Dhp => m_DefenceHp;
 
+
+    public event Action<int, int> OnUpdateHPUI;
+
     public void Initialize(int hpValue)
     {
         m_MaxHp = hpValue;
@@ -18,6 +23,9 @@ public class HpController : MonoBehaviour
     public void Damage(int damage)
     {
         m_Hp -= damage;
+
+        UpdateHP();
+
         if (m_Hp <= 0)
         {
             Dead();
@@ -33,6 +41,8 @@ public class HpController : MonoBehaviour
         {
             m_Hp = m_MaxHp;
         }
+
+        UpdateHP();
     }
 
     /// <summary>
@@ -49,6 +59,9 @@ public class HpController : MonoBehaviour
             m_DefenceHp = 0;
             return rest;
         }
+
+        UpdateHP();
+
         return 0;
     }
 
@@ -57,11 +70,16 @@ public class HpController : MonoBehaviour
         m_DefenceHp = dhp;
     }
 
+    private void UpdateHP()
+    {
+        OnUpdateHPUI?.Invoke(m_Hp, m_DefenceHp);
+    }
+
     protected virtual void Dead()
     {
         if(m_Alive == false) return;
 
-        Debug.Log("Entity is dead");
+        Debug.Log("Entity is dead",this);
         m_Alive = false;
     }
 }

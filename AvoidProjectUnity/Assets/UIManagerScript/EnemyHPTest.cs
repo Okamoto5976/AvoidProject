@@ -14,7 +14,7 @@ public class EnemyHPTest : MonoBehaviour
     private void Start()
     {
         m_currentHP = m_maxHP;
-        m_uiManager.SetupEnemyHP(m_maxHP);
+        m_uiManager.SetUpEnemyHP(m_maxHP);
         m_uiManager.UpdateEnemyHP(m_currentHP);
     }
 
