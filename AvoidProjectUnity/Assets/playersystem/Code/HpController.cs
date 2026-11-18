@@ -22,6 +22,7 @@ public class HpController : MonoBehaviour
 
     public void Damage(int damage)
     {
+        if (Dhp > 0) damage = DamageDefenceHp(damage);
         m_Hp -= damage;
 
         UpdateHP();
