@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42806325fc18aed4cb6770e788a1ae8d, type: 3}
+  m_Name: DebuffData
+  m_EditorClassIdentifier: Assembly-CSharp::DebuffData
+  m_AllDebuffs:
+  - Id: 0
+    Name: DashSpeedDown
+    Reward: 0
+    Category: 0
+  - Id: 1
+    Name: JustAvoidFlameDown
+    Reward: 0
+    Category: 0
+  - Id: 2
+    Name: AvoidMoveDown
+    Reward: 0
+    Category: 0
+  - Id: 3
+    Name: null
+    Reward: 0
+    Category: 0
+  - Id: 4
+    Name: AttackViewTImeDown
+    Reward: 0
+    Category: 1
+  - Id: 5
+    Name: EnemySpeedUp
+    Reward: 0
+    Category: 1
+  - Id: 6
+    Name: AddExAttack
+    Reward: 0
+    Category: 1
+  - Id: 7
+    Name: ExpandPertOfAttackJudge
+    Reward: 0
+    Category: 1
+  - Id: 8
+    Name: MaxLifeDown
+    Reward: 0
+    Category: 2
+  - Id: 9
+    Name: HasRecoveryPotionDown
+    Reward: 0
+    Category: 2
+  - Id: 10
+    Name: InvincibleTimeDown
+    Reward: 0
+    Category: 2
+  - Id: 11
+    Name: DamageTakenUp
+    Reward: 0
+    Category: 2
+  - Id: 12
+    Name: PickUpSpeedDown
+    Reward: 0
+    Category: 3
+  - Id: 13
+    Name: DurabilityDown
+    Reward: 0
+    Category: 3
+  - Id: 14
+    Name: RocoverTimeUp
+    Reward: 0
+    Category: 3
+  - Id: 15
+    Name: null
+    Reward: 0
+    Category: 3

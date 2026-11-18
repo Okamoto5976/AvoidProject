@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 
+[Serializable]
 public enum DebuffCategory
 {
     Action,
@@ -8,6 +9,7 @@ public enum DebuffCategory
     Item
 }
 
+[Serializable]
 public class Debuff
 {
     public int Id;
