@@ -76,11 +76,11 @@ public class UIManager : MonoBehaviour
         {
             //‚à‚µhp‚æ‚è­‚È‚©‚Á‚½‚ç
             //ˆø‚¢‚½•ª’Ç‰Á
-            if(m_hearts.Count < maxHP)
+            if (m_hearts.Count < maxHP)
             {
                 int num = maxHP - m_hearts.Count;
 
-                for(int i = 0; i < num; i++)
+                for (int i = 0; i < num; i++)
                 {
                     var obj = Instantiate(m_playerHeartPrefab, m_heartListContent);
 
@@ -89,11 +89,13 @@ public class UIManager : MonoBehaviour
                     m_hearts.Add(component);
                 }
             }
-            else if(m_hearts.Count > maxHP)
+            //‚à‚µhp‚æ‚è‘½‚©‚Á‚½‚ç
+            //ˆø‚¢‚½•ªList‚Ìã‚©‚çíœ
+            else if (m_hearts.Count > maxHP)
             {
                 int num = m_hearts.Count - maxHP;
 
-                for(int i = num;i < 1; i--)
+                for (int i = num; i < 1; i--)
                 {
                     var obj = m_hearts[i].gameObject;
 
@@ -102,10 +104,10 @@ public class UIManager : MonoBehaviour
                     Destroy(obj);
                 }
             }
+            else if (m_hearts.Count == maxHP)
+            {
 
-
-            //‚à‚µhp‚æ‚è‘½‚©‚Á‚½‚ç
-            //ˆø‚¢‚½•ªList‚Ìã‚©‚çíœ
+            }
         }
         else
         {
