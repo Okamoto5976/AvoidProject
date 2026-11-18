@@ -20,9 +20,9 @@ public class InputProvider
     public event System.Action OnInputAvoid;
     public event Action<bool> OnInputInteractHold;
     public event Action<bool> OnInputRecoverHold;
+    public event System.Action OnInputMenu;
 
     //Input UI
-    public event System.Action OnInputMenu;
     private bool m_submit;
     private bool m_cancel;
     private bool m_subAction;
@@ -48,9 +48,10 @@ public class InputProvider
         m_action.Player.Recover.started += OnRecoverHold;
         m_action.Player.Recover.canceled += OnRecoverHold;
         m_action.Player.Avoid.performed += OnAvoid;
+        m_action.Player.Menu.performed += OnMenu;
 
 
-        m_action.UI.Menu.performed += OnMenu;
+
         m_action.UI.Submit.performed += OnSubmit;
         m_action.UI.Cancel.performed += OnCancel;
         m_action.UI.SubAction.performed += OnSubAction;

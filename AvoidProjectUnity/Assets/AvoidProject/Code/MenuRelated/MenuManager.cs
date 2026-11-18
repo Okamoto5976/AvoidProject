@@ -31,6 +31,7 @@ public class MenuManager : MonoBehaviour
 
     [Header("Not Necessary Reference")]
     private List<MenuTextUI> m_menuButtons = new();
+    private int m_menuButtonsIndex = 0;
 
     private GameManager m_gameManager;
 
@@ -38,30 +39,47 @@ public class MenuManager : MonoBehaviour
     //[SerializeField] private 
     //GoreController
 
+
     //InputProvider
     private InputProvider m_inputProvider;
 
+    private InputUIProvider m_inputUiProvider;
+
     private void OnDisable()
     {
-        if(m_inputProvider == null) return;
+        if(m_inputProvider != null)
+        {
+            m_inputProvider.OnInputMenu -= OnInputMenu;
+            m_inputProvider.UIDisable();
+        }
 
-        m_inputProvider.OnInputMenu -= OnInputMenu;
-        m_inputProvider.UIDisable();
+        if(m_inputUiProvider != null)
+        {
+            m_inputUiProvider.OnInputMove -= OnInputMove;
+            m_inputUiProvider.UIDisable();
+        }
     }
 
     private void OnEnable()
     {
-        if(m_inputProvider == null) return;
+        if(m_inputProvider != null)
+        {
+            m_inputProvider.OnInputMenu += OnInputMenu;
+        }
 
-        m_inputProvider.OnInputMenu += OnInputMenu;
-        m_inputProvider.UIEnable();
+        if( m_inputUiProvider != null)
+        {
+            m_inputUiProvider.OnInputMove += OnInputMove;
+        }
     }
 
     private void Awake()
     {
-        m_menuButtons.Add(m_menuContinuButton);
-        m_menuButtons.Add(m_menuOptionButton);
-        m_menuButtons.Add(m_menuTitleButton);
+        m_inputUiProvider = new InputUIProvider();
+
+        m_menuButtons.Add(m_menuTitleButton);//index0
+        m_menuButtons.Add(m_menuOptionButton);//index1
+        m_menuButtons.Add(m_menuContinuButton);//index2
 
         //Menu画面のボタンを設定
         m_menuContinuButton.Button.onClick.AddListener(() => OnSelectContinu());
@@ -98,6 +116,9 @@ public class MenuManager : MonoBehaviour
             m_optionPanel.SetActive(false);
             m_menuPanel.SetActive(true);
 
+            m_menuButtonsIndex = 1;
+            m_menuButtons[m_menuButtonsIndex].SetAnim(true);
+
             ChangeMenuState(MenuState.Menu);
 
             return;
@@ -108,6 +129,11 @@ public class MenuManager : MonoBehaviour
             OpenMenu();
             m_gameManager.ChangeGameState(GameManager.EnumGameState.Pouse);
 
+            m_menuButtonsIndex = 2;
+            m_menuButtons[m_menuButtonsIndex].SetAnim(true);
+            m_inputProvider.UIEnable();
+            m_inputUiProvider.UIEnable();
+
             ChangeMenuState(MenuState.Menu);
 
         }
@@ -117,15 +143,73 @@ public class MenuManager : MonoBehaviour
             m_gameManager.ChangeGameState(GameManager.EnumGameState.InPlay);
 
             ChangeMenuState(MenuState.None);
+            m_inputProvider.UIDisable();
+            m_inputUiProvider.UIDisable();
+
 
         }
 
     }
 
+
     private void Update()
     {
-        //十字キーで操作　コントローラーなら左スティック入力で　画面にカーソルを表示
-        //矢印キーで操作（asdwでもいい）　
+        if(m_inputProvider.IsSubmit)
+        {
+            m_menuButtons[m_menuButtonsIndex].Button.onClick.Invoke();
+        }
+    }
+
+    //十字キーで操作　コントローラーなら左スティック入力で　画面にカーソルを表示
+    //矢印キーで操作（asdwでもいい）
+
+    private void OnInputMove(Vector2 input)
+    {
+        //foreach(var b in m_menuButtons)
+        //{
+        //    b.SetAnim(false);
+        //}
+
+        //int x;
+        int y = 0;
+        //if (input.x > 0)
+        //{
+        //    x = 1;
+        //}
+        //else if (input.x > 0)
+        //{
+        //    x = -1;
+        //}
+
+        if(input.y > 0)
+        {
+            y = 1;
+        }
+        else if(input.y < 0)
+        {
+            y = -1;
+        }
+        else
+        {
+            //入力がない
+            return;
+        }
+
+        var index = m_menuButtonsIndex;
+
+        m_menuButtonsIndex += y;
+
+        if(m_menuButtonsIndex > m_menuButtons.Count - 1)
+        {
+            m_menuButtonsIndex = 0;
+        }
+        else if(m_menuButtonsIndex < 0)
+        {
+            m_menuButtonsIndex = m_menuButtons.Count - 1;
+        }
+
+        m_menuButtons[index].SetAnim(false);
+        m_menuButtons[m_menuButtonsIndex].SetAnim(true);
     }
 
     private void ChangeMenuState(MenuState state)
@@ -145,6 +229,8 @@ public class MenuManager : MonoBehaviour
         m_gameManager.ChangeGameState(GameManager.EnumGameState.InPlay);
 
         ChangeMenuState(MenuState.None);
+        m_inputProvider.UIDisable();
+        m_inputUiProvider.UIDisable();
 
     }
 

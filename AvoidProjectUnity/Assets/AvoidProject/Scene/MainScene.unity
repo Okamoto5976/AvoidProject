@@ -548,9 +548,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1791912316}
-  - {fileID: 362480441}
-  - {fileID: 1474675510}
   - {fileID: 636110922}
+  - {fileID: 1474675510}
+  - {fileID: 362480441}
   m_Father: {fileID: 1302637395}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1696,7 +1696,7 @@ MonoBehaviour:
     m_actionName: Player/Attack
     m_bindingIndex: 0
   - m_button: {fileID: 1286449061}
-    m_actionName: UI/Menu
+    m_actionName: Player/Menu
     m_bindingIndex: 0
   m_rebindUIKeyList:
   - m_button: {fileID: 1562410352}
