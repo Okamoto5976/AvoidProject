@@ -8,6 +8,7 @@ public class Test : MonoBehaviour
     [SerializeField] private AttackManager m_AttackManager;
     [SerializeField] private SpriteRenderer m_SpriteRenderer;
 
+    [SerializeField] private int multipleAttack;
     [SerializeField] private bool random;
     [SerializeField] private Attack sampleAttack;
 
@@ -41,18 +42,21 @@ public class Test : MonoBehaviour
         //test
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (random) sampleAttack = RandomPosition();
+            if (random) sampleAttack = RandomPosition(multipleAttack);
 
-            Debug.Log(sampleAttack.Position);
-            transform.position = sampleAttack.Position;
             m_AttackManager.Attack(sampleAttack);
         }
     }
 
-    private Attack RandomPosition()
+    private Attack RandomPosition(int value)
     {
         Attack attack = sampleAttack.Clone();
-        attack.Position = new Vector2(Random.Range(-5f, 5f), Random.Range(-2f, 2f));
+        attack.Positions.Clear();
+        for (int i = 0; i < value; i++)
+        {
+            Vector2 randomPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-2f, 2f));
+            attack.Positions.Add(randomPos);
+        }
         return attack;
     }
 
