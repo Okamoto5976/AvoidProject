@@ -716,6 +716,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChangeButton (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8838324414674910057, guid: 23fcf074680a5764cb4114c9b241a00d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1629,7 +1633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuManager
   m_menuPanel: {fileID: 249049220}
-  m_optionPanel: {fileID: 1916331988}
+  m_settingPanel: {fileID: 1916331988}
   m_menuContinuButton: {fileID: 636110923}
   m_menuOptionButton: {fileID: 1474675511}
   m_menuTitleButton: {fileID: 362480442}
@@ -1696,7 +1700,7 @@ MonoBehaviour:
     m_actionName: Player/Attack
     m_bindingIndex: 0
   - m_button: {fileID: 1286449061}
-    m_actionName: Player/Menu
+    m_actionName: UI/Menu
     m_bindingIndex: 0
   m_rebindUIKeyList:
   - m_button: {fileID: 1562410352}
@@ -6600,7 +6604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1916331989}
   m_Layer: 5
-  m_Name: OptionPanel
+  m_Name: SettingPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

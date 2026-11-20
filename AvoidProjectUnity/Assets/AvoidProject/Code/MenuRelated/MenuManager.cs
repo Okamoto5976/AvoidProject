@@ -14,7 +14,7 @@ public class MenuManager : MonoBehaviour
     //ReferenceObject
     [Header("Necessary Reference")]
     [SerializeField] private GameObject m_menuPanel;
-    [SerializeField] private GameObject m_optionPanel;
+    [SerializeField] private GameObject m_settingPanel;
 
     [Header("Menu Buttons")]
     [SerializeField] private MenuTextUI m_menuContinuButton;
@@ -50,7 +50,6 @@ public class MenuManager : MonoBehaviour
         if(m_inputProvider != null)
         {
             m_inputProvider.OnInputMenu -= OnInputMenu;
-            m_inputProvider.UIDisable();
         }
 
         if(m_inputUiProvider != null)
@@ -83,7 +82,7 @@ public class MenuManager : MonoBehaviour
 
         //Menu画面のボタンを設定
         m_menuContinuButton.Button.onClick.AddListener(() => OnSelectContinu());
-        m_menuOptionButton.Button.onClick.AddListener(() => OnSelectOption());
+        m_menuOptionButton.Button.onClick.AddListener(() => OnSelectSetting());
         m_menuTitleButton.Button.onClick.AddListener(() => OnSelectTitle());
 
         //Option画面上部のボタン設定
@@ -98,9 +97,8 @@ public class MenuManager : MonoBehaviour
 
         m_inputProvider = inputProvider;
         m_inputProvider.OnInputMenu += OnInputMenu;
-
-
     }
+
     public void SetGameManager(GameManager component)
     {
         m_gameManager = component;
@@ -113,42 +111,59 @@ public class MenuManager : MonoBehaviour
 
         if(m_menuState == MenuState.Option)
         {
-            m_optionPanel.SetActive(false);
-            m_menuPanel.SetActive(true);
-
-            m_menuButtonsIndex = 1;
-            m_menuButtons[m_menuButtonsIndex].SetAnim(true);
-
-            ChangeMenuState(MenuState.Menu);
-
+            CloseSetting();
+            OpenMenu();
             return;
         }
 
         if(m_gameManager.GameState == GameManager.EnumGameState.InPlay)
         {
-            OpenMenu();
-            m_gameManager.ChangeGameState(GameManager.EnumGameState.Pouse);
-
-            m_menuButtonsIndex = 2;
-            m_menuButtons[m_menuButtonsIndex].SetAnim(true);
-            m_inputProvider.UIEnable();
-            m_inputUiProvider.UIEnable();
-
             ChangeMenuState(MenuState.Menu);
-
+            m_gameManager.ChangeGameState(GameManager.EnumGameState.Pouse);
+            OpenMenu();
         }
         else if(m_gameManager.GameState == GameManager.EnumGameState.Pouse)
         {
-            CloseMenu();
-            m_gameManager.ChangeGameState(GameManager.EnumGameState.InPlay);
-
             ChangeMenuState(MenuState.None);
-            m_inputProvider.UIDisable();
-            m_inputUiProvider.UIDisable();
-
-
+            m_gameManager.ChangeGameState(GameManager.EnumGameState.InPlay);
+            CloseMenu();
         }
+    }
 
+    private void OpenMenu()
+    {
+        m_inputUiProvider.UIEnable();
+        m_inputProvider.PlayerDisable();
+        m_menuPanel.SetActive(true);
+        foreach (var b in m_menuButtons)
+        {
+            b.SetAnim(false);
+        }
+        m_menuButtonsIndex = 2;
+        m_menuButtons[m_menuButtonsIndex].SetAnim(true);
+    }
+
+    private void CloseMenu()
+    {
+        m_inputUiProvider.UIDisable();
+        m_inputProvider.PlayerEnable();
+        m_menuPanel.SetActive(false);
+    }
+
+    private void OpenSetting()
+    {
+        //menu close, but inputProvider isn`t Disable
+        m_menuPanel.SetActive(false);
+        //setting open
+        m_keyConfig.SetActive(false);
+        m_controllerConfig.SetActive(false);
+        m_option.SetActive(true);
+        m_settingPanel.SetActive(true);
+    }
+
+    private void CloseSetting()
+    {
+        m_settingPanel.SetActive(false);
     }
 
 
@@ -219,27 +234,19 @@ public class MenuManager : MonoBehaviour
     }
 
     #region Menu
-    public void OpenMenu() => m_menuPanel.SetActive(true);
-    public void CloseMenu() => m_menuPanel.SetActive(false);
 
     //button.onClick.Invoke();
     public void OnSelectContinu()
     {
-        CloseMenu();
         m_gameManager.ChangeGameState(GameManager.EnumGameState.InPlay);
-
         ChangeMenuState(MenuState.None);
-        m_inputProvider.UIDisable();
-        m_inputUiProvider.UIDisable();
-
+        CloseMenu();
     }
 
-    public void OnSelectOption()
+    public void OnSelectSetting()
     {
-        m_optionPanel.SetActive(true);
         ChangeMenuState(MenuState.Option);
-
-        CloseMenu();
+        OpenSetting();
     }
 
     public void OnSelectTitle()
@@ -253,31 +260,24 @@ public class MenuManager : MonoBehaviour
     //オプション画面上部切り替えEvent
     public void OnChangeOption()
     {
-        CloseKeyConfig();
-        CloseControllerConfig();
-        OpenOption();
+        m_keyConfig.SetActive(false);
+        m_controllerConfig.SetActive(false);
+        m_option.SetActive(true);
     }
 
     public void OnChangeKeyConfig()
     {
-        CloseOption();
-        CloseControllerConfig();
-        OpenKeyConfig();
+        m_option.SetActive(false);
+        m_controllerConfig.SetActive(false);
+        m_keyConfig.SetActive(true);
     }
 
     public void OnChangeControllerConfig()
     {
-        CloseOption();
-        CloseKeyConfig();
-        OpenControllerConfig();
+        m_option.SetActive(false);
+        m_keyConfig.SetActive(false);
+        m_controllerConfig.SetActive(true);
     }
-
-    private void OpenOption() => m_option.SetActive(true);
-    private void CloseOption() => m_option.SetActive(false);
-    private void OpenKeyConfig() => m_keyConfig.SetActive(true);
-    private void CloseKeyConfig() => m_keyConfig.SetActive(false);
-    public void OpenControllerConfig() => m_controllerConfig.SetActive(true);
-    public void CloseControllerConfig() => m_controllerConfig.SetActive(false);
     #endregion
 
 }
