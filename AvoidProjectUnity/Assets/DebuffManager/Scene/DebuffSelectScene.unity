@@ -1012,8 +1012,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 492882890}
-        m_TargetAssemblyTypeName: DebuffManager, Assembly-CSharp
+      - m_Target: {fileID: 492882892}
+        m_TargetAssemblyTypeName: DebuffPresetManager, Assembly-CSharp
         m_MethodName: OnEditPreset
         m_Mode: 3
         m_Arguments:
@@ -1618,6 +1618,7 @@ GameObject:
   m_Component:
   - component: {fileID: 492882891}
   - component: {fileID: 492882890}
+  - component: {fileID: 492882892}
   m_Layer: 0
   m_Name: DebuffManager
   m_TagString: Untagged
@@ -1646,8 +1647,6 @@ MonoBehaviour:
   m_DebuffNameText: {fileID: 1344592012}
   m_DebuffRewardText: {fileID: 359577627}
   m_DebuffActiveText: {fileID: 1043458815}
-  m_PresetPanel: {fileID: 1894389130}
-  m_PresetContent: {fileID: 1133979876}
 --- !u!4 &492882891
 Transform:
   m_ObjectHideFlags: 0
@@ -1663,6 +1662,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &492882892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492882889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19694609f228bbf4d8a03d810086809d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebuffPresetManager
+  m_DebuffManager: {fileID: 492882890}
+  m_DebuffData: {fileID: 11400000, guid: f734f1e8642e81b4db0417d756bcbc52, type: 2}
+  m_PresetPanel: {fileID: 1894389130}
+  m_PresetContent: {fileID: 1133979876}
 --- !u!1 &508943355
 GameObject:
   m_ObjectHideFlags: 0
@@ -1746,8 +1761,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 492882890}
-        m_TargetAssemblyTypeName: DebuffManager, Assembly-CSharp
+      - m_Target: {fileID: 492882892}
+        m_TargetAssemblyTypeName: DebuffPresetManager, Assembly-CSharp
         m_MethodName: OnGetPreset
         m_Mode: 1
         m_Arguments:
@@ -2016,8 +2031,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 492882890}
-        m_TargetAssemblyTypeName: DebuffManager, Assembly-CSharp
+      - m_Target: {fileID: 492882892}
+        m_TargetAssemblyTypeName: DebuffPresetManager, Assembly-CSharp
         m_MethodName: OnEditPreset
         m_Mode: 3
         m_Arguments:
@@ -3052,8 +3067,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 492882890}
-        m_TargetAssemblyTypeName: DebuffManager, Assembly-CSharp
+      - m_Target: {fileID: 492882892}
+        m_TargetAssemblyTypeName: DebuffPresetManager, Assembly-CSharp
         m_MethodName: OnDeletePreset
         m_Mode: 1
         m_Arguments:
@@ -4106,8 +4121,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 492882890}
-        m_TargetAssemblyTypeName: DebuffManager, Assembly-CSharp
+      - m_Target: {fileID: 492882892}
+        m_TargetAssemblyTypeName: DebuffPresetManager, Assembly-CSharp
         m_MethodName: OnSetPreset
         m_Mode: 1
         m_Arguments:
@@ -4730,8 +4745,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 492882890}
-        m_TargetAssemblyTypeName: DebuffManager, Assembly-CSharp
+      - m_Target: {fileID: 492882892}
+        m_TargetAssemblyTypeName: DebuffPresetManager, Assembly-CSharp
         m_MethodName: OnEditPreset
         m_Mode: 3
         m_Arguments:

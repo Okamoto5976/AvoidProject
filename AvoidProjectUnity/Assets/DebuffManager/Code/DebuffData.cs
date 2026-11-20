@@ -1,11 +1,18 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public class DebuffPreset
+{
+    public List<int> List;
+}
 
 [CreateAssetMenu(fileName = "DebuffData", menuName = "Scriptable Objects/DebuffData")]
 public class DebuffData : ScriptableObject
 {
     [SerializeField] private List<Debuff> m_AllDebuffs;
-    private List<List<int>> m_Preset = new();
+    private List<DebuffPreset> m_Preset;
     private int m_MaxPresetIndex;
 
     public void Initialize()
@@ -17,22 +24,27 @@ public class DebuffData : ScriptableObject
             m_AllDebuffs[i].Id = i;
         }
 
+        if (m_Preset == null)
+        {
+            m_Preset = new();
+            Debug.Log("プリセットがnullなのでプリセットを初期化");
+        }
         if (m_Preset.Count < m_MaxPresetIndex)
         {
+            Debug.Log("プリセット枠が規定数以下なのでプリセット枠を増やす");
             for (int i = m_Preset.Count; i < m_MaxPresetIndex; i++)
             {
-                m_Preset.Add(new List<int>());
+                m_Preset.Add(new DebuffPreset());
             }
         }
         if (m_Preset.Count > m_MaxPresetIndex)
         {
-            for (int i = m_Preset.Count; i >= m_MaxPresetIndex; i--)
+            Debug.Log("プリセット枠が規定数以上なのでプリセット枠を減らす");
+            for (int i = m_Preset.Count - 1; i >= m_MaxPresetIndex; i--)
             {
                 m_Preset.RemoveAt(i);
             }
         }
-        Debug.Log(m_MaxPresetIndex);
-        Debug.Log(m_Preset.Count);
     }
 
     public List<Debuff> GetDebuffsInCategory(DebuffCategory category)
@@ -63,48 +75,36 @@ public class DebuffData : ScriptableObject
     /// <summary>
     /// プリセットに保存する関数
     /// </summary>
-    /// <param name="index">保存するプリセット</param>
+    /// <param name="index">保存するプリセットの番号</param>
     /// <param name="debuffs">保存するリスト</param>
-    /// <returns>正常に保存されたか</returns>
-    public bool SetPreset(int index, List<int> debuffs)
+    public void SetPreset(int index, List<int> debuffs)
     {
-        if (index > m_MaxPresetIndex || debuffs.Count <= 0) return false;
-        m_Preset[index] = debuffs;
-        return true;
+        if (index > m_MaxPresetIndex || debuffs.Count <= 0) return;
+        m_Preset[index].List = debuffs;
     }
 
     /// <summary>
     /// プリセットを取得する関数
     /// </summary>
-    /// <param name="index">取得するプリセット</param>
-    /// <param name="debuffs">取得したものを格納するリスト</param>
-    /// <returns>正常に取得できたか</returns>
-    public bool GetPreset(int index, out List<int> debuffs)
+    /// <param name="index">取得するプリセットの番号</param>
+    /// <returns>取得したプリセット</returns>
+    public List<int> GetPreset(int index)
     {
-        if (index > m_MaxPresetIndex || m_Preset[index].Count <= 0)
+        if (index > m_MaxPresetIndex)
         {
-            debuffs = null;
-            return false;
+            return null;
         }
-        debuffs = m_Preset[index];
-        return true;
+        return m_Preset[index].List;
     }
 
     /// <summary>
     /// プリセットを削除する関数
     /// </summary>
-    /// <param name="index">削除するプリセット</param>
-    /// <returns>正常に削除できたか</returns>
+    /// <param name="index">削除するプリセットの番号</param>
     public bool DeletePreset(int index)
     {
-        if (index > m_MaxPresetIndex || m_Preset[index].Count <= 0) return false;
-        m_Preset[index].Clear();
+        if (index > m_MaxPresetIndex) return false;
+        m_Preset[index].List.Clear();
         return true;
-    }
-
-    public List<int> PreviewPreset(int index)
-    {
-        if (index > m_MaxPresetIndex) return null;
-        return m_Preset[index];
     }
 }

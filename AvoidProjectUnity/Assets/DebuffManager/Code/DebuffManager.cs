@@ -18,9 +18,6 @@ public class DebuffManager : MonoBehaviour
     private List<Debuff> m_DebuffsInCategory = new();
     private int m_CategoryIndex = 0;
 
-    [SerializeField] private GameObject m_PresetPanel;
-    [SerializeField] private TextMeshProUGUI m_PresetContent;
-    private int m_PresetIndex;
 
     private void Awake() 
     {
@@ -42,14 +39,19 @@ public class DebuffManager : MonoBehaviour
     public void OnShowDebuff(int index)
     {
         m_SelectIndex = index;
+        UpdateShowDebuff();
+    }
+
+    public void UpdateShowDebuff()
+    {
         Debuff debuff = m_DebuffsInCategory[m_SelectIndex];
         m_DebuffNameText.text = debuff.Name;
         m_DebuffRewardText.text = $"${debuff.Reward}";
-        if (ActiveCheck(debuff.Id)) 
+        if (ActiveCheck(debuff.Id))
         {
             m_DebuffActiveText.text = "CompletedSet";
         }
-        else 
+        else
         {
             m_DebuffActiveText.text = "UncompletedSet";
         }
@@ -67,7 +69,7 @@ public class DebuffManager : MonoBehaviour
         {
             m_DebuffList.Add(id);
         }
-        OnShowDebuff(m_SelectIndex);
+        UpdateShowDebuff();
     }
 
     public void CategorySet()
@@ -114,58 +116,13 @@ public class DebuffManager : MonoBehaviour
         return false;
     }
 
-    public void OnEditPreset(int index)
+    public List<int> GetDebuffList()
     {
-        m_PresetIndex = index;
-        m_PresetContent.text = null;
-        List<int> preview = m_DebuffData.PreviewPreset(m_PresetIndex);
-        Debug.Log($"Test, {preview == null}");
-        if (preview != null)
-        {
-            if (preview.Count == 0)
-            {
-                m_PresetContent.text = "Preset no set";
-            }
-            foreach(int id in preview)
-            {
-                Debuff debuff = m_DebuffData.GetDebuff(id);
-                if (debuff == null) continue;
-                m_PresetContent.text += $"{debuff.Name}\n";
-            }
-        }
-        m_PresetPanel.SetActive(true);
+        return m_DebuffList;
     }
 
-    public void OnSetPreset()
+    public void SetDebuffList(List<int> debuffs)
     {
-        if (!m_DebuffData.SetPreset(m_PresetIndex, m_DebuffList))
-        {
-            Debug.Log("プリセットを設定出来ませんでした");
-            return;
-        }
-        m_PresetPanel.SetActive(false);
-        Debug.Log("プリセットを設定しました");
-    }
-
-    public void OnGetPreset()
-    {
-        if (!m_DebuffData.GetPreset(m_PresetIndex, out m_DebuffList))
-        {
-            Debug.Log("プリセットを反映出来ませんでした");
-            return;
-        }
-        m_PresetPanel.SetActive(false);
-        Debug.Log("プリセットを反映しました");
-    }
-
-    public void OnDeletePreset()
-    {
-        if (!m_DebuffData.DeletePreset(m_PresetIndex))
-        {
-            Debug.Log("プリセットを削除出来ませんでした");
-            return;
-        }
-        m_PresetPanel.SetActive(false);
-        Debug.Log("プリセットを削除しました");
+        m_DebuffList = debuffs;
     }
 }
