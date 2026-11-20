@@ -13,8 +13,8 @@ public class HPTest : MonoBehaviour
     private void Start()
     {
         m_currentHP = m_maxHP;
-        m_uiManager.SetupHearts(m_maxHP);
-        m_uiManager.UpdateHearts(m_currentHP);
+        //m_uiManager.SetupHearts(m_maxHP);
+        //m_uiManager.UpdateHearts(m_currentHP);
     }
 
     private void Update()
@@ -44,7 +44,7 @@ public class HPTest : MonoBehaviour
     private void SetHP(int value)
     {
         m_currentHP = Mathf.Clamp(value, 0, m_maxHP);
-        m_uiManager.UpdateHearts(m_currentHP);
+        //m_uiManager.UpdateHearts(m_currentHP);
 
         if (m_currentHP <= 0)
         {

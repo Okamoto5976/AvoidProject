@@ -6,6 +6,6 @@ public class EnemyHp : HpController
     {
         base.Dead();
 
-        Debug.Log("Player win");
+        //Debug.Log("Player win");
     }
 }

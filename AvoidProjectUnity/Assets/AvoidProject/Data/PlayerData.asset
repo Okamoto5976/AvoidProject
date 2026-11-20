@@ -31,7 +31,7 @@ MonoBehaviour:
   m_attackData:
     m_attackContext:
       Team: 0
-      Damage: 0
+      Damage: 1
       ColliderProperty:
         ShapeType: 0
         Radius: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
         Thickness: 0
         Length: 0
         Angle: 0
-      Position: {x: -0.7331042, y: -2.971568}
+      Position: {x: 5.062379, y: 1.0263469}
       Parent: {fileID: 0}
       StartupTime: 0
       ActiveTime: 0

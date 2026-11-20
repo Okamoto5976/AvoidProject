@@ -23,12 +23,14 @@ public class GameManager : MonoBehaviour
 
     private float m_timeLimit;
 
+    private UIManager m_uiManager;
+
 
     /// <summary>
-    /// ‰Šú‰»‚ÉŒÄ‚Ô@
+    /// åˆæœŸåŒ–æ™‚ã«å‘¼ã¶ã€€
     /// </summary>
     /// <param name="timer"></param>
-    public void Initialize(bool hasTimeLimit, float timer = 0)//ŒãXˆø”‚ª‘‚¦‚é‚æ‚¤‚È‚ç@•Ê‚²‚Æ‚ÉŠÖ”‚ğì‚é‚©@Class‚Å“n‚µ‚Ä‚ ‚°‚é
+    public void Initialize(bool hasTimeLimit, float timer = 0)//å¾Œã€…å¼•æ•°ãŒå¢—ãˆã‚‹ã‚ˆã†ãªã‚‰ã€€åˆ¥ã”ã¨ã«é–¢æ•°ã‚’ä½œã‚‹ã‹ã€€Classã§æ¸¡ã—ã¦ã‚ã’ã‚‹
     {
         m_hasTimeLimit = hasTimeLimit;
         m_timeLimit = timer;
@@ -90,15 +92,15 @@ public class GameManager : MonoBehaviour
         m_gameState = state;
     }
 
-    //Time.Scale‚Ì‘€ì
-    //ŠÔ§ŒÀ‚Ì‘€ì
-    //ƒXƒe[ƒWƒ^ƒCƒv‚©‚çŠÔ§ŒÀ‚©@“¢”°‚©
-    //ŠÔ§ŒÀ‚È‚çGameManager‚Å
-    //“¢”°‚È‚ç@“¢”°Œã‚ÉEvent‚ğ‘–‚ç‚¹‚éiŠÔ§ŒÀ‚Å‚à“¢”°‚Í‚Å‚«‚é‚Ì‚Å@ƒfƒtƒHƒ‹ƒgj
+    //Time.Scaleã®æ“ä½œ
+    //æ™‚é–“åˆ¶é™ã®æ“ä½œ
+    //ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ—ã‹ã‚‰æ™‚é–“åˆ¶é™ã‹ã€€è¨ä¼ã‹
+    //æ™‚é–“åˆ¶é™ãªã‚‰GameManagerã§
+    //è¨ä¼ãªã‚‰ã€€è¨ä¼å¾Œã«Eventã‚’èµ°ã‚‰ã›ã‚‹ï¼ˆæ™‚é–“åˆ¶é™ã§ã‚‚è¨ä¼ã¯ã§ãã‚‹ã®ã§ã€€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆï¼‰
 
     public void OnEnemyDead()
     {
-        //GameCleariEventj‚É2d‚É‚È‚é‚Ì‚ğ–h‚®
+        //GameClearï¼ˆEventï¼‰æ™‚ã«2é‡ã«ãªã‚‹ã®ã‚’é˜²ã
         if (m_gameState != EnumGameState.InPlay) return;
 
         GameClearEvent();
@@ -108,13 +110,18 @@ public class GameManager : MonoBehaviour
     {
         if (m_gameState == EnumGameState.GameOver) return;
 
+
         ChangeGameState(EnumGameState.GameOver);
 
-        Debug.Log("GameOverI");
+
+        m_uiManager.ShowGameOver();
     }
 
     public void GameClearEvent()
     {
+        ChangeGameState(EnumGameState.Event);
+
+        m_uiManager.ShowGameClear();
 
     }
 

@@ -1,15 +1,10 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
-
-
-//パスをキーボードかコントローラーか
-//キーボードならTextをTMPに表示
-//コントローラーならSpriteをImageに表示
+using UnityEngine.InputSystem;
 
 [System.Serializable]
-public class RebindEntry
+public class RebindControllerEntry
 {
     public Button m_button;
     public TMP_Text m_keyText;

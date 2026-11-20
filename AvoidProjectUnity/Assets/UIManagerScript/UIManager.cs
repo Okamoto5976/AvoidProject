@@ -1,39 +1,37 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum UIPanelType
 {
     None,
-    GameClear,
+    GameResult,
     GameOver
 }
 
 public class UIManager : MonoBehaviour
 {
     //Gameover,GameStartのPanelを管理(呼び出せるぜ)
-    [SerializeField] private GameObject m_gameStartPanel;
+    [SerializeField] private GameObject m_gameResultPanel;
     [SerializeField] private GameObject m_gameOverPanel;
 
     //HP表示(ハートの見た目はHeartViewのPrefab側で自由に変えられる)
-    [SerializeField] private HeartView m_heartPrefab;
-    [SerializeField] private Transform m_heartParent;
-    [SerializeField] private int m_hpPerHeart = 2;
+    [SerializeField] private PlayerHPUI m_playerHeartPrefab;
+    [SerializeField] private Transform m_heartListContent;
 
     //敵HPの表示
     [SerializeField] private Slider m_enemyHPSlider;
 
-    private readonly List<HeartView> m_hearts = new List<HeartView>();
+    private readonly List<PlayerHPUI> m_hearts = new List<PlayerHPUI>();
 
-    private Dictionary<UIPanelType, GameObject> panels;
-
-    private int HpPerHeart => Mathf.Max(1, m_hpPerHeart);
+    private Dictionary<UIPanelType, GameObject> m_panels;
 
     private void Awake()
     {
-        panels = new Dictionary<UIPanelType, GameObject>
+        m_panels = new Dictionary<UIPanelType, GameObject>
         {
-            { UIPanelType.GameClear, m_gameStartPanel },
+            { UIPanelType.GameResult, m_gameResultPanel },
             { UIPanelType.GameOver , m_gameOverPanel  }
         };
 
@@ -42,7 +40,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowPanel(UIPanelType type)
     {
-        foreach (var pair in panels)
+        foreach (var pair in m_panels)
         {
             if (pair.Value == null) continue;
             pair.Value.SetActive(pair.Key == type);
@@ -51,7 +49,7 @@ public class UIManager : MonoBehaviour
 
     public void HidePanel(UIPanelType type)
     {
-        if (panels.TryGetValue(type, out var panel) && panel != null)
+        if (m_panels.TryGetValue(type, out var panel) && panel != null)
         {
             panel.SetActive(false);
         }
@@ -59,34 +57,108 @@ public class UIManager : MonoBehaviour
 
     public void HideAll() => ShowPanel(UIPanelType.None);
 
-    public void ShowGameStart() => ShowPanel(UIPanelType.GameClear);
+    public void ShowGameClear() => ShowPanel(UIPanelType.GameResult);
     public void ShowGameOver() => ShowPanel(UIPanelType.GameOver);
 
-    public void SetupHearts(int maxHP)
+    public void SetUpHearts(int maxHP, int dhp)
     {
-        foreach (var heart in m_hearts)
+        if(maxHP < 0)
         {
-            Destroy(heart.gameObject);
+            Debug.LogError("PlayerHPがありません", this);
         }
-        m_hearts.Clear();
+        else if(maxHP < dhp)
+        {
+            Debug.LogError("DHPがHPより大きいため続けれません");
+        }
 
-        int heartCount = Mathf.CeilToInt(maxHP / (float)HpPerHeart);
-        for (int i = 0; i < heartCount; i++)
+        //Debugのため　SetUpが呼ばれたら
+        if (m_hearts.Count > 0)
         {
-            m_hearts.Add(Instantiate(m_heartPrefab, m_heartParent));
+            //もしhpより少なかったら
+            //引いた分追加
+            if (m_hearts.Count < maxHP)
+            {
+                int num = maxHP - m_hearts.Count;
+
+                for (int i = 0; i < num; i++)
+                {
+                    var obj = Instantiate(m_playerHeartPrefab, m_heartListContent);
+
+                    var component = obj.GetComponent<PlayerHPUI>();
+
+                    m_hearts.Add(component);
+                }
+            }
+            //もしhpより多かったら
+            //引いた分Listの上から削除
+            else if (m_hearts.Count > maxHP)
+            {
+                int num = m_hearts.Count - maxHP;
+
+                for (int i = num; i < 1; i--)
+                {
+                    var obj = m_hearts[i].gameObject;
+
+                    m_hearts.RemoveAt(i);
+
+                    Destroy(obj);
+                }
+            }
+            else if (m_hearts.Count == maxHP)
+            {
+
+            }
         }
-    }
-    public void UpdateHearts(int currentHP)
-    {
-        for (int i = 0; i < m_hearts.Count; i++)
+        else
         {
-            float ratio = (currentHP - i * HpPerHeart) / (float)HpPerHeart;
-            m_hearts[i].SetFill(ratio);
+            for (int i = 0; i < maxHP; i++)
+            {
+                var obj = Instantiate(m_playerHeartPrefab, m_heartListContent);
+
+                var component = obj.GetComponent<PlayerHPUI>();
+
+                m_hearts.Add(component);
+            }
+        }
+            //foreach (var heart in m_hearts)
+            //{
+            //    Destroy(heart.gameObject);
+            //}
+            //m_hearts.Clear();
+
+            
+
+        UpdateHearts(maxHP, dhp);
+    }
+    public void UpdateHearts(int hp, int dhp)//ハートが３ hpが2 dhpが1
+    {
+        for(int i = 1; i <= m_hearts.Count; i++)
+        {
+            if(i > dhp)
+            {
+                m_hearts[i - 1].ViewGreenHeart(false);
+            }
+            else
+            {
+                m_hearts[i - 1].ViewGreenHeart(true);
+                continue;
+            }
+
+            if (i > hp)
+            {
+                m_hearts[i - 1].ViewRedHeart(false);
+
+                continue;
+            }
+
+
+
+            m_hearts[i - 1].ViewRedHeart(true);
         }
     }
 
     // 敵のHP処理
-    public void SetupEnemyHP(int maxHP)
+    public void SetUpEnemyHP(int maxHP)
     {
         m_enemyHPSlider.minValue = 0;
         m_enemyHPSlider.maxValue = maxHP;

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b046f13727d1c334d9b23b8e906acb3d, type: 3}
   m_Name: EnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  m_team: 0
   m_enemyScript: {fileID: 11500000, guid: c40ddde9063cdb74baf35c3d1b8f1824, type: 3}
   m_enemyTypeName: TestEnemy
   m_attackSettings:
@@ -46,6 +47,11 @@ MonoBehaviour:
           ActiveTime: 1
         m_actionList:
         - rid: 7576007996673097807
+        - rid: 7170619465301491818
+    - rid: 7170619465301491818
+      type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
+      data:
+        a: 0
     - rid: 7576007996673097807
       type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
       data:
@@ -54,8 +60,8 @@ MonoBehaviour:
       type: {class: MeleeAttackData, ns: , asm: Assembly-CSharp}
       data:
         m_attackContext:
-          Team: 0
-          Damage: 0
+          Team: 1
+          Damage: 1
           ColliderProperty:
             ShapeType: 0
             Radius: 0

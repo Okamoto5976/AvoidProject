@@ -4,8 +4,13 @@ using System.Collections.Generic;
 
 public class RebindManager : MonoBehaviour
 {
-    [SerializeField] private List<RebindEntry> m_rebindList;
+    [SerializeField] private List<RebindKeyEntry> m_rebindActionKeyList;
+    [SerializeField] private List<RebindKeyEntry> m_rebindUIKeyList;
 
+    [SerializeField] private List<RebindControllerEntry> m_rebindActionControllerList;
+    [SerializeField] private List<RebindControllerEntry> m_rebindUIControllerList;
+
+    [SerializeField] private GameObject m_somethingInputGuidePanel;
 
     private InputActionRebindingExtensions.RebindingOperation m_rebindingOperation;
 
@@ -17,15 +22,30 @@ public class RebindManager : MonoBehaviour
         m_inputProvider = provider;
         m_action = m_inputProvider.InputActions;
 
-        foreach(var entry in m_rebindList)
+        foreach(var entry in m_rebindActionKeyList)
         {
             entry.m_action = m_action.asset.FindAction(entry.m_actionName);
-
+            //Debug.Log($"ActionName: {entry.m_actionName}");
+            //Debug.Log($"Žæ“¾Œ‹‰Ê: {entry.m_action}");
             UpdateDisplay(entry);
 
-            RebindEntry target = entry;
+            RebindKeyEntry target = entry;
 
-            entry.m_button.onClick.AddListener(
+            entry.m_keyButton.onClick.AddListener(
+                () => StartRebind(target)
+                );
+        }
+
+        foreach (var entry in m_rebindUIKeyList)
+        {
+            entry.m_action = m_action.asset.FindAction(entry.m_actionName);
+            //Debug.Log($"ActionName: {entry.m_actionName}");
+            //Debug.Log($"Žæ“¾Œ‹‰Ê: {entry.m_action}");
+            UpdateDisplay(entry);
+
+            RebindKeyEntry target = entry;
+
+            entry.m_keyButton.onClick.AddListener(
                 () => StartRebind(target)
                 );
         }
@@ -44,18 +64,21 @@ public class RebindManager : MonoBehaviour
         m_inputProvider.DeleteRebind();
     }
 
-    private void UpdateDisplay(RebindEntry entry)
+    private void UpdateDisplay(RebindKeyEntry entry)
     {
-        entry.m_keyText.text =
-            entry.m_action.GetBindingDisplayString(entry.m_bindingIndex);
+        //Debug.LogWarning($"Entry Kind{entry.m_action}");
+
+        entry.UpdateKeyText(
+            entry.m_action.GetBindingDisplayString(entry.m_bindingIndex)
+            );
     }
 
     //InputAction action, int bindingIndex
-    public void StartRebind(RebindEntry entry)
+    public void StartRebind(RebindKeyEntry entry)
     {
         if (m_rebindingOperation != null) return;
 
-
+        m_somethingInputGuidePanel.SetActive(true);
 
         entry.m_action.Disable();
 
@@ -72,6 +95,7 @@ public class RebindManager : MonoBehaviour
                 m_inputProvider.SaveRebind();
 
                 UpdateDisplay(entry);
+                m_somethingInputGuidePanel.SetActive(false);
 
             })
             .OnCancel(operation =>
@@ -80,6 +104,8 @@ public class RebindManager : MonoBehaviour
                 m_rebindingOperation = null;
 
                 entry.m_action.Enable();
+                m_somethingInputGuidePanel.SetActive(false);
+
             });
 
         m_rebindingOperation.Start();

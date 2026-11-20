@@ -22,6 +22,11 @@ public class InputProvider
 
     //Input UI
     public event System.Action OnInputMenu;
+    private bool m_submit;
+    private bool m_cancel;
+    private bool m_subAction;
+    private bool m_detail;
+
 
     public InputProvider()
     {
@@ -44,6 +49,12 @@ public class InputProvider
 
 
         m_action.UI.Menu.performed += OnMenu;
+        m_action.UI.Submit.performed += OnSubmit;
+        m_action.UI.Cancel.performed += OnCancel;
+        m_action.UI.SubAction.performed += OnSubAction;
+        m_action.UI.Detail.performed += OnDetail;
+
+        m_action.UI.Menu.performed += OnMenu;
         
     }
     private bool m_isPlayerDead = false;
@@ -59,15 +70,17 @@ public class InputProvider
         m_action.Player.Disable();
     }
 
+    //機能停止するとMenuを開けない
+    //使用する側が制御する（入力を受け付けないように）
     public void UIEnable()
     {
         m_action.UI.Enable();
     }
 
-    public void UIDisable()
-    {
-        m_action.UI.Disable();
-    }
+    //public void UIDisable()
+    //{
+    //    m_action.UI.Disable();
+    //}
 
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -111,6 +124,70 @@ public class InputProvider
     private void OnMenu(InputAction.CallbackContext context)
     {
         OnInputMenu?.Invoke();
+    }
+
+    private void OnSubmit(InputAction.CallbackContext context)
+    {
+        m_submit = true;
+    }
+
+    private void OnCancel(InputAction.CallbackContext context)
+    {
+        m_cancel = true;
+    }
+
+    private void OnSubAction(InputAction.CallbackContext context)
+    {
+        m_subAction = true;
+    }
+
+    private void OnDetail(InputAction.CallbackContext context)
+    {
+        m_detail = true;
+    }
+
+    public bool IsSubmit
+    {
+        get
+        {
+            bool result = m_submit;
+            m_submit = false;
+
+            return result;
+        }
+    }
+
+    public bool IsCancel
+    {
+        get
+        {
+            bool result = m_cancel;
+            m_cancel = false;
+
+            return result;
+        }
+    }
+
+    public bool IsSubAction
+    {
+        get
+        {
+            bool result = m_subAction;
+            m_subAction = false;
+
+            return result;
+        }
+    }
+
+    public bool IsDetail
+    { 
+        get
+        {
+            bool result = m_detail;
+            m_detail = false;
+
+            return result;
+        }
     }
 
     public void SaveRebind()
