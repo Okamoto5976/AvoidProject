@@ -30,7 +30,6 @@ public class TestEnemy : Enemy, IDamageable
         m_rd = GetComponent<Rigidbody2D>();
         m_hpController = GetComponent<HpController>();
 
-        m_hpController.Initialize(10);
 
         m_movement = new Movement(m_rd, transform);
     }
@@ -40,8 +39,10 @@ public class TestEnemy : Enemy, IDamageable
         base.InitializeData(data);
 
         m_team = data.Team;
+        m_hpController.Initialize(data.HP);
 
-        foreach(var attack in data.AttackSettings)
+
+        foreach (var attack in data.AttackSettings)
         {
             var attackData = attack.AttackData.CreateAttackClass();
 

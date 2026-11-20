@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     {
         m_inputProvider = inputProvider;
 
-        m_inputProvider.OnPlayerDead += GameOverEvent;
+        //m_inputProvider.OnPlayerDead += GameOverEvent;
     }
     public void StartGame()
     {
@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
     {
         if (m_inputProvider == null) return;
 
-        m_inputProvider.OnPlayerDead -= GameOverEvent;
+        //m_inputProvider.OnPlayerDead -= GameOverEvent;
     }
 
     public void ChangeGameState(EnumGameState state)

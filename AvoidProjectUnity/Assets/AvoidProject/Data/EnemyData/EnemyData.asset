@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b046f13727d1c334d9b23b8e906acb3d, type: 3}
   m_Name: EnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  m_team: 0
+  m_team: 1
+  m_hp: 10
   m_enemyScript: {fileID: 11500000, guid: c40ddde9063cdb74baf35c3d1b8f1824, type: 3}
   m_enemyTypeName: TestEnemy
   m_attackSettings:
@@ -41,7 +42,7 @@ MonoBehaviour:
             Thickness: 0
             Length: 0
             Angle: 45
-          Position: {x: 0, y: 0}
+          Positions: []
           Parent: {fileID: 0}
           StartupTime: 1
           ActiveTime: 1
@@ -72,7 +73,7 @@ MonoBehaviour:
             Thickness: 0
             Length: 0
             Angle: 0
-          Position: {x: 0, y: 0}
+          Positions: []
           Parent: {fileID: 0}
           StartupTime: 1
           ActiveTime: 1

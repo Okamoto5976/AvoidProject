@@ -23,6 +23,10 @@ public class EnemyData : ScriptableObject
 
     public Team Team => m_team;
 
+    [SerializeField] private int m_hp;
+
+    public int HP => m_hp;
+
 #if UNITY_EDITOR
     [SerializeField] private MonoScript m_enemyScript;
 #endif

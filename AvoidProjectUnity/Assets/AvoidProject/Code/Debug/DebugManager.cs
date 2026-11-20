@@ -87,7 +87,7 @@ public class DebugManager : MonoBehaviour
         {
             GUI.Label(
                 new Rect(10, 70, 200, 30),
-                $"EnemyHP :" + 0);
+                $"EnemyHP :" + m_enemyHPController.Hp);
         }
         else
         {

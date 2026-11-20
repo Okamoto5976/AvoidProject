@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum UIPanelType
@@ -21,7 +20,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform m_heartListContent;
 
     //“GHP‚Ì•\Ž¦
-    [SerializeField] private Slider m_enemyHPSlider;
+    [SerializeField] private Image m_enemyHPFilled;
+    private int m_maxHP;
+
 
     private readonly List<PlayerHPUI> m_hearts = new List<PlayerHPUI>();
 
@@ -160,13 +161,22 @@ public class UIManager : MonoBehaviour
     // “G‚ÌHPˆ—
     public void SetUpEnemyHP(int maxHP)
     {
-        m_enemyHPSlider.minValue = 0;
-        m_enemyHPSlider.maxValue = maxHP;
-        m_enemyHPSlider.value = maxHP;
+        //m_enemyHPSlider.minValue = 0;
+        //m_enemyHPSlider.maxValue = maxHP;
+        m_enemyHPFilled.fillAmount = 1f;
+        m_maxHP = maxHP;
     }
 
-    public void UpdateEnemyHP(int currentHP)
+    //dhp‚ÍŽg‚Á‚Ä‚È‚¢
+    public void UpdateEnemyHP(int hp, int dhp)
     {
-        m_enemyHPSlider.value = currentHP;
+        if(dhp > 0)
+        {
+            Debug.LogWarning("Enemy has DefenceHP, that's not necessary");
+        }
+
+        float rate = (float)hp / m_maxHP;
+        Debug.Log($"Enemy UI Rate : {rate}  HP : {hp} / {m_maxHP}");
+        m_enemyHPFilled.fillAmount = rate;
     }
 }

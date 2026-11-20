@@ -9,12 +9,16 @@ using UnityEngine;
 public class EnemyDataEditor : Editor
 {
     private SerializedProperty m_enemyScript;
+    private SerializedProperty m_enemyTeam;
+    private SerializedProperty m_enemyHP;
     private SerializedProperty m_enemyTypeName;
     private SerializedProperty m_attackSettings;
 
     private void OnEnable()
     {
         m_enemyScript = serializedObject.FindProperty("m_enemyScript");
+        m_enemyTeam = serializedObject.FindProperty("m_team");
+        m_enemyHP = serializedObject.FindProperty("m_hp");
         m_enemyTypeName = serializedObject.FindProperty("m_enemyTypeName");
         m_attackSettings = serializedObject.FindProperty("m_attackSettings");
     }
@@ -57,6 +61,9 @@ public class EnemyDataEditor : Editor
             serializedObject.ApplyModifiedProperties();
             return;
         }
+
+        EditorGUILayout.PropertyField(m_enemyTeam);
+        EditorGUILayout.PropertyField(m_enemyHP);
 
         // 実行時の型チェック用にクラス名を保存
         m_enemyTypeName.stringValue = enemyType.FullName;

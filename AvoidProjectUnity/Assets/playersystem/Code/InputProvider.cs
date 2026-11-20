@@ -18,7 +18,7 @@ public class InputProvider
     public event System.Action OnInputAvoid;
     public event Action<bool> OnInputInteractHold;
     public event Action<bool> OnInputRecover;
-    public event System.Action OnPlayerDead;   
+    //public event System.Action OnPlayerDead;   
 
     //Input UI
     public event System.Action OnInputMenu;

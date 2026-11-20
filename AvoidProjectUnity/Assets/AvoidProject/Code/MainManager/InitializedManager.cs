@@ -142,6 +142,8 @@ public class InitializedManager : MonoBehaviour
         //UIManagerのEventをつける
         m_uiManager.SetUpHearts(m_playerData.HP, m_playerData.Dhp);
         m_playerHpController.OnUpdateHPUI += m_uiManager.UpdateHearts;
+        m_uiManager.SetUpEnemyHP(m_enemyData.HP);
+        m_enemyHpController.OnUpdateHPUI += m_uiManager.UpdateEnemyHP;
 
         //DebugManager設定
         m_debugManager.SetGameManager(m_gameManager);
