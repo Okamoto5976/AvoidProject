@@ -48,44 +48,47 @@ public class ColliderManager : MonoBehaviour
     /// <param name="attack">攻撃のデータ</param>
     public void ActiveCollider(Attack attack)
     {
-        //Debug.Log("コライダー有効化");
-        GameObject obj = null;
-        //PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
-        //obj = pool.GenerateFromPool();
-        obj = m_CustomColliderPool.GenerateFromPool();
-        if (obj == null) return;
-        
-
-        Collider2D col = obj.GetComponent<Collider2D>();
-        col.excludeLayers = 0;
-
-        obj.transform.position = attack.Position;
-        //obj.transform.localScale = attack.Size;
-
-        var component = obj.GetComponent<ColliderAttack>();
-
-        component.Initialize(attack.Damage, attack.Team);
-
-        AddGizmo(col);
-
-        TimedAction action = new();
-        action.Attack = attack;
-        action.Object = obj;
-        if (attack.ActiveTime > 0)
+        for (int i = 0; i < attack.Positions.Count; i++)
         {
-            action.Timer = attack.ActiveTime;
-        }
-        else
-        {
-            action.Timer = m_GizmoViewDelay;
-            StartCoroutine(OnceFlameCollider(col));
-        }
-        m_TimedActions.Add(action);
-        m_Player.WakeUp();
+            //Debug.Log("コライダー有効化");
+            GameObject obj = null;
+            //PoolManager pool = m_MediationPool.GetColliderPool(attack.ShapeType);
+            //obj = pool.GenerateFromPool();
+            obj = m_CustomColliderPool.GenerateFromPool();
+            if (obj == null) return;
 
-        ColliderController colliderController = obj.GetComponent<ColliderController>();
-        colliderController.SetColliderProperty(attack.ColliderProperty, attack.Position, attack.Parent);
-        //m_Player.WakeUp();
+
+            Collider2D col = obj.GetComponent<Collider2D>();
+            col.excludeLayers = 0;
+
+            obj.transform.position = attack.Positions[i];
+            //obj.transform.localScale = attack.Size;
+
+            var component = obj.GetComponent<ColliderAttack>();
+
+            component.Initialize(attack.Damage, attack.Team);
+
+            AddGizmo(col);
+
+            TimedAction action = new();
+            action.Attack = attack;
+            action.Object = obj;
+            if (attack.ActiveTime > 0)
+            {
+                action.Timer = attack.ActiveTime;
+            }
+            else
+            {
+                action.Timer = m_GizmoViewDelay;
+                StartCoroutine(OnceFlameCollider(col));
+            }
+            m_TimedActions.Add(action);
+            m_Player.WakeUp();
+
+            ColliderController colliderController = obj.GetComponent<ColliderController>();
+            colliderController.SetColliderProperty(attack.ColliderProperty, attack.Positions[i], attack.Parent);
+            //m_Player.WakeUp();
+        }
     }
 
     private IEnumerator OnceFlameCollider(Collider2D col)

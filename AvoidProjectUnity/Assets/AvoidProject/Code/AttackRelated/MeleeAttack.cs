@@ -51,7 +51,8 @@ public class MeleeAttack : AttackBase
     public override void Attack()
     {
         //Debug.Log("AttackCollider");
-        m_attack.Position = m_transform.position;
+        m_attack.Positions.Clear();
+        m_attack.Positions.Add(m_transform.position);
         m_attackManager.Attack(m_attack);
     }
 }
