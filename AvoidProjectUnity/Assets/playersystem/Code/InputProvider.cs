@@ -15,10 +15,9 @@ public class InputProvider
     public event Action<Vector2> OnInputMove;
     public event Action<bool> OnInputSprint;
     public event System.Action OnInputAttack;
-    public event System.Action OnInputRecover;
     public event System.Action OnInputAvoid;
     public event Action<bool> OnInputInteractHold;
-    public event Action<bool> OnInputRecoverHold;
+    public event Action<bool> OnInputRecover;
     public event System.Action OnPlayerDead;   
 
     //Input UI
@@ -38,7 +37,6 @@ public class InputProvider
         m_action.Player.Sprint.performed += OnSprint;
         m_action.Player.Sprint.canceled += OnSprint;
         m_action.Player.Attack.performed += OnAttack;
-        m_action.Player.Recover.performed += OnRecover;
         m_action.Player.Recover.started += OnRecoverHold;
         m_action.Player.Recover.canceled += OnRecoverHold;
         m_action.Player.Avoid.performed += OnAvoid;
@@ -46,11 +44,13 @@ public class InputProvider
 
 
         m_action.UI.Menu.performed += OnMenu;
-
+        
     }
-
+    private bool m_isPlayerDead = false;
     public void PlayerEnable()
     {
+        if (m_isPlayerDead) return;
+
         m_action.Player.Enable();
     }
 
@@ -71,33 +71,41 @@ public class InputProvider
 
     private void OnMove(InputAction.CallbackContext context)
     {
+        if (m_isPlayerDead) return;
+
         m_inputMove = context.ReadValue<Vector2>();
 
         OnInputMove?.Invoke(m_inputMove);
     }
     private void OnSprint(InputAction.CallbackContext context)
     {
+        if (m_isPlayerDead) return;
+
         OnInputSprint?.Invoke(context.performed);
     }
     private void OnAttack(InputAction.CallbackContext context)
     {
+        if (m_isPlayerDead) return;
+
         OnInputAttack?.Invoke();
-    }
-    private void OnRecover(InputAction.CallbackContext context)
-    {
-        OnInputRecover?.Invoke();
     }
     private void OnAvoid(InputAction.CallbackContext context)
     {
+        if (m_isPlayerDead) return;
+
         OnInputAvoid?.Invoke();
     }
     private void OnInteractHold(InputAction.CallbackContext context)
     {
+        if (m_isPlayerDead) return;
+
         OnInputInteractHold?.Invoke(context.started);
     }
     private void OnRecoverHold(InputAction.CallbackContext context)
     {
-        OnInputRecoverHold?.Invoke(context.started);
+        if (m_isPlayerDead) return;
+
+        OnInputRecover?.Invoke(context.started);
     }   
 
     private void OnMenu(InputAction.CallbackContext context)
@@ -131,6 +139,12 @@ public class InputProvider
     }
     public void PlayerDead()
     {
+        if (m_isPlayerDead) return;
+
+        m_isPlayerDead = true;
+
+        PlayerDisable();
+
         OnPlayerDead?.Invoke();
     }
 }
