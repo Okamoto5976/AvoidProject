@@ -76,6 +76,7 @@ public class HpController : MonoBehaviour
         OnUpdateHPUI?.Invoke(m_Hp, m_DefenceHp);
     }
 
+
     protected virtual void Dead()
     {
         if(m_Alive == false) return;

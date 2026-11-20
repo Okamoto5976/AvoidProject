@@ -81,7 +81,8 @@ public class InitializedManager : MonoBehaviour
         bool hasTimeLimit = m_runtimeData.HasTimeLimit;
         m_gameManager.Initialize(hasTimeLimit, m_timeLimit);
 
-
+        //プレイヤー死亡イベントの登録
+        m_gameManager.InitializeInput(m_inputProvider);
 
         m_rebuildManager.Initialize(m_inputProvider);
 

@@ -47,11 +47,11 @@ MonoBehaviour:
       StartupTime: 0
       ActiveTime: 0
     m_actionList:
-    - rid: 7170619375544434778
+    - rid: 8421334743278420060
   references:
     version: 2
     RefIds:
-    - rid: 7170619375544434778
+    - rid: 8421334743278420060
       type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
       data:
         a: 0
