@@ -38,8 +38,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     // 入力待機フラグ
     private bool m_isPendingAttack = false;
     private bool m_isPendingAvoid = false;
-    private bool? m_pendingInteract = null;
-    private bool? m_pendingRecover = null;
+    private bool m_pendingInteract = false;
+    private bool m_pendingRecover = false;
 
     #endregion
 
@@ -258,19 +258,17 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
 
         // インタラクト
-        if (m_pendingInteract.HasValue)
+        if (m_pendingInteract)
         {
-            bool isHolding = m_pendingInteract.Value;
-            m_pendingInteract = null;
+            bool isHolding = m_pendingInteract;
 
             ExecuteInteract(isHolding);
         }
 
         // 回復
-        if (m_pendingRecover.HasValue)
+        if (m_pendingRecover)
         {
-            bool isHolding = m_pendingRecover.Value;
-            m_pendingRecover = null;
+            bool isHolding = m_pendingRecover;
 
             ExecuteRecover(isHolding);
         }
@@ -776,7 +774,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 
         // GameManagerへ死亡イベントを通知
-        m_inputProvider?.PlayerDead();
 
         Debug.Log("プレイヤー死亡！", this);
     }
