@@ -394,7 +394,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""UIKey1"",
+                    ""name"": ""Next"",
                     ""type"": ""Button"",
                     ""id"": ""15acfa52-2fa1-4e4c-adad-ca1483bec326"",
                     ""expectedControlType"": """",
@@ -403,7 +403,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""UIKey2"",
+                    ""name"": ""Previous"",
                     ""type"": ""Button"",
                     ""id"": ""b06193ff-9698-4b98-a66b-a78c01eb5d93"",
                     ""expectedControlType"": """",
@@ -665,11 +665,11 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""375141de-5310-4b8e-b7e4-ab586140e5f3"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UIKey1"",
+                    ""action"": ""Next"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -680,18 +680,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UIKey1"",
+                    ""action"": ""Next"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""d70eec5d-f63f-4858-bcb3-f5919757aa49"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UIKey2"",
+                    ""action"": ""Previous"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -702,7 +702,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UIKey2"",
+                    ""action"": ""Previous"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -844,8 +844,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_Detail = m_UI.FindAction("Detail", throwIfNotFound: true);
         m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
-        m_UI_UIKey1 = m_UI.FindAction("UIKey1", throwIfNotFound: true);
-        m_UI_UIKey2 = m_UI.FindAction("UIKey2", throwIfNotFound: true);
+        m_UI_Next = m_UI.FindAction("Next", throwIfNotFound: true);
+        m_UI_Previous = m_UI.FindAction("Previous", throwIfNotFound: true);
         m_UI_UIKey3 = m_UI.FindAction("UIKey3", throwIfNotFound: true);
         m_UI_Menu = m_UI.FindAction("Menu", throwIfNotFound: true);
     }
@@ -1087,8 +1087,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Detail;
     private readonly InputAction m_UI_Point;
     private readonly InputAction m_UI_Click;
-    private readonly InputAction m_UI_UIKey1;
-    private readonly InputAction m_UI_UIKey2;
+    private readonly InputAction m_UI_Next;
+    private readonly InputAction m_UI_Previous;
     private readonly InputAction m_UI_UIKey3;
     private readonly InputAction m_UI_Menu;
     /// <summary>
@@ -1131,13 +1131,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Click => m_Wrapper.m_UI_Click;
         /// <summary>
-        /// Provides access to the underlying input action "UI/UIKey1".
+        /// Provides access to the underlying input action "UI/Next".
         /// </summary>
-        public InputAction @UIKey1 => m_Wrapper.m_UI_UIKey1;
+        public InputAction @Next => m_Wrapper.m_UI_Next;
         /// <summary>
-        /// Provides access to the underlying input action "UI/UIKey2".
+        /// Provides access to the underlying input action "UI/Previous".
         /// </summary>
-        public InputAction @UIKey2 => m_Wrapper.m_UI_UIKey2;
+        public InputAction @Previous => m_Wrapper.m_UI_Previous;
         /// <summary>
         /// Provides access to the underlying input action "UI/UIKey3".
         /// </summary>
@@ -1193,12 +1193,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
-            @UIKey1.started += instance.OnUIKey1;
-            @UIKey1.performed += instance.OnUIKey1;
-            @UIKey1.canceled += instance.OnUIKey1;
-            @UIKey2.started += instance.OnUIKey2;
-            @UIKey2.performed += instance.OnUIKey2;
-            @UIKey2.canceled += instance.OnUIKey2;
+            @Next.started += instance.OnNext;
+            @Next.performed += instance.OnNext;
+            @Next.canceled += instance.OnNext;
+            @Previous.started += instance.OnPrevious;
+            @Previous.performed += instance.OnPrevious;
+            @Previous.canceled += instance.OnPrevious;
             @UIKey3.started += instance.OnUIKey3;
             @UIKey3.performed += instance.OnUIKey3;
             @UIKey3.canceled += instance.OnUIKey3;
@@ -1237,12 +1237,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
-            @UIKey1.started -= instance.OnUIKey1;
-            @UIKey1.performed -= instance.OnUIKey1;
-            @UIKey1.canceled -= instance.OnUIKey1;
-            @UIKey2.started -= instance.OnUIKey2;
-            @UIKey2.performed -= instance.OnUIKey2;
-            @UIKey2.canceled -= instance.OnUIKey2;
+            @Next.started -= instance.OnNext;
+            @Next.performed -= instance.OnNext;
+            @Next.canceled -= instance.OnNext;
+            @Previous.started -= instance.OnPrevious;
+            @Previous.performed -= instance.OnPrevious;
+            @Previous.canceled -= instance.OnPrevious;
             @UIKey3.started -= instance.OnUIKey3;
             @UIKey3.performed -= instance.OnUIKey3;
             @UIKey3.canceled -= instance.OnUIKey3;
@@ -1454,19 +1454,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnClick(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "UIKey1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Next" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnUIKey1(InputAction.CallbackContext context);
+        void OnNext(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "UIKey2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Previous" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnUIKey2(InputAction.CallbackContext context);
+        void OnPrevious(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "UIKey3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

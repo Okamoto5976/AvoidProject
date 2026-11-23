@@ -6,6 +6,8 @@ public class RebindManager : MonoBehaviour
 {
     [SerializeField] private List<RebindKeyEntry> m_rebindActionKeyList;
     [SerializeField] private List<RebindKeyEntry> m_rebindUIKeyList;
+    private int m_rebindKeyInex;
+
 
     [SerializeField] private List<RebindControllerEntry> m_rebindActionControllerList;
     [SerializeField] private List<RebindControllerEntry> m_rebindUIControllerList;
@@ -51,6 +53,105 @@ public class RebindManager : MonoBehaviour
         }
     }
 
+    public void OpenKeyConfig()
+    {
+        m_rebindKeyInex = -1;
+        foreach(var entry in m_rebindActionKeyList)
+        {
+            entry.m_button.SetAnim(false);
+        }
+
+        foreach(var entry in m_rebindUIKeyList)
+        {
+            entry.m_button.SetAnim(false);
+        }
+    }
+
+    public void UpdateKeyConfigSelect(Vector2 input)
+    {
+        if(input == Vector2.zero) return;
+
+        if(m_rebindKeyInex == -1)
+        {
+            m_rebindKeyInex = 0;
+            //Anim
+            m_rebindActionKeyList[0].m_button.SetAnim(true);
+            return;
+        }
+
+        int column = m_rebindKeyInex >= 10 ? 1 : 0;
+        int row = m_rebindKeyInex >= 10
+            ? m_rebindKeyInex - 10
+            : m_rebindKeyInex;
+
+        int oldIndex = m_rebindKeyInex;
+
+        if(input.x > 0)
+        {
+            column = 1;
+        }
+        else if (input.x < 0)
+        {
+            column = 0;
+        }
+
+        if(input.y > 0)
+        {
+            row--;
+        }
+        else if(input.y < 0)
+        {
+            row++;
+        }
+
+        int maxRow = column == 0 ? 9 : 3;
+
+        row = Mathf.Clamp(row, 0, maxRow);
+
+        m_rebindKeyInex = column == 0
+            ? row
+            : row + 10;
+
+        Debug.Log(m_rebindKeyInex);
+
+        if(oldIndex >= 10)
+        {
+            m_rebindUIKeyList[oldIndex - 10].m_button.SetAnim(false);
+        }
+        else
+        {
+            m_rebindActionKeyList[oldIndex].m_button.SetAnim(false);
+        }
+
+        if(m_rebindKeyInex >= 10)
+        {
+            m_rebindUIKeyList[row].m_button.SetAnim(true);
+        }
+        else
+        {
+            m_rebindActionKeyList[row].m_button.SetAnim(true);
+        }
+    }
+
+    public void DecideRebind()
+    {
+        RebindKeyEntry entry = null;
+
+        if (m_rebindKeyInex == -1) return;
+
+        if(m_rebindKeyInex >= 10)
+        {
+            entry = m_rebindUIKeyList[m_rebindKeyInex - 10];
+        }
+        else
+        {
+            entry = m_rebindActionKeyList[m_rebindKeyInex];
+
+        }
+
+        StartRebind(entry);
+    }
+
     //[ContextMenu("Change Input")]
     //public void TestRebind()
     //{
@@ -74,7 +175,7 @@ public class RebindManager : MonoBehaviour
     }
 
     //InputAction action, int bindingIndex
-    public void StartRebind(RebindKeyEntry entry)
+    private void StartRebind(RebindKeyEntry entry)
     {
         if (m_rebindingOperation != null) return;
 

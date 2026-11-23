@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class RebindControllerEntry
 {
-    public Button m_button;
+    public KeySettingUI m_button;
+    //public Button m_button;
     public TMP_Text m_keyText;
     public Image m_controllerButtonImage;
 

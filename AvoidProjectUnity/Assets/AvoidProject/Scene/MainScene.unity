@@ -1643,6 +1643,7 @@ MonoBehaviour:
   m_optionButton: {fileID: 7672529066601924601}
   m_keyConfigButton: {fileID: 1404061053}
   m_controllerConfigButton: {fileID: 257239615}
+  m_rebindManager: {fileID: 490510302}
 --- !u!114 &490510301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1715,7 +1716,13 @@ MonoBehaviour:
   - m_button: {fileID: 452033974}
     m_actionName: UI/Detail
     m_bindingIndex: 0
-  m_rebindActionControllerList: []
+  m_rebindActionControllerList:
+  - m_button: {fileID: 0}
+    m_keyText: {fileID: 0}
+    m_controllerButtonImage: {fileID: 0}
+    m_actionName: 
+    m_controllerButtonSprite: {fileID: 0}
+    m_bindingIndex: 0
   m_rebindUIControllerList: []
   m_somethingInputGuidePanel: {fileID: 1786267223}
 --- !u!1 &502742769

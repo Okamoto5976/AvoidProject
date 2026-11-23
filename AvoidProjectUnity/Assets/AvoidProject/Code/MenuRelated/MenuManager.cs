@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+using UnityEngine.Windows;
 
 public class MenuManager : MonoBehaviour
 {
@@ -8,7 +9,14 @@ public class MenuManager : MonoBehaviour
     { 
         None,
         Menu,
-        Option
+        Setting
+    }
+
+    public enum SettingState
+    {
+        Option,
+        KeyConfig,
+        ControllerCongfig
     }
 
     //ReferenceObject
@@ -21,21 +29,27 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private MenuTextUI m_menuOptionButton;
     [SerializeField] private MenuTextUI m_menuTitleButton;
 
-    [Header("Option Buttons")]
+    [Header("Setting Buttons")]
     [SerializeField] private GameObject m_option;
     [SerializeField] private GameObject m_keyConfig;
     [SerializeField] private GameObject m_controllerConfig;
-    [SerializeField] private OptionSelectUI m_optionButton;
-    [SerializeField] private OptionSelectUI m_keyConfigButton;
-    [SerializeField] private OptionSelectUI m_controllerConfigButton;
+    [SerializeField] private SettingSelectUI m_optionButton;
+    [SerializeField] private SettingSelectUI m_keyConfigButton;
+    [SerializeField] private SettingSelectUI m_controllerConfigButton;
+
+    [SerializeField] private RebindManager m_rebindManager;
 
     [Header("Not Necessary Reference")]
     private List<MenuTextUI> m_menuButtons = new();
     private int m_menuButtonsIndex = 0;
 
+    private List<SettingSelectUI> m_settingButtons = new();
+    private int m_settingButtonsIndex = 0;
+
     private GameManager m_gameManager;
 
     private MenuState m_menuState = MenuState.None;
+    private SettingState m_settingState = SettingState.Option;
     //[SerializeField] private 
     //GoreController
 
@@ -80,6 +94,10 @@ public class MenuManager : MonoBehaviour
         m_menuButtons.Add(m_menuOptionButton);//index1
         m_menuButtons.Add(m_menuContinuButton);//index2
 
+        m_settingButtons.Add(m_optionButton);//index0
+        m_settingButtons.Add(m_keyConfigButton);//index1
+        m_settingButtons.Add(m_controllerConfigButton);//index2
+
         //Menu画面のボタンを設定
         m_menuContinuButton.Button.onClick.AddListener(() => OnSelectContinu());
         m_menuOptionButton.Button.onClick.AddListener(() => OnSelectSetting());
@@ -109,7 +127,7 @@ public class MenuManager : MonoBehaviour
         if (m_gameManager.GameState == GameManager.EnumGameState.Event ||
             m_gameManager.GameState == GameManager.EnumGameState.GameOver) return;
 
-        if(m_menuState == MenuState.Option)
+        if(m_menuState == MenuState.Setting)
         {
             CloseSetting();
             OpenMenu();
@@ -159,6 +177,13 @@ public class MenuManager : MonoBehaviour
         m_controllerConfig.SetActive(false);
         m_option.SetActive(true);
         m_settingPanel.SetActive(true);
+
+        foreach(var b in m_settingButtons)
+        {
+            b.SetAnim(false);
+        }
+        m_settingButtonsIndex = 0;
+        m_settingButtons[m_settingButtonsIndex].SetAnim(true);
     }
 
     private void CloseSetting()
@@ -171,60 +196,58 @@ public class MenuManager : MonoBehaviour
     {
         if(m_inputProvider.IsSubmit)
         {
-            m_menuButtons[m_menuButtonsIndex].Button.onClick.Invoke();
+            if(m_settingState == SettingState.KeyConfig)
+            {
+                m_rebindManager.DecideRebind();
+            }
+            else
+            {
+                m_menuButtons[m_menuButtonsIndex].Button.onClick.Invoke();
+
+            }
+
+        }
+
+        if(m_inputUiProvider.IsNext)
+        {
+            UpdateSetting(-1);
+        }
+
+        if(m_inputUiProvider.IsPrevious)
+        {
+            UpdateSetting(1);
         }
     }
 
     //十字キーで操作　コントローラーなら左スティック入力で　画面にカーソルを表示
     //矢印キーで操作（asdwでもいい）
-
     private void OnInputMove(Vector2 input)
     {
-        //foreach(var b in m_menuButtons)
-        //{
-        //    b.SetAnim(false);
-        //}
+        m_rebindManager.UpdateKeyConfigSelect(input);
 
-        //int x;
+        int x;
         int y = 0;
-        //if (input.x > 0)
-        //{
-        //    x = 1;
-        //}
-        //else if (input.x > 0)
-        //{
-        //    x = -1;
-        //}
+        if (input.x > 0)
+        {
+            x = 1;
+        }
+        else if (input.x < 0)
+        {
+            x = -1;
+        }
 
-        if(input.y > 0)
+        if (input.y > 0)
         {
             y = 1;
         }
-        else if(input.y < 0)
+        else if (input.y < 0)
         {
             y = -1;
         }
-        else
-        {
-            //入力がない
-            return;
-        }
 
-        var index = m_menuButtonsIndex;
+        UpdateMenuIndex(y);
 
-        m_menuButtonsIndex += y;
 
-        if(m_menuButtonsIndex > m_menuButtons.Count - 1)
-        {
-            m_menuButtonsIndex = 0;
-        }
-        else if(m_menuButtonsIndex < 0)
-        {
-            m_menuButtonsIndex = m_menuButtons.Count - 1;
-        }
-
-        m_menuButtons[index].SetAnim(false);
-        m_menuButtons[m_menuButtonsIndex].SetAnim(true);
     }
 
     private void ChangeMenuState(MenuState state)
@@ -233,9 +256,37 @@ public class MenuManager : MonoBehaviour
         m_menuState = state;
     }
 
+    private void ChangeSettingState(SettingState state)
+    {
+        if (m_settingState == state) return;
+        m_settingState = state;
+    }
+
     #region Menu
 
-    //button.onClick.Invoke();
+    private void UpdateMenuIndex(int y)
+    {
+        if(y == 0) return;
+
+        var index = m_menuButtonsIndex;
+
+        m_menuButtonsIndex += y;
+
+        if (m_menuButtonsIndex > m_menuButtons.Count - 1)
+        {
+            m_menuButtonsIndex = 0;
+        }
+        else if (m_menuButtonsIndex < 0)
+        {
+            m_menuButtonsIndex = m_menuButtons.Count - 1;
+        }
+
+        Debug.Log("Menu input");
+
+        m_menuButtons[index].SetAnim(false);
+        m_menuButtons[m_menuButtonsIndex].SetAnim(true);
+    }
+
     public void OnSelectContinu()
     {
         m_gameManager.ChangeGameState(GameManager.EnumGameState.InPlay);
@@ -245,7 +296,7 @@ public class MenuManager : MonoBehaviour
 
     public void OnSelectSetting()
     {
-        ChangeMenuState(MenuState.Option);
+        ChangeMenuState(MenuState.Setting);
         OpenSetting();
     }
 
@@ -256,13 +307,45 @@ public class MenuManager : MonoBehaviour
 
     #endregion
 
-    #region Option
+    #region Setting
+    private void UpdateSetting(int x)
+    {
+        var index = m_settingButtonsIndex;
+        m_settingButtonsIndex += x;
+        if(m_settingButtonsIndex > m_menuButtons.Count - 1)
+        {
+            m_settingButtonsIndex = 0;
+        }
+        else if(m_settingButtonsIndex < 0)
+        {
+            m_settingButtonsIndex = m_settingButtons.Count - 1;
+        }
+
+        m_settingButtons[index].SetAnim(false);
+        m_settingButtons[m_settingButtonsIndex].SetAnim(true);
+
+        switch(m_settingButtonsIndex)
+        {
+            case 0:
+                OnChangeOption();
+                break;
+            case 1:
+                OnChangeKeyConfig();
+                break;
+            case 2:
+                OnChangeControllerConfig();
+                break;
+        }
+    }
+
     //オプション画面上部切り替えEvent
     public void OnChangeOption()
     {
         m_keyConfig.SetActive(false);
         m_controllerConfig.SetActive(false);
         m_option.SetActive(true);
+
+        ChangeSettingState(SettingState.Option);
     }
 
     public void OnChangeKeyConfig()
@@ -270,6 +353,9 @@ public class MenuManager : MonoBehaviour
         m_option.SetActive(false);
         m_controllerConfig.SetActive(false);
         m_keyConfig.SetActive(true);
+        m_rebindManager.OpenKeyConfig();
+        ChangeSettingState(SettingState.KeyConfig);
+
     }
 
     public void OnChangeControllerConfig()
@@ -277,6 +363,8 @@ public class MenuManager : MonoBehaviour
         m_option.SetActive(false);
         m_keyConfig.SetActive(false);
         m_controllerConfig.SetActive(true);
+        ChangeSettingState(SettingState.ControllerCongfig);
+
     }
     #endregion
 

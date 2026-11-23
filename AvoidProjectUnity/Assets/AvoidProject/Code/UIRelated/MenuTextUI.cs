@@ -11,6 +11,8 @@ public class MenuTextUI : MonoBehaviour
 
     public void SetAnim(bool value)
     {
-         m_anim.SetBool("Selected", value);
+        if (!gameObject.activeInHierarchy) return;
+
+        m_anim.SetBool("Selected", value);
     }
 }

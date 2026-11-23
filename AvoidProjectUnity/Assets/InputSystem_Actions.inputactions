@@ -308,7 +308,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "UIKey1",
+                    "name": "Next",
                     "type": "Button",
                     "id": "15acfa52-2fa1-4e4c-adad-ca1483bec326",
                     "expectedControlType": "",
@@ -317,7 +317,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "UIKey2",
+                    "name": "Previous",
                     "type": "Button",
                     "id": "b06193ff-9698-4b98-a66b-a78c01eb5d93",
                     "expectedControlType": "",
@@ -579,11 +579,11 @@
                 {
                     "name": "",
                     "id": "375141de-5310-4b8e-b7e4-ab586140e5f3",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UIKey1",
+                    "action": "Next",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -594,18 +594,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UIKey1",
+                    "action": "Next",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "d70eec5d-f63f-4858-bcb3-f5919757aa49",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UIKey2",
+                    "action": "Previous",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -616,7 +616,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UIKey2",
+                    "action": "Previous",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
