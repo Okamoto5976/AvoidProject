@@ -15,7 +15,7 @@ public class PlayerData : ScriptableObject
     [SerializeField] private int m_justAvoidFrame = 5;
 
     [SerializeField] private float m_hitRadius = 1f;
-    [SerializeField] private float m_interactRange = 2f;
+    [SerializeField] private float m_interactRange = 1.5f;
     [SerializeField] private float m_interactHoldTime = 1.5f;
 
     [SerializeField] private float m_recoverMoveSpeed = 2f;

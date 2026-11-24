@@ -5,6 +5,7 @@ public class PlayerInteract
     private IInteractable m_target;
     private Transform m_playerTransform;
     private float m_holdTimer = 0f;
+    private float m_interactRange;
     private bool m_isCompleted = false;
 
     public PlayerInteract(Transform playerTransform)
@@ -27,6 +28,7 @@ public class PlayerInteract
             if (interactable != null)
             {
                 m_target = interactable;
+                m_interactRange = range;
                 m_holdTimer = 0f;
                 m_isCompleted = false;
 
@@ -48,6 +50,20 @@ public class PlayerInteract
             return;
         }
 
+        // プレイヤーと剣の距離を確認
+        float distance = Vector2.Distance(
+            m_playerTransform.position,
+            ((MonoBehaviour)m_target).transform.position
+        );
+
+        //範囲外ならインタラクトを中断
+        if (distance > m_interactRange)
+        {
+            Debug.Log("剣から離れたため拾得を中断します。");
+            EndInteract();
+            return;
+        }
+
         m_holdTimer += deltaTime;
 
         if (m_holdTimer >= requiredHoldTime)
@@ -58,7 +74,6 @@ public class PlayerInteract
 
             if (result)
             {
-                m_isCompleted = true;
                 m_target = null;
             }
             else
