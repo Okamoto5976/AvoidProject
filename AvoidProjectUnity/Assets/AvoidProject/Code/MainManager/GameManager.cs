@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -17,14 +18,18 @@ public class GameManager : MonoBehaviour
     public bool HasTimeLimit => m_hasTimeLimit;
     public float TimeLimit => m_timeLimit;
 
-    private InputProvider m_inputProvider;
-
     private bool m_hasTimeLimit;
 
     private float m_timeLimit;
 
     private UIManager m_uiManager;
 
+    //SlowMotion Variable
+    [SerializeField] private float m_slowScale = 0.3f;
+    [SerializeField] private float m_slowDuration = 0.5f;
+    [SerializeField] private float m_recoveryDuration = 0.5f;
+    [SerializeField] private AnimationCurve m_recoveryCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    private Coroutine m_slowCoroutine;
 
     /// <summary>
     /// 初期化時に呼ぶ　
@@ -36,12 +41,6 @@ public class GameManager : MonoBehaviour
         m_timeLimit = timer;
     }
 
-    public void InitializeInput(InputProvider inputProvider)
-    {
-        m_inputProvider = inputProvider;
-
-        //m_inputProvider.OnPlayerDead += GameOverEvent;
-    }
     public void StartGame()
     {
         ChangeGameState(EnumGameState.InPlay);
@@ -74,16 +73,37 @@ public class GameManager : MonoBehaviour
                 GameClearEvent();
             }
         }
-
-       
     }
 
-    private void OnDestroy()
+    public void SlowMotionEvent()
     {
-        if (m_inputProvider == null) return;
+        if (m_slowCoroutine != null)
+        {
+            StopCoroutine(m_slowCoroutine);
+            m_slowCoroutine = null;
+        }
 
-        //m_inputProvider.OnPlayerDead -= GameOverEvent;
+        m_slowCoroutine = StartCoroutine(SlowMotionCo());
     }
+
+    private IEnumerator SlowMotionCo()
+    {
+        Time.timeScale = m_slowScale;
+        yield return new WaitForSecondsRealtime(m_slowDuration);
+        float elapsed = 0f;
+
+        while (elapsed < m_recoveryDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float rate = Mathf.Clamp01(elapsed / m_recoveryDuration);
+            float curveValue = m_recoveryCurve.Evaluate(rate);
+            Time.timeScale = Mathf.Lerp(m_slowScale, 1f , curveValue);
+        }
+        yield return null;
+        Time.timeScale = 1f;
+        m_slowCoroutine = null;
+    }
+
 
     public void ChangeGameState(EnumGameState state)
     {
