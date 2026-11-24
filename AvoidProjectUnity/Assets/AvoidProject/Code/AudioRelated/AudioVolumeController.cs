@@ -99,6 +99,14 @@ public class AudioVolumeController : MonoBehaviour
         SaveOption();
     }
 
+    public void HorizontalInput(float input)
+    {
+        //animで非選択、選択、調整中を用意
+        //ListでSliderのScriptを入れておく　Animの操作を可能に
+        //選択中での横キーで　10づつ変化　位置のくらいは四捨五入
+        //
+    }
+
     private void SaveOption()
     {
         OptionSaveData data = new();

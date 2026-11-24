@@ -257,7 +257,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AvoidProUI01_7
+      name: AvoidProUI01_6
       rect:
         serializedVersion: 2
         x: 7
@@ -274,6 +274,72 @@ TextureImporter:
       bones: []
       spriteID: 470bc7ef7c202c3c0800000000000000
       internalID: -4340904032840404876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AvoidProUI01_5
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 311
+        width: 298
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ec257772f92def43a417458e1349ae5
+      internalID: 1189705590741400590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AvoidProUI01_7
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 294
+        width: 64
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 425a4c5d1d2de9f4daac06ef736ec5e1
+      internalID: -1185535925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AvoidProUI01_8
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 281
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8410f6538f4a25a42bad0546595afcbc
+      internalID: -773196625
       vertices: []
       indices: 
       edges: []
@@ -298,8 +364,9 @@ TextureImporter:
       AvoidProUI01_3: 1037087348659992712
       AvoidProUI01_4: -5556399701395421673
       AvoidProUI01_5: 1189705590741400590
-      AvoidProUI01_6: -1426800182774070824
-      AvoidProUI01_7: -4340904032840404876
+      AvoidProUI01_6: -4340904032840404876
+      AvoidProUI01_7: -1185535925
+      AvoidProUI01_8: -773196625
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

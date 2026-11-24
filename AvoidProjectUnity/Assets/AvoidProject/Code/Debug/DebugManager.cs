@@ -4,6 +4,7 @@ public class DebugManager : MonoBehaviour
 {
     //TimeLimit表記(UIで表記するから　HasTimeLimitのみでいい）
     //Playerの無敵化
+    //PlayerのHP変更（最大＋Defence　から　HP１まで）
     //EnemyのHPの変更
     //時間を遅く
     //必要な値をTextで表示　（InspecterのDebugModeをしなくていいように
@@ -25,6 +26,7 @@ public class DebugManager : MonoBehaviour
     private GameManager m_gameManager;
 
     private HpController m_playerHpController;
+    private HpController m_enemyHPController;
 
     public void SetGameManager(GameManager manager)
     {
@@ -34,6 +36,11 @@ public class DebugManager : MonoBehaviour
     public void SetPlayerHPController(HpController hpController)
     {
         m_playerHpController = hpController;
+    }
+
+    public void SetEnemyHPController(HpController hpController)
+    {
+        m_enemyHPController = hpController;
     }
 
     private void OnGUI()
@@ -76,6 +83,18 @@ public class DebugManager : MonoBehaviour
                 $"PlayerHP :" + 0);
         }
 
+        if(m_enemyHPController.Hp > 0)
+        {
+            GUI.Label(
+                new Rect(10, 70, 200, 30),
+                $"EnemyHP :" + m_enemyHPController.Hp);
+        }
+        else
+        {
+            GUI.Label(
+                new Rect(10, 70, 200, 30),
+                $"EnemyHP :" + 0);
+        }
         
     }
 

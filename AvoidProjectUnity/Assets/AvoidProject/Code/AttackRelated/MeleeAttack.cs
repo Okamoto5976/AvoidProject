@@ -5,7 +5,7 @@ public class MeleeAttack : AttackBase
 {
     private readonly MeleeAttackData m_data;
 
-    private List<Action> m_actions = new();
+    private List<EnemyAction> m_actions = new();
 
     private int m_currentIndex = 0;
 
@@ -51,7 +51,8 @@ public class MeleeAttack : AttackBase
     public override void Attack()
     {
         //Debug.Log("AttackCollider");
-        m_attack.Position = m_transform.position;
+        m_attack.Positions.Clear();
+        m_attack.Positions.Add(m_transform.position);
         m_attackManager.Attack(m_attack);
     }
 }

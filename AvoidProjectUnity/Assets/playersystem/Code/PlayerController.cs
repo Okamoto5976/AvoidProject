@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -11,11 +12,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private Rigidbody2D m_rd;
     private Movement m_movement;
-    private HpController m_hpController;
+    private PlayerHp m_hpController;
 
     private InputProvider m_inputProvider;
     private PlayerInteract m_playerInteract;
     private MeleeAttack m_meleeAttack;
+    private StageManager m_stageManager;
 
     private PlayerState m_playerState = PlayerState.Idle;
 
@@ -62,7 +64,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     private int m_justAvoidFrameCount = 0;
     private int m_pendingDamage = 0;
     private int m_justAvoidFrame;
-    private int m_dhp;
 
     private Vector2 m_velocity;
     private Vector2 m_avoidDirection;
@@ -82,6 +83,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     #endregion
 
+    public event Action m_onDeadEvent;
+    public event Action<int> m_onUsePotionEvent;
 
     #region Team
 
@@ -102,8 +105,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_playerInteract = new PlayerInteract(transform);
 
         m_rd = GetComponent<Rigidbody2D>();
-        m_movement = new Movement(m_rd, transform);
-        m_hpController = GetComponent<HpController>();
+        m_movement = new Movement(m_rd, transform, LimitStage);
+        m_hpController = GetComponent<PlayerHp>();
+
+        m_hpController.SetPlayer(this);
     }
 
 
@@ -155,6 +160,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         // HP・回復薬の初期化
         m_hpController.Initialize(pData.HP);
+        m_hpController.InitializeDefenceHp(pData.Dhp);
         m_hasRecoverCount = rData.PotionAmount;
 
 
@@ -165,8 +171,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 
         // プレイヤーのステータス設定
-        m_dhp = pData.Dhp;
-
         m_moveSpeed = pData.Speed;
         m_sprintSpeed = pData.SprintSpeed;
         m_attackStateDuration = pData.AttackStateDuration;
@@ -194,10 +198,20 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_damageInvincibleDuration = pData.DamageInvincibleDuration;
     }
 
+    public Vector2 LimitStage(Vector2 pos)
+    {
+        return m_stageManager.LimitMovement(pos);
+    }
+
 
     public void SetAttackManager(AttackManager component)
     {
         m_meleeAttack.Initialize(m_movement, transform, component);
+    }
+
+    public void SetStageManager(StageManager component)
+    {
+        m_stageManager = component;
     }
 
     #endregion
@@ -471,17 +485,15 @@ public class PlayerController : MonoBehaviour, IDamageable
         int damage = m_pendingDamage;
         m_pendingDamage = 0;
 
-        if (damage <= 0) return;
-
         // HP減少
         m_hpController.Damage(damage);
 
-        // HPが0になった場合
-        if (m_hpController.Hp <= 0)
-        {
-            Dead();
-            return;
-        }
+        //// HPが0になった場合
+        //if (m_hpController.Hp <= 0)
+        //{
+        //    Dead();
+        //    return;
+        //}
 
         // ダメージ後の無敵時間
         m_isDamageInvincible = true;
@@ -718,6 +730,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             {
                 m_hasRecoverCount--;
                 m_hpController.Heal(m_recoverValue);
+                m_onUsePotionEvent(m_hasRecoverCount);
                 break;
             }
 
@@ -829,11 +842,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         // 移動停止
         m_movement.Stop();
 
-
-        // GameManagerへ死亡イベントを通知
-        m_inputProvider?.PlayerDead();
-
-        Debug.Log("プレイヤー死亡！", this);
+        m_onDeadEvent?.Invoke();
     }
 
     #endregion

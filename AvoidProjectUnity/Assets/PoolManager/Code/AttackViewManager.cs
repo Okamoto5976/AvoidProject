@@ -43,38 +43,41 @@ public class AttackViewManager : MonoBehaviour
     /// <param name="attack">çUåÇÇÃÉfÅ[É^</param>
     public void AttackView(Attack attack)
     {
-        //Debug.Log("çUåÇó\çêï\é¶");
-        GameObject obj = m_AttackViewPool.GenerateFromPool();
-        Transform transform = obj.transform;
-        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
-
-        transform.localPosition = attack.Position;
-        if (attack.Parent != null)
+        for (int i = 0; i < attack.Positions.Count; i++)
         {
-            transform.parent = attack.Parent;
-        }
+            //Debug.Log("çUåÇó\çêï\é¶");
+            GameObject obj = m_AttackViewPool.GenerateFromPool();
+            Transform transform = obj.transform;
+            SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
 
-        switch (attack.ColliderProperty.ShapeType)
-        {
-            case ShapeType.Box:
-                ShapingBox(attack.ColliderProperty, spriteRenderer, transform);
-                break;
-            case ShapeType.Circle:
-                ShapingCircle(attack.ColliderProperty, spriteRenderer, transform);
-                break;
-            case ShapeType.Line:
-                ShapingLine(attack.ColliderProperty, spriteRenderer, transform);
-                break;
-            case ShapeType.Sector:
-                ShapingSector(attack.ColliderProperty, spriteRenderer, transform);
-                break;
-        }
+            transform.localPosition = attack.Positions[i];
+            if (attack.Parent != null)
+            {
+                transform.parent = attack.Parent;
+            }
 
-        TimedAction action = new();
-        action.Attack = attack;
-        action.Timer = attack.StartupTime;
-        action.Object = obj;
-        m_TimedActions.Add(action);
+            switch (attack.ColliderProperty.ShapeType)
+            {
+                case ShapeType.Box:
+                    ShapingBox(attack.ColliderProperty, spriteRenderer, transform);
+                    break;
+                case ShapeType.Circle:
+                    ShapingCircle(attack.ColliderProperty, spriteRenderer, transform);
+                    break;
+                case ShapeType.Line:
+                    ShapingLine(attack.ColliderProperty, spriteRenderer, transform);
+                    break;
+                case ShapeType.Sector:
+                    ShapingSector(attack.ColliderProperty, spriteRenderer, transform);
+                    break;
+            }
+
+            TimedAction action = new();
+            action.Attack = attack;
+            action.Timer = attack.StartupTime;
+            action.Object = obj;
+            m_TimedActions.Add(action);
+        }
     }
 
     private void ShapingBox(ColliderProperty cp, SpriteRenderer sr, Transform tf)

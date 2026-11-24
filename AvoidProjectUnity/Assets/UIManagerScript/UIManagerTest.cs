@@ -10,7 +10,7 @@ public class UIManagerTest : MonoBehaviour
     {
 #if ENABLE_INPUT_SYSTEM
         if (Keyboard.current == null) return;
-        if (Keyboard.current.aKey.wasPressedThisFrame) uiManager.ShowPanel(UIPanelType.GameClear);
+        if (Keyboard.current.aKey.wasPressedThisFrame) uiManager.ShowPanel(UIPanelType.GameResult);
         if (Keyboard.current.sKey.wasPressedThisFrame) uiManager.ShowPanel(UIPanelType.GameOver);
 #endif
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -17,29 +18,37 @@ public class GameManager : MonoBehaviour
     public bool HasTimeLimit => m_hasTimeLimit;
     public float TimeLimit => m_timeLimit;
 
-    private InputProvider m_inputProvider;
-
     private bool m_hasTimeLimit;
 
     private float m_timeLimit;
 
+    private UIManager m_uiManager;
+
+    private InputProvider m_inputProvider;
+
+    //SlowMotion Variable
+    [SerializeField] private float m_slowScale = 0.3f;
+    [SerializeField] private float m_slowDuration = 0.5f;
+    [SerializeField] private float m_recoveryDuration = 0.5f;
+    [SerializeField] private AnimationCurve m_recoveryCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    private Coroutine m_slowCoroutine;
 
     /// <summary>
-    /// ‰Šú‰»‚ÉŒÄ‚Ô@
+    /// åˆæœŸåŒ–æ™‚ã«å‘¼ã¶ã€€
     /// </summary>
     /// <param name="timer"></param>
-    public void Initialize(bool hasTimeLimit, float timer = 0)//ŒãXˆø”‚ª‘‚¦‚é‚æ‚¤‚È‚ç@•Ê‚²‚Æ‚ÉŠÖ”‚ğì‚é‚©@Class‚Å“n‚µ‚Ä‚ ‚°‚é
+    public void Initialize(
+        UIManager uiMa,
+        InputProvider inputProvider,
+        bool hasTimeLimit,
+        float timer = 0)//å¾Œã€…å¼•æ•°ãŒå¢—ãˆã‚‹ã‚ˆã†ãªã‚‰ã€€åˆ¥ã”ã¨ã«é–¢æ•°ã‚’ä½œã‚‹ã‹ã€€Classã§æ¸¡ã—ã¦ã‚ã’ã‚‹
     {
+        m_uiManager = uiMa;
+        m_inputProvider = inputProvider;
         m_hasTimeLimit = hasTimeLimit;
         m_timeLimit = timer;
     }
-
-    public void InitializeInput(InputProvider inputProvider)
-    {
-        m_inputProvider = inputProvider;
-
-        m_inputProvider.OnPlayerDead += GameOverEvent;
-    }
+    
     public void StartGame()
     {
         ChangeGameState(EnumGameState.InPlay);
@@ -72,16 +81,37 @@ public class GameManager : MonoBehaviour
                 GameClearEvent();
             }
         }
-
-       
     }
 
-    private void OnDestroy()
+    public void SlowMotionEvent()
     {
-        if (m_inputProvider == null) return;
+        if (m_slowCoroutine != null)
+        {
+            StopCoroutine(m_slowCoroutine);
+            m_slowCoroutine = null;
+        }
 
-        m_inputProvider.OnPlayerDead -= GameOverEvent;
+        m_slowCoroutine = StartCoroutine(SlowMotionCo());
     }
+
+    private IEnumerator SlowMotionCo()
+    {
+        Time.timeScale = m_slowScale;
+        yield return new WaitForSecondsRealtime(m_slowDuration);
+        float elapsed = 0f;
+
+        while (elapsed < m_recoveryDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float rate = Mathf.Clamp01(elapsed / m_recoveryDuration);
+            float curveValue = m_recoveryCurve.Evaluate(rate);
+            Time.timeScale = Mathf.Lerp(m_slowScale, 1f , curveValue);
+        }
+        yield return null;
+        Time.timeScale = 1f;
+        m_slowCoroutine = null;
+    }
+
 
     public void ChangeGameState(EnumGameState state)
     {
@@ -90,31 +120,47 @@ public class GameManager : MonoBehaviour
         m_gameState = state;
     }
 
-    //Time.Scale‚Ì‘€ì
-    //ŠÔ§ŒÀ‚Ì‘€ì
-    //ƒXƒe[ƒWƒ^ƒCƒv‚©‚çŠÔ§ŒÀ‚©@“¢”°‚©
-    //ŠÔ§ŒÀ‚È‚çGameManager‚Å
-    //“¢”°‚È‚ç@“¢”°Œã‚ÉEvent‚ğ‘–‚ç‚¹‚éiŠÔ§ŒÀ‚Å‚à“¢”°‚Í‚Å‚«‚é‚Ì‚Å@ƒfƒtƒHƒ‹ƒgj
+    //Time.Scaleã®æ“ä½œ
+    //æ™‚é–“åˆ¶é™ã®æ“ä½œ
+    //ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ—ã‹ã‚‰æ™‚é–“åˆ¶é™ã‹ã€€è¨ä¼ã‹
+    //æ™‚é–“åˆ¶é™ãªã‚‰GameManagerã§
+    //è¨ä¼ãªã‚‰ã€€è¨ä¼å¾Œã«Eventã‚’èµ°ã‚‰ã›ã‚‹ï¼ˆæ™‚é–“åˆ¶é™ã§ã‚‚è¨ä¼ã¯ã§ãã‚‹ã®ã§ã€€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆï¼‰
 
     public void OnEnemyDead()
     {
-        //GameCleariEventj‚É2d‚É‚È‚é‚Ì‚ğ–h‚®
+        //GameClearï¼ˆEventï¼‰æ™‚ã«2é‡ã«ãªã‚‹ã®ã‚’é˜²ã
         if (m_gameState != EnumGameState.InPlay) return;
 
         GameClearEvent();
     }
 
-    public void GameOverEvent()
+    public void OnGameOverEvent()
     {
         if (m_gameState == EnumGameState.GameOver) return;
 
         ChangeGameState(EnumGameState.GameOver);
-
-        Debug.Log("GameOverI");
+        m_inputProvider.PlayerDisable();
+        if(m_slowCoroutine != null)
+        {
+            StopCoroutine(m_slowCoroutine);
+            m_slowCoroutine = null;
+        }
+        
+        m_uiManager.ShowGameOver();
     }
 
     public void GameClearEvent()
     {
+        ChangeGameState(EnumGameState.Event);
+        m_inputProvider.PlayerDisable();
+
+        if (m_slowCoroutine != null)
+        {
+            StopCoroutine(m_slowCoroutine);
+            m_slowCoroutine = null;
+        }
+        Time.timeScale = 0f;
+        m_uiManager.ShowGameClear();
 
     }
 

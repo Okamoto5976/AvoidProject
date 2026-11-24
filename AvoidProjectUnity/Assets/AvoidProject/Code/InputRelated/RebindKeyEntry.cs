@@ -9,18 +9,20 @@ using UnityEngine.UI;
 //コントローラーならSpriteをImageに表示
 
 [System.Serializable]
-public class RebindEntry
+public class RebindKeyEntry
 {
-    public Button m_button;
-    public TMP_Text m_keyText;
-    public Image m_controllerButtonImage;
+    public KeySettingUI m_button;
+    public Button m_keyButton => m_button.KeyButton;
+    //public Image m_controllerButtonImage;
 
     //どのInputActionを変更するか
     public string m_actionName;
 
-    public Sprite m_controllerButtonSprite;
+    //public Sprite m_controllerButtonSprite;
     public int m_bindingIndex;
 
     [System.NonSerialized]
     public InputAction m_action;
+
+    public void UpdateKeyText(string text) => m_button.UpdateKeyText(text);
 }

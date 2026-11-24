@@ -250,8 +250,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Test
   m_AttackManager: {fileID: 13313496}
   m_SpriteRenderer: {fileID: 417548085}
+  multipleAttack: 3
   random: 1
   sampleAttack:
+    Team: 0
+    Damage: 0
     ColliderProperty:
       ShapeType: 0
       Radius: 2
@@ -262,7 +265,7 @@ MonoBehaviour:
       Thickness: 0.5
       Length: 5
       Angle: 180
-    Position: {x: 0, y: 0}
+    Positions: []
     Parent: {fileID: 0}
     StartupTime: 2
     ActiveTime: 2

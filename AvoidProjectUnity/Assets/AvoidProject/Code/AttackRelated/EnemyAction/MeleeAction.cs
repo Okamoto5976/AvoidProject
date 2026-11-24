@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MeleeAction : Action
+public class MeleeAction : EnemyAction
 {
     private readonly MeleeActionData m_actionData;
 

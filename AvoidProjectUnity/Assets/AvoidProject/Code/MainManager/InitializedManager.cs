@@ -33,6 +33,7 @@ public class InitializedManager : MonoBehaviour
 
     [SerializeField] private Enemy m_enemy;
     [SerializeField] private EnemyData m_enemyData;
+    private HpController m_enemyHpController;
 
     [SerializeField] private AttackManager m_attackManager;
     [SerializeField] private AttackViewManager m_attackViewManager;
@@ -42,7 +43,7 @@ public class InitializedManager : MonoBehaviour
      
     [SerializeField] private CameraManager m_cameraManager;
 
-
+    [SerializeField] private UIManager m_uiManager;
 
     [SerializeField] private DebugManager m_debugManager;
 
@@ -78,10 +79,11 @@ public class InitializedManager : MonoBehaviour
         //GameTypeを受け取る　制限時間か　討伐か
         //GameManagerの初期化
         bool hasTimeLimit = m_runtimeData.HasTimeLimit;
-        m_gameManager.Initialize(hasTimeLimit, m_timeLimit);
-
-        //プレイヤー死亡イベントの登録
-        m_gameManager.InitializeInput(m_inputProvider);
+        m_gameManager.Initialize(
+            m_uiManager,
+            m_inputProvider,
+            hasTimeLimit,
+            m_timeLimit);
 
         m_rebuildManager.Initialize(m_inputProvider);
 
@@ -111,12 +113,20 @@ public class InitializedManager : MonoBehaviour
             m_stageManager, 
             m_inputProvider);
 
+        m_playerController.m_onDeadEvent += m_gameManager.OnGameOverEvent;
+
         m_playerController.SetAttackManager(m_attackManager);
+        m_playerController.SetStageManager(m_stageManager);
         //Deadの際のイベントを入れておく
 
 
         //Enemyの生成--------------------------
+        m_enemyHpController = m_enemy.GetComponent<HpController>();
+
         m_enemy.InitializeData(m_enemyData);
+        m_enemy.SetStageManager(m_stageManager);
+
+        m_enemy.m_onDeadEvent += m_gameManager.OnEnemyDead;
 
         //Runtimeから降ろした敵の生成
         //敵の初期化（RunTimeのものを初期化）
@@ -137,10 +147,17 @@ public class InitializedManager : MonoBehaviour
         //それぞれに　必要なManagerを渡す Attack時に必要なものとか
 
         //UIManagerのEventをつける
+        m_uiManager.SetPotionCount(m_runtimeData.PotionAmount);
+        m_playerController.m_onUsePotionEvent += m_uiManager.SetPotionCount;
+        m_uiManager.SetUpHearts(m_playerData.HP, m_playerData.Dhp);
+        m_playerHpController.OnUpdateHPUI += m_uiManager.UpdateHearts;
+        m_uiManager.SetUpEnemyHP(m_enemyData.HP);
+        m_enemyHpController.OnUpdateHPUI += m_uiManager.UpdateEnemyHP;
 
         //DebugManager設定
         m_debugManager.SetGameManager(m_gameManager);
         m_debugManager.SetPlayerHPController(m_playerHpController);
+        m_debugManager.SetEnemyHPController(m_enemyHpController);
 
         //GameStartDirectorを呼ぶ
 

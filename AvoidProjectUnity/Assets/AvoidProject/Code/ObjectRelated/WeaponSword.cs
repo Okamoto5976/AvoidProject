@@ -11,14 +11,15 @@ public class WeaponSword : MonoBehaviour, IInteractable
 
     public bool Interact(PlayerController c)
     {
-        //Œ•‚ğ‘•”õ
-        Debug.Log("Œ•‚ğæ“¾‚µ‚Ü‚µ‚½I");
+        //å‰£ã‚’è£…å‚™
+        Debug.Log("å‰£ã‚’å–å¾—ã—ã¾ã—ãŸï¼");
 
-        // ƒvƒŒƒCƒ„[‚ÌŒ•Šó‘Ô‚ğ•ÏX
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‰£æ‰€æŒçŠ¶æ…‹ã‚’å¤‰æ›´
         c.SetHasWeapon(true);
 
-        // Œ•‚ğƒv[ƒ‹‚É–ß‚·
+        //Anim ã‚„ Particel
         ReturnObject();
+
 
         return true;
     }

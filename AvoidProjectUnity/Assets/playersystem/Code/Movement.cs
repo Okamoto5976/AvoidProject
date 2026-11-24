@@ -1,20 +1,20 @@
 using UnityEngine;
+using System;
 
 public class Movement 
 {
     private Rigidbody2D m_rd;
     private Transform m_transform;
-    private StageManager m_stageManager;
+    public event Func<Vector2, Vector2> m_onLimitStage;
 
-    public Movement(Rigidbody2D rd, Transform target)
+    public Movement(
+        Rigidbody2D rd,
+        Transform target,
+        Func<Vector2, Vector2> onLimitStage)
     {
         m_rd = rd;
         m_transform = target;
-    }
-
-    public void Initialize(StageManager manager)
-    {
-        m_stageManager = manager;
+        m_onLimitStage = onLimitStage;
     }
 
     public void Move(Vector2 direction, float speed)
@@ -30,12 +30,7 @@ public class Movement
     
     public void LimitMovement()
     {
-        if (m_stageManager == null)
-        {
-            return;
-        }
-
-        m_transform.position = m_stageManager.LimitMovement(m_transform.position);
+        m_transform.position = m_onLimitStage?.Invoke(m_transform.position) ?? m_transform.position;
     }
 
 }

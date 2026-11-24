@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AttackAction : Action
+public class AttackAction : EnemyAction
 {
     public override void Execute()
     {
