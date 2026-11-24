@@ -27,11 +27,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     #region Player Flags
 
     private bool m_isSprinting = false;
-    private bool m_isAvoiding = false;
-    private bool m_isInteracting = false;
     private bool m_isWaitingAvoid = false;
     private bool m_isWaitingAvoidInput = false;
-    private bool m_isRecovering = false;
     private bool m_isInvincible = false;
     private bool m_hasWeapon = false;
     private bool m_isJustAvoidSuccess = false;
@@ -41,7 +38,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     private bool m_isPendingAttack = false;
     private bool m_isPendingAvoid = false;
     private bool m_pendingInteract = false;
+    private bool m_hasPendingInteract = false;
     private bool m_pendingRecover = false;
+    private bool m_hasPendingRecover = false;
 
     #endregion
 
@@ -247,7 +246,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 
         // インタラクト
-        if (m_isInteracting)
+        if (m_playerState == PlayerState.Interact)
         {
             m_playerInteract.Interact(
                 this,
@@ -272,17 +271,21 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
 
         // インタラクト
-        if (m_pendingInteract)
+        if (m_hasPendingInteract)
         {
             bool isHolding = m_pendingInteract;
+
+            m_hasPendingInteract = false;
 
             ExecuteInteract(isHolding);
         }
 
         // 回復
-        if (m_pendingRecover)
+        if (m_hasPendingRecover)
         {
             bool isHolding = m_pendingRecover;
+
+            m_hasPendingRecover = false;
 
             ExecuteRecover(isHolding);
         }
@@ -293,18 +296,22 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void ExecuteAttack()
     {
+        //攻撃できない状態なら終了
+        if (m_playerState == PlayerState.Dead ||
+            m_playerState == PlayerState.Attack || 
+            m_playerState == PlayerState.Avoid) 
+            return;
+
         if (!m_hasWeapon)
         {
             Debug.Log("武器を持っていないため攻撃できません！", this);
             return;
         }
 
-        if (m_isInteracting)
+        if (m_playerState == PlayerState.Interact)
         {
-            m_isInteracting = false;
             m_playerInteract.EndInteract();
         }
-        m_isRecovering = false;
 
         ChangeState(PlayerState.Attack);
         m_meleeAttack.Execute();
@@ -314,15 +321,22 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void ExecuteAvoid()
     {
-        if (m_isAvoiding || m_isWaitingAvoid || m_isWaitingAvoidInput) return;
+        if (m_playerState  == PlayerState.Dead ||
+            m_playerState == PlayerState.Attack ||
+            m_playerState == PlayerState.Avoid || 
+            m_isWaitingAvoid || 
+            m_isWaitingAvoidInput)
+            return;
         
-        if (m_isInteracting)
+        if (m_playerState == PlayerState.Interact)
         {
-            m_isInteracting = false;
             m_playerInteract.EndInteract();
         }
 
-        m_isRecovering = false;
+        if (m_playerState == PlayerState.Recover)
+        {
+            ChangeState(PlayerState.Idle);
+        }
 
         // ジャスト回避成功
         if (m_isWaitingJustAvoid)
@@ -356,12 +370,21 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void ExecuteInteract(bool isHolding)
     {
-        m_isInteracting = isHolding;
-
         if (isHolding)
         {
-            m_isRecovering = false;
+            // インタラクトできない状態
+            if (m_playerState == PlayerState.Dead ||
+                m_playerState == PlayerState.Attack ||
+                m_playerState == PlayerState.Avoid ||
+                m_playerState == PlayerState.Recover ||
+                m_isWaitingAvoid ||
+                m_isWaitingAvoidInput)
+            {
+                return;
+            }
 
+
+            // インタラクト開始
             ChangeState(PlayerState.Interact);
 
             m_playerInteract.StartInteract(this, m_interactRange);
@@ -370,7 +393,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             m_playerInteract.EndInteract();
 
-            if (!m_isAvoiding)
+            if (m_playerState == PlayerState.Interact)
             {
                 ChangeState(PlayerState.Idle);
             }
@@ -382,9 +405,18 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isHolding)
         {
+            if (m_playerState == PlayerState.Dead ||
+                m_playerState == PlayerState.Attack ||
+                m_playerState == PlayerState.Avoid ||
+                m_playerState == PlayerState.Interact ||
+                m_playerState == PlayerState.Recover ||
+                m_isWaitingAvoid ||
+                m_isWaitingAvoidInput)
+                return;
+
             if (m_hasRecoverCount <= 0) return;
 
-            m_isRecovering = true;
+            ChangeState(PlayerState.Recover);
 
             if (m_recoverCoroutine == null)
             {
@@ -393,9 +425,14 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
         else
         {
-            m_isRecovering = false;
             m_recoverTimer = 0f;
+            if (m_playerState == PlayerState.Recover)
+            {
+                ChangeState(PlayerState.Idle);
+            }
         }
+
+       
     }
 
     #endregion
@@ -476,24 +513,47 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Move()
     {
+        // 死亡中は移動しない
         if (m_playerState == PlayerState.Dead) return;
 
-        if (m_isAvoiding || m_isWaitingAvoid || m_isWaitingAvoidInput)
+        // 回避中・回避待機中は移動しない
+        if (m_playerState == PlayerState.Avoid ||
+            m_isWaitingAvoid ||
+            m_isWaitingAvoidInput)
         {
             return;
         }
 
+        // 攻撃・インタラクト中は移動状態を変更しない
+        if (m_playerState == PlayerState.Attack ||
+            m_playerState == PlayerState.Interact)
+        {
+            m_movement.Move(m_velocity, m_moveSpeed);
+            return;
+        }
+
+        // 移動速度を決定
         float speed = m_moveSpeed;
 
-
-        if (m_isRecovering)
+        if (m_playerState == PlayerState.Recover)
         {
             speed = m_recoverMoveSpeed;
-            ChangeState(PlayerState.Recover);
         }
         else if (m_isSprinting)
         {
             speed = m_sprintSpeed;
+        }
+
+        // 移動
+        m_movement.Move(m_velocity, speed);
+
+        // プレイヤーの状態を決定
+        if (m_playerState == PlayerState.Recover)
+        {
+            return;
+        }
+        else if (m_isSprinting)
+        {
             ChangeState(PlayerState.Sprint);
         }
         else if (m_velocity != Vector2.zero)
@@ -504,11 +564,56 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             ChangeState(PlayerState.Idle);
         }
-
-        m_movement.Move(m_velocity, speed);
     }
 
 
+
+
+    #endregion
+
+
+    //==================================================
+    // 入力処理
+    //==================================================
+
+    #region Input
+
+    private void InputSprint(bool isSprinting)
+    {
+        if (m_playerState == PlayerState.Dead) return;
+
+        m_isSprinting = isSprinting;
+    }
+
+    private void InputInteract(bool isHolding)
+    {
+        if (m_playerState == PlayerState.Dead) return;
+
+        m_pendingInteract = isHolding;
+        m_hasPendingInteract = true;
+    }
+
+    private void InputAttack()
+    {
+        if (m_playerState == PlayerState.Dead) return;
+
+        m_isPendingAttack = true;
+    }
+
+    private void InputRecover(bool isHolding)
+    {
+        if (m_playerState == PlayerState.Dead) return;
+
+        m_pendingRecover = isHolding;
+        m_hasPendingRecover = true;
+    }
+
+    private void InputAvoid()
+    {
+        if (m_playerState == PlayerState.Dead) return;
+
+        m_isPendingAvoid = true;
+    }
     private void InputMove(Vector2 value)
     {
         if (m_playerState == PlayerState.Dead) return;
@@ -559,50 +664,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 
     //==================================================
-    // 入力処理
-    //==================================================
-
-    #region Input
-
-    private void InputSprint(bool isSprinting)
-    {
-        if (m_playerState == PlayerState.Dead) return;
-
-        m_isSprinting = isSprinting;
-    }
-
-    private void InputInteract(bool isHolding)
-    {
-        if (m_playerState == PlayerState.Dead) return;
-
-        m_pendingInteract = isHolding;
-    }
-
-    private void InputAttack()
-    {
-        if (m_playerState == PlayerState.Dead) return;
-
-        m_isPendingAttack = true;
-    }
-
-    private void InputRecover(bool isHolding)
-    {
-        if (m_playerState == PlayerState.Dead) return;
-
-        m_pendingRecover = isHolding;
-    }
-
-    private void InputAvoid()
-    {
-        if (m_playerState == PlayerState.Dead) return;
-
-        m_isPendingAvoid = true;
-    }
-
-    #endregion
-
-
-    //==================================================
     // ダメージ処理
     //==================================================
 
@@ -612,7 +673,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (m_playerState == PlayerState.Dead) return;
 
-
         // 回避中はダメージ無効
         if (m_isInvincible)
         {
@@ -620,28 +680,27 @@ public class PlayerController : MonoBehaviour, IDamageable
             return;
         }
 
-
         // ダメージ後の無敵時間中は無効
         if (m_isDamageInvincible)
         {
             return;
         }
 
+        // 即座にHPを減らす
+        m_hpController.Damage(damage);
 
-        // ジャスト回避受付中なら追加ダメージを受け付けない
-        if (m_isWaitingJustAvoid)
+        Debug.Log("攻撃Hit！ダメージを受けました", this);
+
+        // HPが0になった場合
+        if (m_hpController.Hp <= 0)
         {
+            Dead();
             return;
         }
 
-
-        m_isWaitingJustAvoid = true;
-        m_justAvoidFrameCount = 0;
-
-        // 最初の攻撃分だけ記録
-        m_pendingDamage = damage;
-
-        Debug.Log("攻撃Hit！ジャスト回避受付開始！", this);
+        // ダメージ後の無敵時間を開始
+        m_isDamageInvincible = true;
+        m_damageInvicibleTimer = 0f;
     }
 
 
@@ -663,8 +722,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         m_recoverTimer = 0f;
 
-        while (m_isRecovering &&
-               m_playerState != PlayerState.Dead)
+        while (m_playerState == PlayerState.Recover )
         {
             m_recoverTimer += Time.deltaTime;
 
@@ -689,7 +747,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (m_playerState == PlayerState.Dead)
             yield break;
 
-        m_isAvoiding = true;
 
         ChangeState(PlayerState.Avoid);
 
@@ -719,7 +776,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_movement.Stop();
 
         m_isInvincible = false;
-        m_isAvoiding = false;
+
 
 
         // 移動入力が残っていれば通常移動に戻る
