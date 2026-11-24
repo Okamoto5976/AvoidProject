@@ -102,91 +102,72 @@ public class InputProvider
     {
         OnInputRecover?.Invoke(context.started);
     }   
-
     private void OnMenu(InputAction.CallbackContext context)
     {
         OnInputMenu?.Invoke();
     }
-
     private void OnSubmit(InputAction.CallbackContext context)
     {
         m_submit = true;
     }
-
     private void OnCancel(InputAction.CallbackContext context)
     {
         m_cancel = true;
     }
-
     private void OnSubAction(InputAction.CallbackContext context)
     {
         m_subAction = true;
     }
-
     private void OnDetail(InputAction.CallbackContext context)
     {
         m_detail = true;
     }
-
     public bool IsSubmit
     {
         get
         {
             bool result = m_submit;
             m_submit = false;
-
             return result;
         }
     }
-
     public bool IsCancel
     {
         get
         {
             bool result = m_cancel;
             m_cancel = false;
-
             return result;
         }
     }
-
     public bool IsSubAction
     {
         get
         {
             bool result = m_subAction;
             m_subAction = false;
-
             return result;
         }
     }
-
     public bool IsDetail
     { 
         get
         {
             bool result = m_detail;
             m_detail = false;
-
             return result;
         }
     }
-
     public void SaveRebind()
     {
         string json = m_action.SaveBindingOverridesAsJson();
-
         PlayerPrefs.SetString(REBIND_KEY, json);
         PlayerPrefs.Save();
     }
-
     private void LoadRebind()
     {
-        if (!PlayerPrefs.HasKey(REBIND_KEY))
-            return;
-
+        if (!PlayerPrefs.HasKey(REBIND_KEY)) return;
         string json = PlayerPrefs.GetString(REBIND_KEY);
-
         m_action.LoadBindingOverridesFromJson(json);
     }
 
@@ -194,6 +175,5 @@ public class InputProvider
     {
         PlayerPrefs.DeleteKey(REBIND_KEY);
         PlayerPrefs.Save();
-
     }
 }

@@ -14,6 +14,7 @@ public class MenuManager : MonoBehaviour
 
     public enum SettingState
     {
+        None,
         Option,
         KeyConfig,
         ControllerCongfig
@@ -38,6 +39,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private SettingSelectUI m_controllerConfigButton;
 
     [SerializeField] private RebindManager m_rebindManager;
+    [SerializeField] private AudioVolumeController m_audioVolumeController;
 
     [Header("Not Necessary Reference")]
     private List<MenuTextUI> m_menuButtons = new();
@@ -49,7 +51,7 @@ public class MenuManager : MonoBehaviour
     private GameManager m_gameManager;
 
     private MenuState m_menuState = MenuState.None;
-    private SettingState m_settingState = SettingState.Option;
+    private SettingState m_settingState = SettingState.None;
     //[SerializeField] private 
     //GoreController
 
@@ -189,6 +191,7 @@ public class MenuManager : MonoBehaviour
     private void CloseSetting()
     {
         m_settingPanel.SetActive(false);
+        ChangeSettingState(SettingState.None);
     }
 
 
@@ -215,6 +218,8 @@ public class MenuManager : MonoBehaviour
         {
             UpdateSetting(1);
         }
+
+
     }
 
     //十字キーで操作　コントローラーなら左スティック入力で　画面にカーソルを表示
@@ -222,6 +227,7 @@ public class MenuManager : MonoBehaviour
     private void OnInputMove(Vector2 input)
     {
         m_rebindManager.UpdateKeyConfigSelect(input);
+        m_audioVolumeController.SelectInput(input);
 
         int x;
         int y = 0;

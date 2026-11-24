@@ -123,13 +123,6 @@ public class UIManager : MonoBehaviour
                 m_hearts.Add(component);
             }
         }
-            //foreach (var heart in m_hearts)
-            //{
-            //    Destroy(heart.gameObject);
-            //}
-            //m_hearts.Clear();
-
-            
 
         UpdateHearts(maxHP, dhp);
     }
