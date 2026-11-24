@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
 
     private UIManager m_uiManager;
 
+    private InputProvider m_inputProvider;
+
     //SlowMotion Variable
     [SerializeField] private float m_slowScale = 0.3f;
     [SerializeField] private float m_slowDuration = 0.5f;
@@ -35,12 +37,18 @@ public class GameManager : MonoBehaviour
     /// 初期化時に呼ぶ　
     /// </summary>
     /// <param name="timer"></param>
-    public void Initialize(bool hasTimeLimit, float timer = 0)//後々引数が増えるようなら　別ごとに関数を作るか　Classで渡してあげる
+    public void Initialize(
+        UIManager uiMa,
+        InputProvider inputProvider,
+        bool hasTimeLimit,
+        float timer = 0)//後々引数が増えるようなら　別ごとに関数を作るか　Classで渡してあげる
     {
+        m_uiManager = uiMa;
+        m_inputProvider = inputProvider;
         m_hasTimeLimit = hasTimeLimit;
         m_timeLimit = timer;
     }
-
+    
     public void StartGame()
     {
         ChangeGameState(EnumGameState.InPlay);
@@ -126,21 +134,26 @@ public class GameManager : MonoBehaviour
         GameClearEvent();
     }
 
-    public void GameOverEvent()
+    public void OnGameOverEvent()
     {
         if (m_gameState == EnumGameState.GameOver) return;
 
-
         ChangeGameState(EnumGameState.GameOver);
+        m_inputProvider.PlayerDisable();
 
-
+        StopCoroutine(m_slowCoroutine);
+        m_slowCoroutine = null;
         m_uiManager.ShowGameOver();
     }
 
     public void GameClearEvent()
     {
         ChangeGameState(EnumGameState.Event);
+        m_inputProvider.PlayerDisable();
 
+        StopCoroutine(m_slowCoroutine);
+        m_slowCoroutine = null;
+        Time.timeScale = 0f;
         m_uiManager.ShowGameClear();
 
     }

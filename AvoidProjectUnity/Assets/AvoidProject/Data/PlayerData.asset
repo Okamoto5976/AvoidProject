@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   m_hp: 3
-  m_dhp: 0
+  m_dhp: 3
   m_speed: 5
   m_sprintSpeed: 10
   m_attackStateDuration: 0.3
@@ -42,16 +42,17 @@ MonoBehaviour:
         Thickness: 0
         Length: 0
         Angle: 0
-      Position: {x: 5.062379, y: 1.0263469}
+      Positions:
+      - {x: -0.405015, y: -0.4050238}
       Parent: {fileID: 0}
       StartupTime: 0
       ActiveTime: 0
     m_actionList:
-    - rid: 8421334743278420060
+    - rid: 7170619556171874452
   references:
     version: 2
     RefIds:
-    - rid: 8421334743278420060
+    - rid: 7170619556171874452
       type: {class: MeleeActionData, ns: , asm: Assembly-CSharp}
       data:
         a: 0

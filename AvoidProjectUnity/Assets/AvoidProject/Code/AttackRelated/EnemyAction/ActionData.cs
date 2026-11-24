@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public abstract class ActionData
 {
-    public abstract Action CreateAction(AttackBase attack);
+    public abstract EnemyAction CreateAction(AttackBase attack);
 }
 
 [System.Serializable]
@@ -12,7 +12,7 @@ public class MeleeActionData : ActionData
 {
     public float a;//発動タイミング
 
-    public override Action CreateAction(AttackBase attack)
+    public override EnemyAction CreateAction(AttackBase attack)
     {
         return new MeleeAction(this, attack);
     }
@@ -23,7 +23,7 @@ public class MeleeActionData : ActionData
 [ActionDataFor(typeof (JumpAttackData))]
 public class WaitActionData : ActionData
 {
-    public override Action CreateAction(AttackBase attack)
+    public override EnemyAction CreateAction(AttackBase attack)
     {
         return new WaitAction(this);
     }

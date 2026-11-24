@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WaitAction : Action
+public class WaitAction : EnemyAction
 {
     private readonly WaitActionData m_actionData;
 

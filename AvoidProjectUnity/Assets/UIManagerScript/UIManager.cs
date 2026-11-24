@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image m_enemyHPFilled;
     private int m_maxHP;
 
+    [SerializeField] private TMP_Text m_potionCountText;
 
     private readonly List<PlayerHPUI> m_hearts = new List<PlayerHPUI>();
 
@@ -179,4 +181,10 @@ public class UIManager : MonoBehaviour
         Debug.Log($"Enemy UI Rate : {rate}  HP : {hp} / {m_maxHP}");
         m_enemyHPFilled.fillAmount = rate;
     }
+
+    public void SetPotionCount(int num)
+    {
+        m_potionCountText.text = num.ToString();
+    }
+
 }

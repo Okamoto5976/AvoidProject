@@ -1800,6 +1800,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84714ed90722a2c4589fe80e28909f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  m_slowScale: 0.3
+  m_slowDuration: 0.5
+  m_recoveryDuration: 0.5
+  m_recoveryCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &503960967
 Transform:
   m_ObjectHideFlags: 0
@@ -5589,6 +5616,7 @@ MonoBehaviour:
   m_playerHeartPrefab: {fileID: 5950428544451882733, guid: 1e9960fefc808634e9132b2c1fcf4fbf, type: 3}
   m_heartListContent: {fileID: 249268593}
   m_enemyHPFilled: {fileID: 1650016147}
+  m_potionCountText: {fileID: 2128338921}
 --- !u!4 &1589673091
 Transform:
   m_ObjectHideFlags: 0
@@ -7608,10 +7636,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3
+  m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dc061509e47fe7443b325108ac32f7bb, type: 2}
+  m_sharedMaterial: {fileID: 7380934484909385932, guid: dc061509e47fe7443b325108ac32f7bb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

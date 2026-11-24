@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Action
+public abstract class EnemyAction
 {
     protected bool m_isComplete;
 
