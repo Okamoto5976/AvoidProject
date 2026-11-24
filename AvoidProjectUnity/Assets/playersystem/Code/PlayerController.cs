@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Rigidbody2D m_rd;
     private Movement m_movement;
     private PlayerHp m_hpController;
+    private PlayerAnim m_playerAnim;
 
     private InputProvider m_inputProvider;
     private PlayerInteract m_playerInteract;
@@ -109,6 +110,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_hpController = GetComponent<PlayerHp>();
 
         m_hpController.SetPlayer(this);
+
+        m_playerAnim = GetComponent<PlayerAnim>();
     }
 
 
@@ -546,6 +549,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         // 移動
         m_movement.Move(m_velocity, speed);
+
+        m_playerAnim.IdleAnim(m_velocity);
 
         // プレイヤーの状態を決定
         if (m_playerState == PlayerState.Recover)
