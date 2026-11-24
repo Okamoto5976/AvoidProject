@@ -6,6 +6,7 @@ public class KeySettingUI : MonoBehaviour
 {
     [SerializeField] private Button m_button;
     [SerializeField] private TMP_Text m_keyText;
+    [SerializeField] private Image m_buttonImage;
     [SerializeField] private Animator m_anim;
     public Button KeyButton => m_button;
     public TMP_Text KeyText => m_keyText;
@@ -20,5 +21,10 @@ public class KeySettingUI : MonoBehaviour
     public void UpdateKeyText(string text)
     {
         m_keyText.text = text;
+    }
+
+    public void UpdateButtonImage(Sprite sprite)
+    {
+        m_buttonImage.sprite = sprite;
     }
 }

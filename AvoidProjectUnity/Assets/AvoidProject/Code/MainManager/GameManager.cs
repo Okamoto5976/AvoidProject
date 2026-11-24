@@ -140,9 +140,12 @@ public class GameManager : MonoBehaviour
 
         ChangeGameState(EnumGameState.GameOver);
         m_inputProvider.PlayerDisable();
-
-        StopCoroutine(m_slowCoroutine);
-        m_slowCoroutine = null;
+        if(m_slowCoroutine != null)
+        {
+            StopCoroutine(m_slowCoroutine);
+            m_slowCoroutine = null;
+        }
+        
         m_uiManager.ShowGameOver();
     }
 
@@ -151,8 +154,11 @@ public class GameManager : MonoBehaviour
         ChangeGameState(EnumGameState.Event);
         m_inputProvider.PlayerDisable();
 
-        StopCoroutine(m_slowCoroutine);
-        m_slowCoroutine = null;
+        if (m_slowCoroutine != null)
+        {
+            StopCoroutine(m_slowCoroutine);
+            m_slowCoroutine = null;
+        }
         Time.timeScale = 0f;
         m_uiManager.ShowGameClear();
 

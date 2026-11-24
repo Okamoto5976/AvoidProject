@@ -203,9 +203,7 @@ public class MenuManager : MonoBehaviour
             else
             {
                 m_menuButtons[m_menuButtonsIndex].Button.onClick.Invoke();
-
             }
-
         }
 
         if(m_inputUiProvider.IsNext)
@@ -246,8 +244,6 @@ public class MenuManager : MonoBehaviour
         }
 
         UpdateMenuIndex(y);
-
-
     }
 
     private void ChangeMenuState(MenuState state)

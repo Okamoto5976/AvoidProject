@@ -152,12 +152,6 @@ public class RebindManager : MonoBehaviour
         StartRebind(entry);
     }
 
-    //[ContextMenu("Change Input")]
-    //public void TestRebind()
-    //{
-    //    StartRebind(
-    //        m_inputProvider.InputActions.Player.Attack, 1);
-    //}
 
     [ContextMenu("Delete RebindSetting")]
     public void DeleteRebindSetting()
