@@ -1761,7 +1761,7 @@ MonoBehaviour:
   m_keyConfigButton: {fileID: 1404061053}
   m_controllerConfigButton: {fileID: 257239615}
   m_rebindManager: {fileID: 490510302}
-  m_audioVolumeController: {fileID: 0}
+  m_audioVolumeController: {fileID: 490510301}
 --- !u!114 &490510301
 MonoBehaviour:
   m_ObjectHideFlags: 0

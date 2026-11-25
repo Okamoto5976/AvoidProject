@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Windows;
 
 public class MenuManager : MonoBehaviour
 {
@@ -101,14 +100,14 @@ public class MenuManager : MonoBehaviour
         m_settingButtons.Add(m_controllerConfigButton);//index2
 
         //Menu画面のボタンを設定
-        m_menuContinuButton.Button.onClick.AddListener(() => OnSelectContinu());
-        m_menuOptionButton.Button.onClick.AddListener(() => OnSelectSetting());
-        m_menuTitleButton.Button.onClick.AddListener(() => OnSelectTitle());
+        m_menuContinuButton.Button.onClick.AddListener(OnSelectContinu);
+        m_menuOptionButton.Button.onClick.AddListener(OnSelectSetting);
+        m_menuTitleButton.Button.onClick.AddListener(OnSelectTitle);
 
         //Option画面上部のボタン設定
-        m_optionButton.Button.onClick.AddListener(() => OnChangeOption());
-        m_keyConfigButton.Button.onClick.AddListener(() => OnChangeKeyConfig());
-        m_controllerConfigButton.Button.onClick.AddListener(() => OnChangeControllerConfig());
+        m_optionButton.Button.onClick.AddListener(OnChangeOption);
+        m_keyConfigButton.Button.onClick.AddListener(OnChangeKeyConfig);
+        m_controllerConfigButton.Button.onClick.AddListener(OnChangeControllerConfig);
     }
 
     public void Initialize(InputProvider inputProvider)
@@ -314,7 +313,7 @@ public class MenuManager : MonoBehaviour
     {
         var index = m_settingButtonsIndex;
         m_settingButtonsIndex += x;
-        if(m_settingButtonsIndex > m_menuButtons.Count - 1)
+        if(m_settingButtonsIndex > m_settingButtons.Count - 1)
         {
             m_settingButtonsIndex = 0;
         }
