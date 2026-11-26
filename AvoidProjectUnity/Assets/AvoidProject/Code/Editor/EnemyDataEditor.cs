@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(EnemyData))]
 public class EnemyDataEditor : Editor
@@ -529,3 +530,4 @@ public class EnemyDataEditor : Editor
 
     #endregion
 }
+#endif

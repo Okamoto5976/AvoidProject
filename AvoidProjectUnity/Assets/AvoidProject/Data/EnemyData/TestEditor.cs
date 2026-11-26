@@ -2,6 +2,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(TestSO))]
 public class TestEditor : Editor
 {
@@ -100,4 +101,6 @@ public class TestEditor : Editor
         //EditorUtility.SetDirty(data);
         serializedObject.ApplyModifiedProperties();
     }
+
 }
+#endif
