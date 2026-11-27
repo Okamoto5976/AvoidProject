@@ -534,7 +534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &249049221
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9003,7 +9003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7a5b5706d8a8746afaae09c61a0b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InitializedManager
-  m_timeLimit: 60
+  m_timeLimit: 120
   m_stageRadius: 20
   m_stageWeaponCount: 4
   m_runtimeData:

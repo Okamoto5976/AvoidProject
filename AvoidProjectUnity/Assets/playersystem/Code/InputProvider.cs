@@ -14,14 +14,14 @@ public class InputProvider
     private Vector2 m_inputMove;
     public event Action<Vector2> OnInputMove;
     public event Action<bool> OnInputSprint;
-    public event System.Action OnInputAttack;
-    public event System.Action OnInputAvoid;
+    public event Action OnInputAttack;
+    public event Action OnInputAvoid;
     public event Action<bool> OnInputInteractHold;
     public event Action<bool> OnInputRecover;
     //public event System.Action OnPlayerDead;   
 
     //Input UI
-    public event System.Action OnInputMenu;
+    public event Action OnInputMenu;
     private bool m_submit;
     private bool m_cancel;
     private bool m_subAction;

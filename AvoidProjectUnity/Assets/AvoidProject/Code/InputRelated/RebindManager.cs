@@ -31,8 +31,6 @@ public class RebindManager : MonoBehaviour
         foreach(var entry in m_rebindActionKeyList)
         {
             entry.m_action = m_action.asset.FindAction(entry.m_actionName);
-            //Debug.Log($"ActionName: {entry.m_actionName}");
-            //Debug.Log($"Žæ“¾Œ‹‰Ê: {entry.m_action}");
             UpdateKeyDisplay(entry);
 
             RebindKeyEntry target = entry;
@@ -45,8 +43,6 @@ public class RebindManager : MonoBehaviour
         foreach (var entry in m_rebindUIKeyList)
         {
             entry.m_action = m_action.asset.FindAction(entry.m_actionName);
-            //Debug.Log($"ActionName: {entry.m_actionName}");
-            //Debug.Log($"Žæ“¾Œ‹‰Ê: {entry.m_action}");
             UpdateKeyDisplay(entry);
 
             RebindKeyEntry target = entry;
